@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" class=""><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中北喵星图 · 校园猫咪星系</title>
+<style>
+  :root{
+    --gold:#ffd76a; --gold-soft:#ffe9a8; --ink:#dfe8ff; --dim:#7f92c0; --dimmer:#54648f;
+    --teal:#7de8d8; --mag:#c48cff;
+    --panel:rgba(10,16,36,.64); --line:rgba(140,170,255,.22);
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ width:100%; height:100%; overflow:hidden; background:#03060f;
+    font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
+  #sky{ position:fixed; inset:0; width:100vw; height:100vh; cursor:grab; display:block; touch-action:none; }
+  #sky.dragging{ cursor:grabbing; }
+  #sky.editmode{ cursor:crosshair; }
+
+  /* ---------- 入场页（粒子标题由画布绘制，HTML 承载副文案） ---------- */
+  #intro{ position:fixed; inset:0; z-index:100; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; transition:opacity .7s ease;
+    background:radial-gradient(ellipse at 50% 44%, rgba(13,27,58,.18) 0%, rgba(3,6,15,.66) 78%); }
+  #intro.fade{ opacity:0; pointer-events:none; }
+  .titleFallback{ color:var(--ink); font-weight:300; font-size:clamp(26px,4.2vw,44px);
+    letter-spacing:.34em; text-indent:.34em; margin-bottom:6px;
+    text-shadow:0 0 22px rgba(150,190,255,.9),0 0 60px rgba(150,190,255,.4);
+    animation:breathe 4s ease-in-out infinite; }
+  #intro.fx .titleFallback{ animation:none; opacity:0; transition:opacity .9s ease .5s; } /* 画布粒子接管标题 */
+  #intro .titleSpace{ height:clamp(96px,15vw,170px); width:1px; }  /* 为粒子标题占位 */
+  @keyframes breathe{ 0%,100%{opacity:.92} 50%{opacity:1} }
+  #intro .sub{ margin-top:8px; color:#aebbe8; font-size:clamp(13px,1.6vw,15px); letter-spacing:.3em;
+    opacity:0; animation:fadeUp 1.2s var(--ease) 1.5s forwards; }
+  #intro .stats{ margin-top:16px; color:var(--dim); font-size:11px; letter-spacing:.24em;
+    opacity:0; animation:fadeUp 1.2s var(--ease) 2s forwards; }
+  #introBtn{ margin-top:46px; padding:14px 54px; background:transparent; color:var(--gold-soft);
+    border:1px solid rgba(255,233,168,.5); border-radius:32px; font-size:15px; letter-spacing:.42em;
+    text-indent:.42em; cursor:pointer; transition:.35s;
+    opacity:0; animation:fadeUp 1.2s var(--ease) 2.5s forwards, btnGlow 2.6s ease-in-out 3s infinite; }
+  #introBtn:hover{ background:rgba(255,233,168,.14); letter-spacing:.5em; box-shadow:0 0 34px rgba(255,215,106,.5); }
+  #intro .enterHint{ margin-top:18px; color:var(--dimmer); font-size:10px; letter-spacing:.4em;
+    opacity:0; animation:fadeUp 1.4s ease 3.2s forwards; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+  @keyframes btnGlow{ 0%,100%{box-shadow:0 0 10px rgba(255,215,106,.15)} 50%{box-shadow:0 0 26px rgba(255,215,106,.45)} }
+
+  /* ---------- UI 渐入编排 ---------- */
+  .ui{ opacity:0; transform:translateY(10px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+  body.live .ui{ opacity:1; transform:none; }
+  body.live #topbar{ transition-delay:.05s; } body.live #hint{ transition-delay:.55s; }
+  body.live #legend{ transition-delay:.35s; } body.live #zoomctl{ transition-delay:.45s; }
+
+  /* ---------- 顶栏 ---------- */
+  #topbar{ position:fixed; top:0; left:0; right:0; z-index:50; height:58px;
+    display:flex; align-items:center; gap:12px; padding:0 18px;
+    background:linear-gradient(180deg, rgba(4,8,18,.88), rgba(4,8,18,.48) 78%, transparent);
+    border-bottom:1px solid rgba(140,170,255,.08); backdrop-filter:blur(8px); }
+  .brand{ display:flex; flex-direction:column; line-height:1.25; user-select:none; flex-shrink:0; }
+  .brand b{ font-size:17px; letter-spacing:.18em; font-weight:700;
+    background:linear-gradient(100deg,#ffe9a8 20%,#ffd76a 45%,#fff3cf 60%,#ffd76a 80%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 10px rgba(255,220,130,.45)); }
+  .brand span{ color:var(--dimmer); font-size:9.5px; letter-spacing:.28em; }
+  #search{ margin-left:auto; padding:7px 16px; width:150px; border-radius:18px; font-size:12px;
+    border:1px solid var(--line); background:rgba(10,18,40,.6); color:var(--ink); outline:none;
+    transition:.25s; flex-shrink:0; }
+  #search:focus{ border-color:rgba(255,215,106,.55); width:180px; box-shadow:0 0 14px rgba(255,215,106,.18); }
+  #search::placeholder{ color:var(--dimmer); }
+  #chips{ display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; flex-shrink:1; }
+  #chips::-webkit-scrollbar{ display:none; }
+  .chip{ padding:6px 14px; border-radius:16px; border:1px solid var(--line); color:#b9c8ee;
+    font-size:12px; cursor:pointer; background:rgba(10,18,40,.5); transition:.22s;
+    user-select:none; white-space:nowrap; flex-shrink:0; }
+  .chip:hover,.chip:focus-visible{ border-color:rgba(255,233,168,.65); color:var(--gold-soft); transform:translateY(-1px); outline:none; }
+  .chip:focus-visible{ box-shadow:0 0 0 2px rgba(255,215,106,.35); }
+  .chip.on{ background:rgba(255,215,106,.16); border-color:var(--gold); color:var(--gold-soft);
+    box-shadow:0 0 12px rgba(255,215,106,.3); }
+  #btnMeet{ border-color:rgba(255,150,200,.45); color:#ffc4dd; }
+  #btnMeet:hover{ border-color:#ff9ecb; color:#ffe0ee; box-shadow:0 0 12px rgba(255,150,200,.3); }
+  #btnEdit.on{ background:rgba(120,255,190,.14); border-color:#6fe3b0; color:#a9f5d2;
+    box-shadow:0 0 12px rgba(111,227,176,.3); }
+  #btnNet{ border-color:rgba(125,232,216,.4); color:#a9ece2; }
+  #btnNet:hover{ border-color:var(--teal); color:#d2fff7; box-shadow:0 0 12px rgba(125,232,216,.3); }
+  #btnNet.on{ background:rgba(125,232,216,.13); border-color:var(--teal); color:#d9fff8;
+    box-shadow:0 0 14px rgba(125,232,216,.35); }
+
+  /* ---------- 图例 & 缩放 ---------- */
+  #legend{ position:fixed; left:16px; bottom:16px; z-index:50; padding:10px 14px; border-radius:12px;
+    background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(8px); }
+  #legend .t{ color:var(--dimmer); font-size:10px; letter-spacing:.2em; margin-bottom:6px; }
+  #legend .row{ display:flex; align-items:center; gap:7px; margin-top:4px; font-size:11px; color:#aabadd; }
+  #legend .dot{ width:8px; height:8px; border-radius:50%; box-shadow:0 0 6px currentColor; background:currentColor; }
+  #legend .note{ margin-top:8px; padding-top:7px; border-top:1px dashed rgba(140,170,255,.16);
+    color:var(--dimmer); font-size:9.5px; letter-spacing:.05em; line-height:1.6; }
+  #zoomctl{ position:fixed; right:16px; bottom:16px; z-index:50; display:flex; flex-direction:column; gap:6px; }
+  #zoomctl button{ width:38px; height:38px; border-radius:10px; border:1px solid var(--line);
+    background:var(--panel); color:#b9c8ee; font-size:16px; cursor:pointer; transition:.2s; backdrop-filter:blur(8px); }
+  #zoomctl button:hover{ border-color:var(--gold); color:var(--gold-soft); }
+
+  /* ---------- 档案卡 ---------- */
+  #card{ position:fixed; top:0; right:-440px; width:408px; max-width:94vw; height:100%; z-index:60;
+    background:linear-gradient(165deg, rgba(14,23,50,.96), rgba(6,10,24,.97));
+    border-left:1px solid rgba(255,215,106,.18); transition:right .55s var(--ease);
+    overflow-y:auto; backdrop-filter:blur(12px); box-shadow:-20px 0 60px rgba(0,0,0,.5); }
+  #card.open{ right:0; }
+  #card::-webkit-scrollbar{ width:4px; } #card::-webkit-scrollbar-thumb{ background:rgba(140,170,255,.25); border-radius:2px; }
+  #cardClose{ position:absolute; top:14px; right:16px; z-index:3; width:34px; height:34px; border-radius:50%;
+    background:rgba(5,9,20,.55); color:#9fb0d8; font-size:14px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:.2s; border:1px solid rgba(140,170,255,.2); }
+  #cardClose:hover{ color:var(--gold-soft); border-color:var(--gold); transform:rotate(90deg); }
+  .cardImgWrap{ position:relative; height:264px; overflow:hidden; background:
+    radial-gradient(circle at 50% 45%, #16224a 0%, #0a1228 70%); }
+  #cardImg{ width:100%; height:100%; object-fit:cover; display:block; }
+  #card.open #cardImg{ animation:kenburns 16s ease-in-out .3s infinite alternate; }
+  @keyframes kenburns{ from{ transform:scale(1) translate(0,0);} to{ transform:scale(1.12) translate(-1.6%,1.2%);} }
+  .cardImgWrap::before{ content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,.16) 50%, transparent 58%);
+    transform:translateX(-130%) skewX(-8deg); }
+  #card.open .cardImgWrap::before{ animation:shine 1.3s ease .45s forwards; }
+  @keyframes shine{ to{ transform:translateX(130%) skewX(-8deg); } }
+  .cardImgWrap::after{ content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 45%, rgba(6,10,24,.95) 100%); }
+  .cardHead{ position:relative; margin:-46px 24px 0; z-index:2; }
+  #cardName{ font-size:28px; color:var(--gold-soft); letter-spacing:.12em; font-weight:600;
+    text-shadow:0 0 18px rgba(255,220,130,.6); }
+  #cardRank{ display:inline-flex; align-items:center; gap:6px; margin-top:10px; padding:5px 14px;
+    border:1px solid rgba(255,215,106,.55); border-radius:4px; color:var(--gold); font-size:12px;
+    letter-spacing:.2em; background:rgba(255,215,106,.07); box-shadow:0 0 14px rgba(255,215,106,.15) inset; }
+  #cardTitle{ margin-top:9px; color:var(--dim); font-size:12px; letter-spacing:.06em; }
+  #cardBody{ padding:6px 24px 44px; color:#c9d6f5; }
+  .kv{ display:flex; margin-top:13px; font-size:13px; line-height:1.75; }
+  .kv b{ color:var(--dim); font-weight:normal; width:58px; flex-shrink:0; letter-spacing:.1em; }
+  .kv span{ color:#d4e0fa; }
+  #cardBio{ margin-top:18px; padding:14px 16px; border-left:2px solid rgba(255,215,106,.5);
+    background:rgba(255,215,106,.05); border-radius:0 10px 10px 0; font-size:13px; line-height:2; color:#c2cfef; }
+  #cardPhotos{ margin-top:16px; font-size:11.5px; color:var(--dimmer); letter-spacing:.05em; }
+  #cardShare{ margin-top:14px; padding:11px; text-align:center; border-radius:10px; cursor:pointer;
+    border:1px solid rgba(125,232,216,.45); color:#a9ece2; font-size:12.5px; letter-spacing:.2em;
+    background:rgba(125,232,216,.07); transition:.25s; user-select:none; }
+  #cardShare:hover{ background:rgba(125,232,216,.15); box-shadow:0 0 18px rgba(125,232,216,.25); color:#d9fff8; }
+  #card.open #cardShare{ animation-delay:.66s; }
+  .pill{ display:inline-block; padding:2px 9px; border-radius:10px; font-size:10.5px; margin-left:6px; }
+  .pill.ok{ color:#a9f5d2; border:1px solid rgba(111,227,176,.4); }
+  .pill.no{ color:#ffb37a; border:1px solid rgba(255,179,122,.4); }
+  .pill.cal{ color:#ffd9a0; border:1px solid rgba(255,217,160,.45); cursor:pointer; }
+  .pill.cal:hover{ background:rgba(255,217,160,.12); }
+  /* 卡片内容级联入场 */
+  #card .anim{ opacity:0; }
+  #card.open .anim{ animation:cardRise .6s var(--ease) forwards; }
+  #card.open .cardHead{ animation-delay:.12s; }
+  #card.open .kv:nth-of-type(1){ animation-delay:.24s; } #card.open .kv:nth-of-type(2){ animation-delay:.3s; }
+  #card.open .kv:nth-of-type(3){ animation-delay:.36s; } #card.open .kv:nth-of-type(4){ animation-delay:.42s; }
+  #card.open #cardBio{ animation-delay:.5s; } #card.open #cardPhotos{ animation-delay:.58s; }
+  @keyframes cardRise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none;} }
+
+  /* ---------- 底部 ---------- */
+  #hint{ position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:50; color:var(--dimmer);
+    font-size:11.5px; letter-spacing:.14em; background:rgba(4,8,18,.55); padding:7px 20px;
+    border-radius:16px; white-space:nowrap; border:1px solid rgba(140,170,255,.08);
+    transition:opacity 1s ease; }
+  #hint.gone{ opacity:0; pointer-events:none; }
+  #editbar{ position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:51; display:none; gap:10px; }
+  #editbar.show{ display:flex; }
+  #editbar .chip{ background:rgba(8,20,30,.9); }
+  #toast{ position:fixed; top:72px; left:50%; transform:translateX(-50%) translateY(-6px); z-index:90;
+    background:rgba(18,30,62,.95); color:#a9f5d2; padding:10px 24px; border-radius:20px; font-size:13px;
+    opacity:0; transition:opacity .4s, transform .4s var(--ease); pointer-events:none;
+    border:1px solid rgba(120,255,190,.3); letter-spacing:.06em; box-shadow:0 6px 30px rgba(0,0,0,.4); }
+  #toast.show{ transform:translateX(-50%) translateY(0); }
+
+  /* ---------- 喵图鉴 · 遇见收集 ---------- */
+  #seenWrap{ margin-top:10px; padding-top:9px; border-top:1px dashed rgba(140,170,255,.18); }
+  #seenBar{ height:6px; border-radius:3px; background:rgba(140,170,255,.12); overflow:hidden; }
+  #seenFill{ display:block; height:100%; width:0; border-radius:3px;
+    background:linear-gradient(90deg,#ffd76a,#ffbe6a); box-shadow:0 0 8px rgba(255,215,106,.6);
+    transition:width .6s var(--ease); }
+  #seenCount{ margin-top:6px; font-size:10px; color:#aabadd; letter-spacing:.08em; }
+  #cardSeen{ margin-top:10px; padding:11px; text-align:center; border-radius:10px; cursor:pointer;
+    border:1px solid rgba(255,215,106,.45); color:#ffe3a1; font-size:12.5px; letter-spacing:.2em;
+    background:rgba(255,215,106,.07); transition:.25s; user-select:none; }
+  #cardSeen:hover{ background:rgba(255,215,106,.15); box-shadow:0 0 18px rgba(255,215,106,.25); color:#fff3d6; }
+  #cardSeen.on{ background:rgba(255,215,106,.18); color:#ffd76a;
+    box-shadow:0 0 22px rgba(255,215,106,.35), inset 0 0 12px rgba(255,215,106,.1); }
+  #card.open #cardSeen{ animation-delay:.74s; }
+
+  /* ---------- 今日喵签 ---------- */
+  #btnFortune{ border-color:rgba(196,140,255,.45); color:#dcc4ff; }
+  #btnFortune:hover{ border-color:#c48cff; color:#efe2ff; box-shadow:0 0 12px rgba(196,140,255,.3); }
+  #btnTrails{ border-color:rgba(255,214,130,.42); color:#ffe4a4; }
+  #btnTrails:hover{ border-color:#ffd682; color:#fff0cd; box-shadow:0 0 12px rgba(255,214,130,.3); }
+  #btnTrails.on{ background:rgba(255,214,130,.13); border-color:#ffd682; color:#fff3d6;
+    box-shadow:0 0 16px rgba(255,214,130,.35); }
+  #btnAudio{ border-color:rgba(158,190,255,.42); color:#c3d4ff; }
+  #btnAudio:hover{ border-color:#9ebeff; color:#e2ecff; box-shadow:0 0 12px rgba(158,190,255,.3); }
+  #btnAudio.on{ background:rgba(158,190,255,.13); border-color:#9ebeff; color:#e8f0ff;
+    box-shadow:0 0 16px rgba(158,190,255,.35); }
+  #fortune{ position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center;
+    background:rgba(2,4,12,.55); backdrop-filter:blur(6px);
+    opacity:0; pointer-events:none; transition:opacity .45s var(--ease); }
+  #fortune.open{ opacity:1; pointer-events:auto; }
+  .fCard{ position:relative; width:min(420px,86vw); padding:34px 30px 26px; text-align:center; border-radius:18px;
+    background:linear-gradient(165deg, rgba(20,16,46,.96), rgba(8,10,26,.97));
+    border:1px solid rgba(196,140,255,.35);
+    box-shadow:0 32px 96px rgba(0,0,0,.65), 0 0 26px 5px rgba(139,126,200,.28), 0 0 90px rgba(196,140,255,.22);
+    transform:translateY(18px) scale(.92); transition:transform .5s var(--ease); }
+  #fortune.open .fCard{ transform:none; animation:fBreath 3.6s ease-in-out .6s infinite; }
+  @keyframes fBreath{ 0%,100%{ box-shadow:0 32px 96px rgba(0,0,0,.65), 0 0 26px 5px rgba(139,126,200,.28), 0 0 90px rgba(196,140,255,.22); }
+    50%{ box-shadow:0 32px 96px rgba(0,0,0,.65), 0 0 34px 8px rgba(139,126,200,.38), 0 0 120px rgba(196,140,255,.34); } }
+  #fClose{ position:absolute; top:10px; right:12px; width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:#9fb0d8; font-size:12px; cursor:pointer;
+    border:1px solid rgba(140,170,255,.2); background:rgba(5,9,20,.5); transition:.2s; }
+  #fClose:hover{ color:#e9d5ff; border-color:#c48cff; transform:rotate(90deg); }
+  .fGrade{ color:#c9a6ff; font-size:12px; letter-spacing:.34em; text-shadow:0 0 12px rgba(196,140,255,.6); }
+  .fName{ margin-top:14px; font-size:40px; font-weight:700; color:#ffe9a8;
+    text-shadow:0 0 24px rgba(255,220,130,.45); }
+  .fRank{ margin-top:8px; color:#ffd76a; font-size:14px;
+    display:inline-flex; align-items:center; gap:7px; }
+  .fText{ margin:18px auto 0; max-width:300px; color:#cfd9f5; font-size:14.5px; line-height:1.9;
+    border-top:1px dashed rgba(196,140,255,.25); padding-top:16px; }
+  .fGo{ margin-top:20px; padding:10px; border-radius:10px; cursor:pointer;
+    border:1px solid rgba(196,140,255,.45); color:#dcc4ff; font-size:12.5px; letter-spacing:.2em;
+    background:rgba(196,140,255,.08); transition:.25s; }
+  .fGo:hover{ background:rgba(196,140,255,.16); box-shadow:0 0 18px rgba(196,140,255,.25); color:#f0e4ff; }
+
+  /* ---------- 星图志统计面板 ---------- */
+  #stats{ position:fixed; top:66px; right:16px; z-index:55; width:302px; max-height:calc(100vh - 84px);
+    overflow-y:auto; padding:15px 18px; border-radius:16px;
+    background:linear-gradient(170deg, rgba(14,23,50,.92), rgba(6,10,24,.94));
+    border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(12px);
+    box-shadow:0 18px 60px rgba(0,0,0,.5);
+    opacity:0; transform:translateX(24px); pointer-events:none;
+    transition:opacity .5s var(--ease), transform .5s var(--ease); }
+  #stats.open{ opacity:1; transform:none; pointer-events:auto; }
+  #stats::-webkit-scrollbar{ width:4px; } #stats::-webkit-scrollbar-thumb{ background:rgba(140,170,255,.25); border-radius:2px; }
+  #statsClose{ position:absolute; top:10px; right:12px; width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:#9fb0d8; font-size:12px;
+    cursor:pointer; border:1px solid rgba(140,170,255,.2); background:rgba(5,9,20,.5); transition:.2s; }
+  #statsClose:hover{ color:var(--gold-soft); border-color:var(--gold); transform:rotate(90deg); }
+  /* ---------- 实地寻猫面板 ---------- */
+  #find{ position:fixed; top:66px; right:16px; z-index:55; width:330px; max-height:calc(100vh - 84px);
+    overflow-y:auto; padding:15px 16px; border-radius:16px;
+    background:linear-gradient(170deg, rgba(12,24,44,.93), rgba(6,10,24,.95));
+    border:1px solid rgba(125,232,214,.22); backdrop-filter:blur(12px);
+    box-shadow:0 18px 60px rgba(0,0,0,.5);
+    opacity:0; transform:translateX(24px); pointer-events:none;
+    transition:opacity .5s var(--ease), transform .5s var(--ease); }
+  #find.open{ opacity:1; transform:none; pointer-events:auto; }
+  #find::-webkit-scrollbar{ width:4px; } #find::-webkit-scrollbar-thumb{ background:rgba(140,170,255,.25); border-radius:2px; }
+  #findClose{ position:absolute; top:10px; right:12px; width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:#9fb0d8; font-size:12px;
+    cursor:pointer; border:1px solid rgba(140,255,255,.2); background:rgba(5,9,20,.5); transition:.2s; }
+  #findClose:hover{ color:#a9ece2; border-color:var(--teal); transform:rotate(90deg); }
+  .fdTitle{ color:#a9ece2; font-size:14px; letter-spacing:.22em; font-weight:600;
+    text-shadow:0 0 14px rgba(125,232,214,.5); margin-bottom:8px; }
+  .fdIntro{ font-size:12px; color:#8fa2c8; line-height:1.6; margin-bottom:10px; }
+  .fdExport{ display:block; width:100%; text-align:center; padding:9px 0; border-radius:10px; cursor:pointer;
+    background:rgba(125,232,214,.1); border:1px solid rgba(125,232,214,.35); color:#cffef4;
+    font-size:13px; letter-spacing:.08em; margin-bottom:12px; transition:.2s; }
+  .fdExport:hover{ background:rgba(125,232,214,.18); box-shadow:0 0 14px rgba(125,232,214,.25); }
+  .fdSec{ color:#ffd76a; font-size:12px; letter-spacing:.12em; font-weight:600;
+    margin:12px 0 6px; padding-left:8px; border-left:3px solid rgba(255,215,106,.5); }
+  .fRow{ display:flex; align-items:center; gap:9px; padding:6px 7px; border-radius:10px; cursor:pointer; transition:.15s; }
+  .fRow:hover{ background:rgba(125,232,214,.08); }
+  .fRow img{ width:40px; height:40px; border-radius:9px; object-fit:cover; flex-shrink:0;
+    border:1px solid rgba(140,170,255,.25); background:#0a1228; }
+  .fRow .fdot{ width:40px; height:40px; border-radius:9px; flex-shrink:0;
+    border:1px solid rgba(140,170,255,.25); background:#0a1228;
+    display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .fRow .fi{ flex:1; min-width:0; }
+  .fRow .fn,.fRow .ff{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .fRow .fn{ font-size:13px; color:#e6ecfa; font-weight:600; }
+  .fRow .fn i{ font-style:normal; color:#ffd76a; font-size:11px; margin-left:5px; }
+  .fRow .ff{ font-size:11px; color:#7f92c0; }
+  #btnFind{ border-color:rgba(125,232,214,.4); color:#a9ece2; }
+  #btnFind:hover{ border-color:var(--teal); color:#d2fff7; box-shadow:0 0 12px rgba(125,232,214,.3); }
+  #btnFind.on{ background:rgba(125,232,214,.13); border-color:var(--teal); color:#d9fff8;
+    box-shadow:0 0 12px rgba(125,232,214,.35); }
+  /* ---------- 喵星导览字幕条 ---------- */
+  #tourBar{ position:fixed; left:50%; bottom:86px; transform:translateX(-50%) translateY(18px); z-index:60;
+    max-width:min(620px,88vw); padding:13px 22px 15px; border-radius:16px; text-align:center;
+    background:linear-gradient(170deg, rgba(10,18,40,.9), rgba(5,9,22,.92));
+    border:1px solid rgba(255,215,106,.32); backdrop-filter:blur(10px);
+    box-shadow:0 14px 50px rgba(0,0,0,.55);
+    opacity:0; pointer-events:none; transition:opacity .45s var(--ease), transform .45s var(--ease); }
+  #tourBar.on{ opacity:1; transform:translateX(-50%); pointer-events:auto; cursor:pointer; }
+  #tourStep{ font-size:11px; letter-spacing:.28em; color:#ffd76a; margin-bottom:5px; }
+  #tourCap{ font-size:15px; line-height:1.65; color:#dfe7f8; min-height:26px;
+    text-shadow:0 0 12px rgba(120,160,255,.35); }
+  #tourSkip{ font-size:11px; color:#7f92c0; margin-top:7px; letter-spacing:.1em; }
+  #btnTour{ border-color:rgba(216,160,255,.42); color:#e2c8ff; }
+  #btnTour:hover{ border-color:#c79bff; color:#f2e4ff; box-shadow:0 0 12px rgba(216,160,255,.3); }
+  #btnTour.on{ background:rgba(216,160,255,.13); border-color:#c79bff; color:#f2e4ff;
+    box-shadow:0 0 12px rgba(216,160,255,.35); }
+  .fdGroup{ margin:11px 0 4px; font-size:11px; color:#8fd8cc; letter-spacing:.08em;
+    display:flex; align-items:center; gap:7px; }
+  .fdGroup b{ color:#ffe9b8; font-weight:600; }
+  .fdGroup::after{ content:""; flex:1; height:1px;
+    background:linear-gradient(90deg,rgba(125,232,214,.3),transparent); }
+  #fdPoster{ margin-top:13px; padding:10px; border-radius:11px; text-align:center; font-size:12.5px;
+    color:#ffe9b0; cursor:pointer; border:1px dashed rgba(255,215,106,.42); transition:.2s; }
+  #fdPoster:hover{ background:rgba(255,215,106,.1); border-color:var(--gold); }
+  @media (max-width:768px){
+    #find{ top:auto; bottom:0; right:0; left:0; width:100%; max-height:62vh;
+      border-radius:18px 18px 0 0; transform:translateY(30px); }
+    #find.open{ transform:none; }
+    #tourBar{ bottom:96px; padding:11px 16px 13px; }
+  }
+  .stTitle{ color:var(--gold-soft); font-size:14px; letter-spacing:.22em; font-weight:600;
+    text-shadow:0 0 14px rgba(255,220,130,.5); margin-bottom:10px; }
+  .stBig{ display:flex; gap:8px; }
+  .stBig>div{ flex:1; text-align:center; padding:8px 4px; border-radius:10px;
+    background:rgba(255,215,106,.06); border:1px solid rgba(255,215,106,.16); }
+  .stBig b{ display:block; font-size:22px; color:var(--gold); font-weight:700; }
+  .stBig i{ font-style:normal; font-size:10px; color:var(--dim); letter-spacing:.12em; }
+  .stSec{ margin:13px 0 7px; color:var(--teal); font-size:11px; letter-spacing:.2em; }
+  .stSec::after{ content:""; display:block; height:1px; margin-top:5px;
+    background:linear-gradient(90deg, rgba(125,232,216,.4), transparent); }
+  .stRow{ display:flex; align-items:center; gap:8px; margin-top:5px; font-size:12px; color:#c4d2f2; }
+  .stRow .nm{ width:58px; flex-shrink:0; color:#aabadd; }
+  .stRow .bar{ flex:1; height:7px; border-radius:4px; background:rgba(140,170,255,.1); overflow:hidden; }
+  .stRow .bar i{ display:block; height:100%; border-radius:4px; width:0;
+    transition:width .8s var(--ease) .15s; }
+  .stRow .ct{ width:46px; text-align:right; color:var(--dim); font-size:11px; flex-shrink:0; }
+  #stTop .stRow{ cursor:pointer; }
+  #stTop .stRow:hover .nm{ color:var(--gold-soft); }
+  .stRow .nm svg{ vertical-align:-6px; margin-right:3px; }
+  #stTop .stRow .nm svg{ vertical-align:-5px; margin-left:4px; }
+  .fRow .fn i svg{ vertical-align:-5px; margin-right:2px; }
+  .stFoot{ margin-top:10px; padding-top:7px; border-top:1px dashed rgba(140,170,255,.16);
+    color:var(--dimmer); font-size:9px; letter-spacing:.04em; line-height:1.55; }
+  @media (max-width:768px){
+    #stats{ top:auto; bottom:0; right:0; left:0; width:100%; max-height:62vh;
+      border-radius:18px 18px 0 0; transform:translateY(30px); }
+    #stats.open{ transform:none; }
+  }
+
+  /* ---------- 移动端 ---------- */
+  @media (max-width:768px){
+    #topbar{ height:auto; flex-wrap:wrap; padding:8px 10px; gap:7px; }
+    .brand b{ font-size:15px; } .brand span{ font-size:8.5px; }
+    #search{ order:9; width:118px; margin-left:0; }
+    #search:focus{ width:150px; }
+    #chips{ order:5; width:100%; }
+    .chip{ padding:8px 12px; min-height:36px; display:inline-flex; align-items:center; }
+    #zoomctl{ bottom:78px; } #zoomctl button{ width:44px; height:44px; }
+    #legend{ bottom:78px; left:10px; padding:8px 10px; max-width:46vw; }
+    #hint{ bottom:14px; font-size:10px; padding:6px 14px; max-width:92vw; white-space:normal; text-align:center; }
+    #card{ width:100vw; max-width:100vw; right:-102vw; }
+    .cardImgWrap{ height:216px; }
+    #cardName{ font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+
+<div id="intro">
+  <h1 class="titleFallback">中北喵星图</h1>
+  <div class="titleSpace"></div>
+  <div class="sub">人民兵工第一校的喵星编制 · 每颗星都是一只真实生活的中北猫</div>
+  <div class="stats">76 只在编基米 ｜ 194 张学长学姐实拍</div>
+  <button id="introBtn">入 夜 寻 喵</button>
+  <div class="enterHint">轻触按钮 · 坠入喵星系</div>
+</div>
+
+<div id="topbar" class="ui">
+  <div class="brand"><b>中北喵星图</b><span>NUC CAT GALAXY</span></div>
+  <input id="search" placeholder="搜索喵名 / 军衔…" aria-label="搜索猫咪">
+  <div id="chips">
+    <span class="chip filter on" data-f="all" tabindex="0" role="button">全部</span>
+    <span class="chip filter" data-f="橘" tabindex="0" role="button">橘系</span>
+    <span class="chip filter" data-f="狸花" tabindex="0" role="button">狸花</span>
+    <span class="chip filter" data-f="三花" tabindex="0" role="button">三花/玳瑁</span>
+    <span class="chip filter" data-f="黑白" tabindex="0" role="button">黑白系</span>
+    <span class="chip" id="btnMeet" tabindex="0" role="button">✦ 今日偶遇</span>
+    <span class="chip" id="btnTour" tabindex="0" role="button">▶ 喵星导览</span>
+    <span class="chip" id="btnFind" tabindex="0" role="button">⌖ 实地寻猫</span>
+    <span class="chip" id="btnNet" tabindex="0" role="button">✧ 星域网络</span>
+    <span class="chip" id="btnTrails" tabindex="0" role="button">◎ 星轨</span>
+    <span class="chip" id="btnStats" tabindex="0" role="button">▤ 星图志</span>
+    <span class="chip" id="btnFortune" tabindex="0" role="button">🎋 喵签</span>
+    <span class="chip" id="btnAudio" tabindex="0" role="button">♪ 星语</span>
+    <span class="chip" id="btnEdit" tabindex="0" role="button">✎ 校准位置</span>
+  </div>
+</div>
+
+<div id="legend" class="ui">
+  <div class="t">STAR LEGEND · 星图例</div>
+  <div class="row"><i class="dot" style="color:#ffbe6a"></i>橘系</div>
+  <div class="row"><i class="dot" style="color:#e8c98a"></i>狸花</div>
+  <div class="row"><i class="dot" style="color:#ff9ec2"></i>三花/玳瑁</div>
+  <div class="row"><i class="dot" style="color:#cfe0ff"></i>黑白系</div>
+  <div class="note">星周环绕光点 = 收录照片数<br>✧ 可开启「星域网络」看搭档连线</div>
+  <div id="seenWrap">
+    <div id="seenBar"><i id="seenFill"></i></div>
+    <div id="seenCount"></div>
+  </div>
+</div>
+
+<div id="zoomctl" class="ui">
+  <button id="zin" aria-label="放大">＋</button><button id="zout" aria-label="缩小">－</button><button id="zfit" title="复位" aria-label="复位视角">⌂</button>
+</div>
+
+<div id="card">
+  <span id="cardClose" tabindex="0" role="button" aria-label="关闭档案">✕</span>
+  <div class="cardImgWrap"><img id="cardImg" alt="猫咪照片"></div>
+  <div class="cardHead anim">
+    <div id="cardName"></div>
+    <div id="cardRank"></div>
+    <div id="cardTitle"></div>
+  </div>
+  <div id="cardBody">
+    <div class="kv anim"><b>毛色</b><span id="kvCoat"></span></div>
+    <div class="kv anim"><b>特征</b><span id="kvFeat"></span></div>
+    <div class="kv anim"><b>出没</b><span id="kvArea"></span></div>
+    <div class="kv anim" id="kvRelRow" style="display:none"><b>搭档</b><span id="kvRel"></span></div>
+    <div id="cardBio" class="anim"></div>
+    <div id="cardPhotos" class="anim"></div>
+    <div id="cardShare" class="anim" tabindex="0" role="button">⤓ 生成喵星分享卡</div>
+    <div id="cardSeen" class="anim" tabindex="0" role="button">✓ 我遇见过它</div>
+  </div>
+</div>
+
+<div id="hint" class="ui gone">凌晨了 · 夜巡的猫刚换岗 ｜ 拖动漫游 · 滚轮缩放 · 点击星星看档案</div>
+<div id="stats" aria-label="星图志统计面板">
+  <span id="statsClose" tabindex="0" role="button" aria-label="关闭统计">✕</span>
+  <div class="stTitle">星图志 · CAT ALMANAC</div>
+  <div class="stBig">
+    <div><b id="stN">0</b><i>在编基米</i></div>
+    <div><b id="stP">0</b><i>档案收录</i></div>
+    <div><b id="stA">0</b><i>出没星域</i></div>
+    <div><b id="stS">0</b><i>图鉴遇见</i></div>
+  </div>
+  <div class="stSec">毛色星族分布</div>
+  <div id="stCoat"></div>
+  <div class="stSec">编制军衔构成 · 前六类</div>
+  <div id="stRank"></div>
+  <div class="stSec">档案最厚的星 · 点击直达</div>
+  <div id="stTop"></div>
+  <div class="stFoot">数据源：猫咪名册.csv · 2026-08 实地普查<br>星色 = 毛色 ｜ 环绕光点 = 收录照片数</div>
+</div>
+<div id="find" aria-label="实地寻猫目录">
+  <span id="findClose" tabindex="0" role="button" aria-label="关闭寻猫目录">✕</span>
+  <div class="fdTitle">实地寻猫 · FIELD GUIDE</div>
+  <div id="fdBody"></div>
+  <div id="fdPoster" tabindex="0" role="button">⤓ 一键导出寻猫海报</div>
+</div>
+<div id="tourBar" tabindex="0" role="button" aria-label="导览字幕，轻触前往下一站">
+  <div id="tourStep"></div>
+  <div id="tourCap"></div>
+  <div id="tourSkip">轻触字幕 · 前往下一站</div>
+</div>
+<div id="editbar">
+  <span class="chip" id="btnExport" tabindex="0" role="button">⬇ 导出校准数据</span>
+  <span class="chip" id="btnReset" tabindex="0" role="button">↺ 清除手动校准</span>
+  <span class="chip" id="btnEditDone" tabindex="0" role="button">✔ 完成校准</span>
+</div>
+<div id="fortune" aria-label="今日喵签">
+  <div class="fCard">
+    <span id="fClose" tabindex="0" role="button" aria-label="关闭喵签">✕</span>
+    <div class="fGrade" id="fGrade"></div>
+    <div class="fName" id="fName"></div>
+    <div class="fRank" id="fRank"></div>
+    <div class="fText" id="fText"></div>
+    <div class="fGo" id="fGo" tabindex="0" role="button">→ 去看它的那颗星</div>
+  </div>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+ * 中北喵星图 · 校园猫咪星系  v2（诗云级视觉打磨版）
+ * 底图: 校园地图-夜空版-web.jpg | 数据: CATS（76只真猫名册 · 2026-08普查）
+ * ============================================================ */
+
+// ---- 真实名册数据（源自 猫咪档案/猫咪名册.csv · 76只=52原有+24补充归并 · 2026-08普查）----
+const CATS = [
+  { id:"CAT-001", name:"墩墩", rank:"喵校长", title:"总揽全校猫务", coat:"全橘虎斑", coatGroup:"橘",
+    features:"体型胖粉鼻、侧躺露肚、人摸不醒、气场十足", area:"宿舍楼玻璃门前石台", bio:"全校编制的唯一掌门人。石台一躺，肚皮一翻，谁来都得先打招呼。摸可以，醒是不可能的——校长日理万机，此刻正在办公。",
+    photo:"assets/photos/微信图片_20260812143555_100_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-002", name:"格子", rank:"中士", title:"宿舍内务员", coat:"橘白", coatGroup:"橘",
+    features:"橘头橘背白胸腹、体型中等偏瘦、常钻红白格桌布下", area:"宿舍红白格桌布区域", bio:"内务检查从不迟到，本人就藏在红白格桌布底下。桌布和毛色谁抄谁，尚无定论。找它别喊名字，掀桌布最快。",
+    photo:"assets/photos/50E8904B46C698659B377B114F19A118.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-003", name:"围脖", rank:"少校", title:"窗台哨长", coat:"橘白", coatGroup:"橘",
+    features:"头顶橘斑中分、白围脖白手套、偏胖、爱趴窗台晒太阳", area:"宿舍窗台", bio:"白围脖白手套，军容严整，常年把守宿舍窗台第一线。中分的橘斑是天生的，晒太阳的姿势也是——站岗和补钙，人家全都要。",
+    photo:"assets/photos/5828C42C0CB0C2C7244529762D44D4D9.jpg", photoCount:5, brightness:.94 },
+  { id:"CAT-004", name:"环尾", rank:"中尉", title:"高台瞭望员", coat:"全橘虎斑", coatGroup:"橘",
+    features:"粗尾橘色环纹明显、体型胖、前爪尖偏白、爱趴高处", area:"室外白色高台沿", bio:"尾巴上一圈圈橘环，是自带的路障警示纹。高台一趴，全校动静尽收眼底。体格虽胖，居高临下的气势从不打折。",
+    photo:"assets/photos/微信图片_20260812143555_121_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-005", name:"松果", rank:"下士", title:"绿化带潜伏员", coat:"全橘虎斑", coatGroup:"橘",
+    features:"常在松柏树下碎石区闭眼趴卧", area:"松柏树下绿化带", bio:"松柏树下常驻兵力，闭眼趴卧不是睡觉，是潜伏。碎石堆是它选的单人哨所，一次执勤能从早课坚持到晚自习。",
+    photo:"assets/photos/微信图片_20260812143555_148_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-006", name:"天线", rank:"上尉", title:"窗台通讯员", coat:"全橘/浅橘", coatGroup:"橘",
+    features:"胸前挂一截白色线状物、辨识度极高、趴台沿探头", area:"建筑物窗台/柜台沿", bio:"胸前常年挂着一截白线，像随时待发的通信天线，全编制独一份的工装。趴在窗台探头探脑，消息比广播站还灵。",
+    photo:"assets/photos/微信图片_20260812143555_154_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-007", name:"奶油", rank:"中士", title:"挑檐巡逻兵", coat:"浅橘(奶油色)虎斑", coatGroup:"橘",
+    features:"浅橘细条纹、黄眼粉鼻、爱趴高处台沿", area:"楼道横梁/高处台沿", bio:"毛色浅得像加了三倍奶，细条纹是出厂限定。挑檐横梁是它的巡逻专线，黄眼睛粉鼻子，高处风大也吹不乱队形。",
+    photo:"assets/photos/微信图片_20260816233805_66_184.jpg", photoCount:8, brightness:1.05 },
+  { id:"CAT-008", name:"喇叭", rank:"列兵", title:"宣传干事", coat:"橘白", coatGroup:"橘",
+    features:"偏瘦青年猫、耳大、仰卧露肚爱叫", area:"白墙黑砖地面区域", bio:"全编制嗓门担当，耳朵大得像自带扩音。仰面朝天露出肚皮就开始演讲，至于内容——宣传干事说了，重在气势。",
+    photo:"assets/photos/微信图片_20260812143555_110_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-009", name:"粉鼻", rank:"列兵", title:"水泥地巡查", coat:"橘白虎斑", coatGroup:"橘",
+    features:"粉鼻白嘴、白胸腹白手套、侧躺", area:"白天水泥砖地面", bio:"鼻头是粉的，嘴角是白的，爪子还戴白手套，巡查水泥地也要体面。侧躺值班是它的独门姿势，路过的都得绕着走。",
+    photo:"assets/photos/微信图片_20260812143555_95_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-010", name:"项圈", rank:"中士", title:"人行道纠察", coat:"橘白短毛", coatGroup:"橘",
+    features:"白颈圈白腿白尾尖、爱蜷睡草地", area:"草地/盲道人行道", bio:"脖子上一圈白毛像自带项圈，省了编制配发。纠察草地和盲道，查完就势一蜷，把自己盘成行李箱等下班。",
+    photo:"assets/photos/微信图片_20260812143555_152_56.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-011", name:"螺栓", rank:"下士", title:"车库技师", coat:"橘白短毛", coatGroup:"橘",
+    features:"橘虎斑背、白手套白靴鼻周白、出现在灰色油漆地面", area:"室内/车库灰色油漆地面", bio:"深夜出没在灰色油漆地面，疑似车库编外技师。橘虎斑配白手套，干活不脏手。工具没见它用，螺栓倒是都紧过。",
+    photo:"assets/photos/微信图片_20260816232105_99_39.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-012", name:"雪顶", rank:"中尉", title:"夜间车管", coat:"长毛橘白", coatGroup:"橘",
+    features:"主体白色蓬松、头顶耳部及尾巴橘色、夜间出现在车顶", area:"车顶/路边广告牌", bio:"一头橘色像刚出炉的雪顶咖啡。夜里上岗管车顶，专挑最暖的那台趴。车主请注意：挪车前，先敲敲引擎盖。",
+    photo:"assets/photos/微信图片_20260812143555_162_56.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-013", name:"课代表", rank:"少校", title:"教学督导", coat:"长毛橘白", coatGroup:"橘",
+    features:"橘背橘头白胸、大尾巴极蓬松、体型壮、上过教室课桌", area:"石花坛边/教室课桌", bio:"唯一有教室工位记录的干部，课桌都上过，督导证件比学生证还全。尾巴蓬松得能当教鞭，听课不听课，全看它心情。",
+    photo:"assets/photos/微信图片_20260812143555_138_56.jpg", photoCount:5, brightness:.94 },
+  { id:"CAT-014", name:"拖把", rank:"中士", title:"夜间游荡", coat:"全橘长毛", coatGroup:"橘",
+    features:"长毛蓬松尾粗大、体型较大", area:"夜间砖石路面井盖旁", bio:"长毛拖地，尾巴粗得像老式拖把，工位名字就是这么实在。夜里沿砖石路巡逻，走到哪拖到哪，路面干净全靠它。",
+    photo:"assets/photos/微信图片_20260812143555_84_56.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-015", name:"大厅", rank:"列兵", title:"大厅巡逻", coat:"狸花", coatGroup:"狸花",
+    features:"体型偏小青年猫、爱趴室内白色抛光瓷砖", area:"教学楼/食堂大厅白瓷砖", bio:"教学楼大厅白瓷砖的专属巡逻员，个头不大，气场不小。瓷砖越亮，它趴得越正——巡逻岗也能趴出仪仗队的效果。",
+    photo:"assets/photos/13951BEAD8371B46AB8351276772BF48.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-016", name:"锦鲤", rank:"上士", title:"外墙粉刷班长", coat:"彩狸(狸花腹泛橘)", coatGroup:"狸花",
+    features:"腹部四肢泛橘罕见、黑尾、尾尖黑、后爪白", area:"白色矮墙/水泥路", bio:"腹部四肢泛着橘，像干活时蹭了半桶油漆，再配一条黑尾巴，配色全编制独一份。粉刷外墙是本职，蹭色属于工伤证明。",
+    photo:"assets/photos/812ECF0BC693511417B88A2F552872A8.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-017", name:"略略", rank:"中士", title:"门口接待员", coat:"狸花白", coatGroup:"狸花",
+    features:"深狸花背白围脖白手套、吐舌舔鼻、体型胖", area:"建筑物入口地垫/花岗岩", bio:"门口接待岗的老熟人，见面先吐舌舔个鼻，算打过招呼。深狸花背配白围脖白手套，胖归胖，礼数一样不缺。",
+    photo:"assets/photos/A66981CEBAA620A95058D1FC12A73A2E.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-018", name:"旗杆", rank:"下士", title:"石阶仪仗兵", coat:"狸花", coatGroup:"狸花",
+    features:"偏瘦、尾巴高竖如旗杆尾尖深黑、前爪白手套嘴白", area:"教学楼前大片石阶", bio:"尾巴竖得笔直，尾尖一抹深黑，活像升好的旗。教学楼前的石阶就是检阅台，前爪白手套一抬，谁过都得目送。",
+    photo:"assets/photos/微信图片_20260812143555_83_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-019", name:"罐头", rank:"列兵", title:"后勤炊事员", coat:"黄棕狸花", coatGroup:"狸花",
+    features:"体态圆胖、夜间出没、被拍到吃罐头", area:"夜间路边土坡/砖石路", bio:"夜间土坡蹲点，被拍到的唯一画面是埋头吃罐头——炊事员的敬业方式很直接。体态说明伙食，毛色说明岗位。",
+    photo:"assets/photos/微信图片_20260812143555_85_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-020", name:"体操", rank:"列兵", title:"体能教官", coat:"狸花加白", coatGroup:"狸花",
+    features:"白爪白口鼻、白从下巴延伸到腹、爱伸懒腰", area:"水泥地/红砖人行道", bio:"全编制柔韧担当，一个懒腰能从前爪拉到后胯，教学示范从不偷懒。白爪白口鼻，动作干净利落，体操教名不虚传。",
+    photo:"assets/photos/微信图片_20260812143555_91_56.jpg", photoCount:7, brightness:1.05 },
+  { id:"CAT-021", name:"门神", rank:"下士", title:"门厅守卫", coat:"狸花", coatGroup:"狸花",
+    features:"棕黑虎斑无白、爱团成球睡在黑色瓷砖门厅", area:"建筑物入口黑色瓷砖", bio:"守门的方式是把自己团成一颗球，堵在黑色瓷砖门厅正中央。棕黑虎斑和地砖融为一体——这是战术，不是偷懒。",
+    photo:"assets/photos/微信图片_20260812143555_99_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-022", name:"摸头", rank:"上尉", title:"亲和力教官", coat:"狸花", coatGroup:"狸花",
+    features:"绿黄大眼粉棕鼻白长胡须、任人摸头、亲人", area:"绿色铁栅栏高处台沿", bio:"编制内亲和力天花板，头递过来就是让你摸的。绿黄大眼配上长白胡须，军衔不高不低，全靠好脾气一步一步升上来。",
+    photo:"assets/photos/微信图片_20260812143555_101_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-023", name:"白梁", rank:"中士", title:"外交联络官", coat:"狸花加白", coatGroup:"狸花",
+    features:"白鼻梁竖条通鼻口、绿眼、曾与全橘猫头挨头睡觉", area:"灰地砖/室内台沿", bio:"一道白鼻梁从额头通到嘴边，像戴着通信面罩。外交水平有照片为证：和全橘猫头挨头开会，会谈气氛相当融洽。",
+    photo:"assets/photos/微信图片_20260812143555_134_56.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-024", name:"监工", rank:"上士", title:"施工监理", coat:"狸花", coatGroup:"狸花",
+    features:"粉鼻带黑斑大眼长胡须、出现在施工告示金属台面", area:"施工区域金属台面", bio:"常驻施工区金属台面，监工姿势标准：趴着盯。施工告示旁边一趴，谁干活谁偷懒，粉鼻子黑斑的脸上写得明明白白。",
+    photo:"assets/photos/微信图片_20260812143555_115_56.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-025", name:"悟空", rank:"中士", title:"二龙山侦察兵", coat:"狸花带橘调", coatGroup:"狸花",
+    features:"圆脸大眼粗尾环纹、会爬树", area:"室外树上", bio:"全编制唯一被拍到爬树的，二龙山侦察兵的岗位是凭本事挣的。圆脸大眼，粗尾环纹，树上视野好，情报来得早。",
+    photo:"assets/photos/微信图片_20260812143555_132_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-026", name:"围挡", rank:"列兵", title:"施工区巡查", coat:"狸花白", coatGroup:"狸花",
+    features:"白身为主、头顶及尾灰狸花环纹、偏瘦绿眼", area:"施工围挡/电动车广告牌", bio:"白身上顶着狸花帽，尾巴也是花的，远看像施工围挡倒了半幅。围挡广告牌一线巡查，瘦归瘦，警惕性拉满。",
+    photo:"assets/photos/微信图片_20260812143555_164_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-027", name:"栏杆", rank:"列兵", title:"护栏哨兵", coat:"狸花", coatGroup:"狸花",
+    features:"灰底黑条纹、瘦小亚成年、四肢深条纹", area:"大理石墙面不锈钢栏杆", bio:"亚成年的小个子，守着大理石墙边的不锈钢栏杆，站姿笔挺。灰底黑条纹，四肢自带深色护腿，制服是娘胎里配发的。",
+    photo:"assets/photos/微信图片_20260812143555_166_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-028", name:"懒腰", rank:"列兵", title:"门厅接待", coat:"狸花", coatGroup:"狸花",
+    features:"灰褐底黑条纹、前爪伸直趴卧伸懒腰", area:"建筑入口阴凉处", bio:"建筑入口阴凉处的接待担当，业务动作只有一个：前爪伸直，标准懒腰。来客一律先看它拉伸，看完自己都想躺下。",
+    photo:"assets/photos/微信图片_20260812143555_169_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-029", name:"大胆", rank:"上尉", title:"对犬作战处长", coat:"狸花白", coatGroup:"狸花",
+    features:"深灰褐背白口罩脸白手套白靴绿眼、与黄狗对峙不落下风", area:"柏油路面", bio:"编制里战功最硬的一位：与黄狗当街对峙，寸步不让，全程占上风。白口罩白手套配绿眼，气场两米八，犬类请绕行。",
+    photo:"assets/photos/微信图片_20260816232535_101_39.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-030", name:"花木兰", rank:"少校", title:"电动车区统领", coat:"三花", coatGroup:"三花",
+    features:"橘黑白三色、仰头直视镜头、气场足", area:"电动车停放区", bio:"全校唯一三花，替父从军的事迹待考，统领电动车区是真管。仰头直视镜头的那张照片，现在是编制的宣传照。",
+    photo:"assets/photos/微信图片_20260812143555_158_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-031", name:"枯叶", rank:"中士", title:"土路潜伏员", coat:"玳瑁", coatGroup:"三花",
+    features:"黑为主杂橘斑、尾黑、常卧土路枯草边", area:"土路枯草区", bio:"毛色是枯叶同款迷彩，往土路枯草边一卧，侦察兵来了都得走空。黑底杂橘斑，尾巴一收，潜伏从早到晚不成问题。",
+    photo:"assets/photos/微信图片_20260812143555_147_56.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-032", name:"白靴", rank:"下士", title:"灌木侦察", coat:"玳瑁", coatGroup:"三花",
+    features:"黑橘斑驳、一只白色后爪、深色蓬松尾", area:"路边枯叶灌木丛", bio:"四爪黑得均匀，唯独一只后爪是白的，像下楼时踩进了面粉。灌木丛侦察岗，那只白靴就是它的到岗打卡记录。",
+    photo:"assets/photos/微信图片_20260816232544_108_39.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-033", name:"电瓶", rank:"列兵", title:"车棚充电员", coat:"玳瑁", coatGroup:"三花",
+    features:"黑褐橘杂色、出没电动车停放处", area:"电动车停放处/广场", bio:"车棚充电岗列兵，黑褐橘三色混编毛，和车棚里的电线一个色系。电动车堆里一蹲，充电桩都不好意思跳闸。",
+    photo:"assets/photos/微信图片_20260812143555_168_56.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-034", name:"手套", rank:"中士", title:"夜间巡逻", coat:"奶牛", coatGroup:"黑白",
+    features:"黑背白腹、四爪白手套醒目、体型圆润", area:"夜间树下草地/石板台阶", bio:"四爪雪白，像夜间巡逻专用手套，黑背白腹出厂标配。夜里草地石板来回走，圆润的体型不耽误查岗，只耽误跑步。",
+    photo:"assets/photos/微信图片_20260812143555_82_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-035", name:"斑马线", rank:"下士", title:"马路协警", coat:"奶牛", coatGroup:"黑白",
+    features:"脸白底黑斑(眼周耳侧)、粉鼻、夜间柏油路白线旁", area:"夜间柏油路面", bio:"脸部白底黑斑分布均匀，站在夜路白线旁边，和斑马线互相认证。协警不指挥交通，负责监督大家别压线。",
+    photo:"assets/photos/微信图片_20260812143555_88_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-036", name:"潜伏", rank:"列兵", title:"草丛哨兵", coat:"奶牛", coatGroup:"黑白",
+    features:"黑多白少、四肢白袜、头埋草丛", area:"石墙根草丛", bio:"石墙根草丛的专业户，黑多白少，一头扎进草丛只剩个背影。哨兵当到这个份上，路过的人连它在哪都说不清。",
+    photo:"assets/photos/微信图片_20260812143555_94_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-037", name:"红毯", rank:"列兵", title:"门厅礼仪", coat:"奶牛", coatGroup:"黑白",
+    features:"黑背白腹白手套、卧红色地垫旁", area:"花岗岩地面红地垫角落", bio:"门厅红地垫旁的礼仪岗，黑背白腹白手套，趴姿端正。红毯它不走，就守在边上——礼宾司的排面，从来不靠站。",
+    photo:"assets/photos/微信图片_20260812143555_113_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-038", name:"月牙", rank:"列兵", title:"新兵", coat:"奶牛(幼猫)", coatGroup:"黑白",
+    features:"颈后白色项圈状月牙环纹、体型小", area:"花岗岩地面红地垫旁", bio:"新兵蛋子，颈后一圈白纹弯成月牙，是编制里最年轻的记号。体格还没长开，站姿已经学得有模有样，重点培养对象。",
+    photo:"assets/photos/微信图片_20260812143555_114_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-039", name:"面罩", rank:"中士", title:"蒙面教官", coat:"奶牛", coatGroup:"黑白",
+    features:"白身黑头、黑面罩配白鼻梁、鼻粉带黑点黄绿眼", area:"室外沥青路面", bio:"白身子顶个黑脑袋，面罩正中留一道白梁，蒙面教官的行头是娘胎里配发的。鼻头粉里带黑点，仰头看你，教官有话说。",
+    photo:"assets/photos/微信图片_20260812143555_119_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-040", name:"白须", rank:"上士", title:"老参谋", coat:"奶牛", coatGroup:"黑白",
+    features:"黑背白胸白下巴、鼻黑带粉、白须长显老成", area:"墙角黑地砖", bio:"下巴一把白须，参谋气质从胡须开始。鼻头黑里透粉，眼神老成，办公地点选在墙角黑地砖——参谋嘛，就得坐后排。",
+    photo:"assets/photos/微信图片_20260812143555_120_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-041", name:"披肩", rank:"上士", title:"仪仗队员", coat:"奶牛", coatGroup:"黑白",
+    features:"黑背、肩部白色弧形披肩纹", area:"墙角金属门槛", bio:"黑背上一道白色弧纹横过肩头，仪仗队的披风是长在身上的。金属门槛边一站半天不动，队形意识刻进了毛色里。",
+    photo:"assets/photos/微信图片_20260812143555_123_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-042", name:"墨尾", rank:"中尉", title:"楼内巡逻长", coat:"奶牛", coatGroup:"黑白",
+    features:"白底大块黑斑、纯黑尾巴极具辨识度", area:"花岗岩地面/建筑物门口", bio:"白底黑斑配一条纯黑尾巴，全编制照片最多的明星，档案照六张起步。楼内巡逻长负责花岗岩一线，黑尾一甩就是巡更记录。",
+    photo:"assets/photos/微信图片_20260812143555_136_56.jpg", photoCount:6, brightness:1.05 },
+  { id:"CAT-043", name:"坦荡", rank:"列兵", title:"土路晾晒员", coat:"奶牛", coatGroup:"黑白",
+    features:"白身背腰大块黑斑、仰卧露肚毫不设防", area:"土路枯草边", bio:"土路枯草边的晾晒专员，业务姿势：仰面朝天，肚皮全开，毫不设防。坦荡两个字，它是用整只猫在解释的。",
+    photo:"assets/photos/微信图片_20260812143555_143_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-044", name:"圆眼", rank:"下士", title:"草丛哨兵", coat:"奶牛", coatGroup:"黑白",
+    features:"黑面罩白嘴鼻白胸白爪、圆眼直视", area:"草丛井盖旁", bio:"黑面罩白嘴鼻，一双圆眼直勾勾盯着镜头，哨兵的警觉全写在眼睛里。草丛井盖旁站岗，谁路过都得被这双眼睛过一遍。",
+    photo:"assets/photos/微信图片_20260812143555_167_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-045", name:"黑豆", rank:"列兵", title:"新兵", coat:"奶牛(幼猫)", coatGroup:"黑白",
+    features:"黑背白胸四肢白、背上有白块、体型小", area:"草地土路交界", bio:"新兵连里最小的一颗豆，黑背白胸，背上还洒了点白芝麻。跟黑猫前辈同框出镜，站姿已见章法，未来可期。",
+    photo:"assets/photos/微信图片_20260816232539_105_39.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-046", name:"黑帽", rank:"上士", title:"车棚管理员", coat:"奶牛", coatGroup:"黑白",
+    features:"头顶一块显著黑斑如戴帽、背两大块黑斑黑尾、圆胖", area:"石材铺地自行车旁", bio:"头顶一块黑斑端端正正，像上岗必戴的大檐帽，背上的黑斑就是肩章。圆胖身材管车棚，车辆的进出它都点过头。",
+    photo:"assets/photos/微信图片_20260816232543_107_39.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-047", name:"马鞍", rank:"中士", title:"运输兵", coat:"奶牛", coatGroup:"黑白",
+    features:"背部大片黑色鞍状斑、头带黑斑白腿、体型胖", area:"路边枯叶灌木丛", bio:"背上驮着一片黑色鞍状斑，运输兵的马鞍是自带的。头带黑斑四腿雪白，体型敦实，枯叶灌木丛一带的货运全靠它。",
+    photo:"assets/photos/微信图片_20260816232545_109_39.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-048", name:"独眼", rank:"中士", title:"夜巡队长", coat:"奶牛", coatGroup:"黑白",
+    features:"左眼及耳周大片黑斑如眼罩、黄绿眼粉鼻圆胖脸", area:"夜晚路面", bio:"左眼一圈黑斑像戴了眼罩，夜巡队长的造型自带威慑。黄绿眼粉鼻圆脸盘，夜里路面上一走，路灯都得让三分。",
+    photo:"assets/photos/微信图片_20260816232548_112_39.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-049", name:"披风", rank:"上士", title:"灰地砖巡长", coat:"奶牛", coatGroup:"黑白",
+    features:"背部黑色如披风、头顶黑斑、头颈腹白", area:"灰色地砖路面", bio:"整个背部一片黑，像披了件夜行披风，头顶黑斑是帽檐。灰地砖路段的巡长，头颈腹全白，走路带风，披风先行。",
+    photo:"assets/photos/微信图片_20260812143555_135_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-050", name:"白玉", rank:"中尉", title:"仪仗队礼服", coat:"纯白", coatGroup:"黑白",
+    features:"纯白无杂毛、蓝眼睛粉鼻、体态圆润、颜值担当", area:"户外石砖路边柏树旁", bio:"全校独一份的纯白蓝眼，仪仗队礼服白得发光。体态圆润，往柏树边一站就是风景——颜值即战力，编制的门面担当。",
+    photo:"assets/photos/5F9B576FCD0F435CEB1DC58553937C7C.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-051", name:"暹罗", rank:"上校", title:"外籍技术顾问", coat:"长毛重点色", coatGroup:"其他",
+    features:"灰重点色长毛(布偶/暹罗串)、耳尖面部灰色、尾蓬松、稀有品种", area:"花岗岩地面(疑似楼内)", bio:"编制里唯一的重点色长毛，灰面灰耳灰尾巴，上校军衔走的外籍专家路线。全校师生围观过的稀罕物，顾问费按小鱼干结算。",
+    photo:"assets/photos/微信图片_20260812143555_124_56.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-052", name:"奶糖", rank:"列兵", title:"新兵蛋子", coat:"浅橘(奶油色)幼猫", coatGroup:"橘",
+    features:"全身浅橘细虎斑、粉鼻绿眼、仰躺露肚", area:"室内墙角黑白瓷砖", bio:"编制末位的新兵蛋子，浅橘虎斑像化开的奶糖。仰面躺在墙角瓷砖上露着肚皮——新兵训练第一课：先睡出气势。",
+    photo:"assets/photos/微信图片_20260812143555_112_56.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-053", name:"仰面", rank:"列兵", title:"新兵连学员", coat:"狸花白(幼猫)", coatGroup:"狸花",
+    features:"头部虎斑面具+白身白肢、仰躺前肢伸展直视镜头", area:"居民楼红砖地", bio:"红砖地是新兵连的床，仰面一躺前爪一伸，眼神却直勾勾盯着你——睡姿满分，警惕性也满分，前途无量。",
+    photo:"assets/photos/微信图片_20260816233805_7_184.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-054", name:"墨点", rank:"列兵", title:"新兵连学员", coat:"奶牛(幼猫)", coatGroup:"黑白",
+    features:"白底头部黑面具+鼻部黑点、仰卧直视", area:"居民楼红砖地", bio:"白脸上扣了半张黑面具，鼻尖再点一粒墨，伪装就这点预算。和仰面疑似同窝，一个躺一个卧，兄弟分工明确。",
+    photo:"assets/photos/微信图片_20260816233805_9_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-055", name:"自来熟", rank:"中士", title:"民心工作员", coat:"狸花白", coatGroup:"狸花",
+    features:"白脸白胸白爪+深灰虎斑面具、黑鼻斑、仰卧露腹亲人", area:"老旧水泥地砖房区", bio:"老楼区的民心工作全靠肚皮完成：仰面朝天，谁来都能摸两把。黑鼻斑是它的工牌，照片拍倒了都不耽误认人。",
+    photo:"assets/photos/微信图片_20260816233805_11_184.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-056", name:"鸳鸯", rank:"中士", title:"被服厂配色师", coat:"三花虎斑", coatGroup:"三花",
+    features:"左脸米黄右脸深灰黑、白鼻梁白胸、侧卧直视", area:"红褐瓷砖地面", bio:"左脸米黄右脸黑，天生自带渐变配色方案，被服厂校色全靠它，一猫两面样品都省了。侧卧直视镜头，气场严格对称。",
+    photo:"assets/photos/微信图片_20260816233805_14_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-057", name:"探地", rank:"列兵", title:"地形勘察员", coat:"三花(幼猫)", coatGroup:"三花",
+    features:"头部棕褐深灰+白脸白爪、站立低头嗅地", area:"老旧楼道口", bio:"楼道口新兵，头埋得比谁都低——不是害羞，是勘察地形。鼻子就是测量仪，走过的每寸路面都要归档备案。",
+    photo:"assets/photos/微信图片_20260816233805_18_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-058", name:"摔跤", rank:"下士", title:"体能训练员", coat:"狸花", coatGroup:"狸花",
+    features:"灰黑条纹+白腹白围脖白手套、打闹担当", area:"水泥地排水格栅区", bio:"排水格栅就是擂台，白围脖一系像戴了护颈。和陪练日日过招，翻滚扑咬样样在行，训练员的编制是实打实战出来的。",
+    photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-059", name:"陪练", rank:"列兵", title:"体能训练员", coat:"白底黑斑", coatGroup:"黑白",
+    features:"背单块圆黑斑+黑白尾、仰卧四脚朝天", area:"水泥地排水格栅区", bio:"背上一块圆斑像披了护具，专职陪摔跤练招。仰面四脚朝天是常态——被摔的永远是它，第二天照样准时出勤。",
+    photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-060", name:"玄铁", rank:"上士", title:"装备保密员", coat:"纯黑", coatGroup:"其他",
+    features:"通黑无杂色、中长毛圆润肥硕", area:"石台灌木小径", bio:"全校唯一纯黑编制，黑得夜景照都难拍清。上士军衔管装备保密——通体自带隐身涂层，不保密实在说不过去。",
+    photo:"assets/photos/微信图片_20260816233805_44_184.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-061", name:"脸谱", rank:"中士", title:"文工团台柱子", coat:"黑白奶牛", coatGroup:"黑白",
+    features:"黑面具+白口罩、黑背白胸腹白肢、蹲坐仰头直视", area:"浅灰花岗岩石台", bio:"黑面具白口罩，一抬头就是文工团台柱子的扮相。石台是它的舞台，蹲坐亮相有板有眼，场场都是满座。",
+    photo:"assets/photos/微信图片_20260816233805_48_184.jpg", photoCount:3, brightness:.72 },
+  { id:"CAT-062", name:"跟班", rank:"列兵", title:"石台警卫员", coat:"棕狸花", coatGroup:"狸花",
+    features:"浅黄褐底深棕条纹+M纹、石台群幼年渐长", area:"浅灰花岗岩石台", bio:"石台警卫班里资历最浅，从幼猫一路跟到大。棕条纹朴素低调，前辈蹲哪它蹲哪，从不抢镜——档案照倒是一张没缺。",
+    photo:"assets/photos/微信图片_20260816233805_43_184.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-063", name:"小黑帽", rank:"列兵", title:"给养接收员", coat:"白底黑斑(幼猫)", coatGroup:"黑白",
+    features:"头顶黑帽+尾根黑鞍+全黑尾、竖尾站立", area:"红砖地投喂点", bio:"头顶黑帽歪着戴，尾巴黑得像配了根指挥棒。投喂点出勤率第一，给养一到，竖着尾巴头一个到场清点数量。",
+    photo:"assets/photos/微信图片_20260816233805_41_184.jpg", photoCount:4, brightness:.83 },
+  { id:"CAT-064", name:"小虎", rank:"列兵", title:"新兵连学员", coat:"棕褐虎斑(幼猫)", coatGroup:"狸花",
+    features:"背部条纹清晰、前爪搭同伴肩嗅闻", area:"绿门水泥地投喂点", bio:"名字带虎，其实是全编制最小的兵之一。前爪搭在同伴肩上探头探脑，新兵连的社交担当，走哪儿都得勾肩搭背。",
+    photo:"assets/photos/微信图片_20260816233805_33_184.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-065", name:"高架", rank:"下士", title:"高空作业员", coat:"狸白长毛(幼猫)", coatGroup:"狸花",
+    features:"深灰黑虎斑头+白身+黑蓬松长尾、攀爬金属框架探头", area:"金属护栏扶手", bio:"金属框架说爬就爬，长毛幼猫身手一点不含糊。黑蓬松大尾巴在高处一甩，高空作业员到场——安全帽没戴，毛够厚。",
+    photo:"assets/photos/微信图片_20260816233805_38_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-066", name:"干饭", rank:"列兵", title:"炊事班学徒", coat:"灰白虎斑加白", coatGroup:"狸花",
+    features:"灰黑面具八字脸+白口鼻白爪、进食抬头直视", area:"红褐水泥地投喂点", bio:"全编制饭点最准的兵，猫粮袋一响就已就位。八字面具脸抬头直视镜头：干饭不影响警惕，警惕不影响干饭。",
+    photo:"assets/photos/微信图片_20260816233805_40_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-067", name:"挡风", rank:"中士", title:"车辆保养员", coat:"橘白", coatGroup:"橘",
+    features:"橘背橘头淡虎斑+白胸腹白肢、偏胖、站车座伸爪探挡风被", area:"电动车停放区", bio:"体型偏胖身手却矫健，专攻电动车挡风被。伸爪一探，被子里外摸得门儿清——冬季被装，先到先得，过期不候。",
+    photo:"assets/photos/微信图片_20260816233805_50_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-068", name:"坐垫", rank:"列兵", title:"车库值班员", coat:"橘白", coatGroup:"橘",
+    features:"橘头橘背+白脸白颈白胸腹、偏瘦青年、车座熟睡", area:"电动车停放区", bio:"把电动车座当值班床，一睡一下午。偏瘦的身板往皮座上一铺，比原装坐垫还服帖——睡岗也算岗，这在条令里有。",
+    photo:"assets/photos/微信图片_20260816233805_51_184.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-069", name:"立正", rank:"列兵", title:"仪仗队苗子", coat:"狸花白(幼猫)", coatGroup:"狸花",
+    features:"棕灰虎斑背头尾+白胸腹白爪白围脖、站立翘尾直视", area:"水泥路缘石", bio:"站姿是全编制的教科书：四爪扎根、尾巴竖直、目视前方。白围脖白手套一样不少，仪仗队的好苗子，就差发顶帽子。",
+    photo:"assets/photos/微信图片_20260816233805_55_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-070", name:"查鞋", rank:"列兵", title:"内务检查员", coat:"狸花(幼猫)", coatGroup:"狸花",
+    features:"深浅灰褐条纹背深腹浅、低头嗅白运动鞋", area:"沥青路面", bio:"内务检查有独门绝活——用鼻子。路过同学的运动鞋逐双嗅过，红字的白底的统统登记在案，不合格的记大过。",
+    photo:"assets/photos/微信图片_20260816233805_57_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-073", name:"大字", rank:"列兵", title:"午休标兵", coat:"狸花", coatGroup:"狸花",
+    features:"棕褐底深条纹+浅米腹白口鼻白围脖、仰卧四脚朝天", area:"水泥台阶路缘", bio:"水泥地上一躺，四肢朝天摆成个「大」字，深纹背浅米腹，午休标兵的睡姿比正步还标准。叫它不应——午休时间，天塌不管。",
+    photo:"assets/photos/微信图片_20260816233805_61_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-074", name:"晨雾", rank:"中士", title:"气象观测员", coat:"灰白长毛", coatGroup:"其他",
+    features:"银灰与白相间无明显深纹、体型偏大、草地侧卧打盹", area:"草地落叶", bio:"银灰长毛像蒙了层薄雾，往草地一卧就和晨色融成一片。气象观测员的基本素养：起雾时它在，雾散了它还在。",
+    photo:"assets/photos/微信图片_20260816235021_78_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-075", name:"初雪", rank:"列兵", title:"新兵连学员", coat:"纯白(幼猫)", coatGroup:"黑白",
+    features:"纯白短毛、蹲姿看镜头", area:"铁栅栏边", bio:"纯白小猫蹲在栅栏边，像入冬第一场雪落错了地方。眼睛盯着镜头毫不怯场——新兵连最白净的兵，白得名副其实。",
+    photo:"assets/photos/微信图片_20260816235021_101_184.jpg", photoCount:1, brightness:.5 },
+  { id:"CAT-078", name:"方砖", rank:"下士", title:"瓷砖区巡查员", coat:"橘白长毛", coatGroup:"橘",
+    features:"橘白分布均匀、蓬松长毛、灰瓷砖区常驻", area:"灰瓷砖地面", bio:"灰瓷砖区的常驻巡查员，橘白长毛贴地走，路过之处自带打光。五张档案照全在同一条砖路上——巡查路线，从不带改的。",
+    photo:"assets/photos/微信图片_20260816235021_96_184.jpg", photoCount:5, brightness:.94 },
+  { id:"CAT-079", name:"远望", rank:"下士", title:"哨所观察员", coat:"奶牛(长毛)", coatGroup:"黑白",
+    features:"黑白斑明显、端坐目光望远方", area:"植被地面", bio:"端坐在植被前，目光望向远方，哨所观察员的标准证件照。黑斑白毛分得清清楚楚——看得远，是因为坐得住。",
+    photo:"assets/photos/微信图片_20260816235021_83_184.jpg", photoCount:2, brightness:.61 },
+  { id:"CAT-080", name:"两仪", rank:"中士", title:"地图绘制员", coat:"三花(长毛)", coatGroup:"三花",
+    features:"左半脸黑右半脸橘、白胸腹白肢、黄眼", area:"粉色砖地绿门框", bio:"左脸黑右脸橘，一猫分两仪，地图绘制员的职业操守就是黑白分明。全校花色稀有榜再添一员，判读从不出错。",
+    photo:"assets/photos/微信图片_20260816235021_103_184.jpg", photoCount:1, brightness:.5 }
+];
+
+const MAP_SRC = "校园地图-夜空版-web.jpg";
+const LS_KEY  = "nuc-cat-galaxy-positions";
+
+/* ---------- 画布基础 ---------- */
+const canvas = document.getElementById("sky"), ctx = canvas.getContext("2d");
+let W=innerWidth, H=innerHeight;
+const DPR = Math.min(devicePixelRatio||1, 2);
+const cam = { x:0, y:0, z:1 };
+const mapImg = new Image(); let mapReady=false, MW=1920, MH=1239;
+mapImg.onload = ()=>{ mapReady=true; MW=mapImg.width; MH=mapImg.height; if(phase==="live") fitMap(); };
+mapImg.src = MAP_SRC;
+/* roundRect 兜底（Safari<16 / Chrome<99 星图黑屏修复） */
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    r=Math.min(r||0,w/2,h/2);
+    this.moveTo(x+r,y); this.arcTo(x+w,y,x+w,y+h,r); this.arcTo(x+w,y+h,x,y+h,r);
+    this.arcTo(x,y+h,x,y,r); this.arcTo(x,y,x+w,y,r); this.closePath(); return this; };
+}
+function resize(){
+  W=innerWidth; H=innerHeight;
+  canvas.width=W*DPR; canvas.height=H*DPR;
+  canvas.style.width=W+"px"; canvas.style.height=H+"px";
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  trailCv.width=W*DPR; trailCv.height=H*DPR;
+  tctx.setTransform(DPR,0,0,DPR,0,0);
+  galCv.width=W; galCv.height=H;
+}
+const trailCv=document.createElement("canvas"), tctx=trailCv.getContext("2d");
+const galCv=document.createElement("canvas"), gctx=galCv.getContext("2d");   // 星系独立层：星轨长曝光只累积这一层
+addEventListener("resize", ()=>{           // 手机地址栏收起等小幅变化不打断视角
+  const dw=Math.abs(W-innerWidth), dh=Math.abs(H-innerHeight);
+  resize(); if(mapReady&&phase==="live"&&(dw>90||dh>90)) fitMap();
+});
+resize();
+
+function fitMap(){ cam.z=Math.max(W/MW,H/MH); cam.x=(W-MW*cam.z)/2; cam.y=(H-MH*cam.z)/2; }
+function clampCam(){
+  cam.z=Math.min(9,Math.max(0.3,cam.z));
+  const mw=MW*cam.z, mh=MH*cam.z, m=120;  // 边界余量
+  if(mw<=W) cam.x=(W-mw)/2; else cam.x=Math.min(m,Math.max(W-mw-m,cam.x));
+  if(mh<=H) cam.y=(H-mh)/2; else cam.y=Math.min(m,Math.max(H-mh-m,cam.y));
+}
+const toScreen=(nx,ny)=>({ x:cam.x+nx*MW*cam.z, y:cam.y+ny*MH*cam.z });
+const toNorm=(sx,sy)=>({ x:(sx-cam.x)/(MW*cam.z), y:(sy-cam.y)/(MH*cam.z) });
+
+/* ---------- 位置（种子随机 + 人工校准覆盖） ---------- */
+function hashStr(s){ let h=2166136261; for(const c of s){ h^=c.codePointAt(0); h=Math.imul(h,16777619);} return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function basePos(cat){ const r=mulberry32(hashStr(cat.id));
+  return { x:.07+r()*.86, y:.09+r()*.82 }; }
+/* 固化校准坐标（2026-08-17 v6 · 全员限定红框核心建成区 x.332-.848/y.164-.827 · 语义聚簇落位 · 手动校准 localStorage 仍优先覆盖） */
+const CALIB={
+  /* 居民楼宿舍区 */
+  "CAT-001":{x:.626,y:.509},"CAT-003":{x:.569,y:.596},"CAT-053":{x:.615,y:.592},"CAT-054":{x:.642,y:.573},
+  /* 排水格栅区 */
+  "CAT-014":{x:.359,y:.419},"CAT-058":{x:.387,y:.432},"CAT-059":{x:.333,y:.405},
+  /* 石台灌木猫群 */
+  "CAT-009":{x:.480,y:.531},"CAT-060":{x:.438,y:.562},"CAT-061":{x:.462,y:.586},"CAT-062":{x:.418,y:.594},
+  /* 电动车停放区 */
+  "CAT-011":{x:.712,y:.448},"CAT-026":{x:.650,y:.437},"CAT-067":{x:.678,y:.478},"CAT-068":{x:.704,y:.497},
+  /* 道路沿线 */
+  "CAT-029":{x:.533,y:.430},"CAT-035":{x:.590,y:.349},"CAT-039":{x:.517,y:.290},"CAT-048":{x:.573,y:.426},
+  "CAT-069":{x:.505,y:.375},"CAT-070":{x:.478,y:.352},"CAT-073":{x:.478,y:.398},
+  /* 教学楼食堂区 */
+  "CAT-015":{x:.345,y:.468},"CAT-021":{x:.433,y:.395},"CAT-028":{x:.390,y:.390},"CAT-037":{x:.471,y:.463},
+  "CAT-040":{x:.499,y:.438},"CAT-041":{x:.467,y:.498},"CAT-051":{x:.461,y:.430},"CAT-052":{x:.356,y:.384},
+  "CAT-078":{x:.415,y:.440},
+  /* 金属护栏 */
+  "CAT-027":{x:.644,y:.374},"CAT-065":{x:.635,y:.325},
+  /* 铁栅栏施工区 */
+  "CAT-016":{x:.800,y:.498},"CAT-022":{x:.793,y:.453},"CAT-024":{x:.844,y:.496},"CAT-075":{x:.835,y:.445},
+  /* 草地植被区 */
+  "CAT-010":{x:.381,y:.564},"CAT-019":{x:.412,y:.506},"CAT-031":{x:.372,y:.612},"CAT-032":{x:.384,y:.469},
+  "CAT-034":{x:.410,y:.541},"CAT-036":{x:.378,y:.504},"CAT-043":{x:.439,y:.534},"CAT-050":{x:.411,y:.477},
+  "CAT-074":{x:.339,y:.620},"CAT-079":{x:.352,y:.528},
+  /* 老旧房区 */
+  "CAT-055":{x:.378,y:.676},"CAT-056":{x:.352,y:.700},"CAT-057":{x:.395,y:.716},
+  /* 投喂点 */
+  "CAT-063":{x:.578,y:.538},"CAT-064":{x:.554,y:.556},"CAT-066":{x:.596,y:.560},
+  /* 绿门粉砖地 */
+  "CAT-080":{x:.482,y:.626}
+};
+const loadOv=()=>OV;
+let OV={}; try{ OV=JSON.parse(localStorage.getItem(LS_KEY)||"{}")||{}; }catch(e){ OV={}; }
+const flushOv=()=>{ try{ localStorage.setItem(LS_KEY,JSON.stringify(OV)); }catch(e){} };   // 隐私模式容错
+const POS=new Map();
+const catPos=c=>{ let p=POS.get(c.id);
+  if(!p){ p=OV[c.id]||CALIB[c.id]||basePos(c); POS.set(c.id,p); } return p; };
+const setPos=(c,n)=>{ OV[c.id]={x:n.x,y:n.y,manual:true}; POS.set(c.id,OV[c.id]); };
+
+/* ---------- 氛围层：星云 + 星尘 ---------- */
+// 预渲染星云（离屏）
+const neb=document.createElement("canvas"); neb.width=1024; neb.height=660;
+(function paintNebula(){
+  const n=neb.getContext("2d");
+  const blobs=[ [300,260,340,"255,190,90",.16],[720,180,300,"90,220,200",.11],
+    [520,480,360,"140,110,255",.12],[850,500,260,"255,110,170",.10],
+    [150,540,240,"255,215,130",.10],[620,330,220,"120,170,255",.09] ];
+  for(const [x,y,r,c,a] of blobs){
+    const g=n.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,`rgba(${c},${a})`); g.addColorStop(1,"rgba(0,0,0,0)");
+    n.fillStyle=g; n.beginPath(); n.arc(x,y,r,0,7); n.fill();
+  }
+})();
+// 星尘：地图空间 480 颗 + 屏幕空间 110 颗（视差）
+const dustMap=[], dustScr=[];
+for(let i=0;i<480;i++) dustMap.push({ x:Math.random(), y:Math.random(), r:.3+Math.random()*1.1,
+  ph:Math.random()*6.28, sp:.5+Math.random()*1.4, warm:Math.random()<.18 });
+for(let i=0;i<110;i++) dustScr.push({ x:Math.random(), y:Math.random(), r:.3+Math.random()*.9,
+  ph:Math.random()*6.28, sp:.4+Math.random()*1.1 });
+
+/* ==================== FX 引擎（诗云级视觉） ==================== */
+const TAU=Math.PI*2;
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const easeIO=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+const easeOutBack=k=>1+2.70158*Math.pow(k-1,3)+1.70158*Math.pow(k-1,2);
+
+/* --- 发光贴图缓存（替代每帧新建 300+ 渐变对象） --- */
+const spriteCache=new Map();
+function glowSprite(color,inner="#fff"){
+  const key=color+inner, hit=spriteCache.get(key); if(hit) return hit;
+  const s=document.createElement("canvas"); s.width=s.height=128;
+  const g=s.getContext("2d"), gr=g.createRadialGradient(64,64,0,64,64,64);
+  gr.addColorStop(0,inner); gr.addColorStop(.3,color); gr.addColorStop(1,"rgba(0,0,0,0)");
+  g.fillStyle=gr; g.fillRect(0,0,128,128);
+  spriteCache.set(key,s); return s;
+}
+function raySprite(color){
+  const key="ray"+color, hit=spriteCache.get(key); if(hit) return hit;
+  const s=document.createElement("canvas"); s.width=128; s.height=4;
+  const g=s.getContext("2d"), gr=g.createLinearGradient(0,2,128,2);
+  gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(.5,color); gr.addColorStop(1,"rgba(0,0,0,0)");
+  g.fillStyle=gr; g.fillRect(0,0,128,4);
+  spriteCache.set(key,s); return s;
+}
+function drawGlow(x,y,r,color,inner){ ctx.drawImage(glowSprite(color,inner),x-r,y-r,r*2,r*2); }
+
+/* --- 螺旋星系（屏幕空间 · 三旋臂 · 差速旋转 · 金核/青臂/紫晕） --- */
+const GAL_N=(W<760?950:2100);
+const galBuckets=[[],[],[]];               // 0 金核 1 青绿 2 紫红
+{
+  const arms=3;
+  for(let i=0;i<GAL_N;i++){
+    const t=Math.pow(Math.random(),.6);
+    const arm=(i%arms)*(TAU/arms);
+    const p={ r:t*(Math.hypot(W,H)*.52), th:arm+t*3.9+(Math.random()-.5)*((1-t)*.9+.14)*2,
+      w:(.045+Math.random()*.09)*(t<.25?1.6:1),      // 内圈转得快（差速）
+      sz:.6+Math.random()*1.6, ph:Math.random()*TAU, tw:.4+Math.random()*1.3 };
+    galBuckets[t<.15?0:t<.55?1:2].push(p);
+  }
+}
+const GAL_C=["255,216,150","70,220,198","188,124,255"];
+function drawGalaxy(g,t,alpha,px,py,szMul){
+  const cx=W/2+px, cy=H*.47+py;
+  g.globalCompositeOperation="lighter";
+  for(let b=0;b<3;b++){
+    g.fillStyle="rgb("+GAL_C[b]+")";
+    for(const p of galBuckets[b]){
+      const a=p.th+p.w*t;
+      const x=cx+Math.cos(a)*p.r, y=cy+Math.sin(a)*p.r*.45;   // 倾斜投影
+      if(x<-20||x>W+20||y<-20||y>H+20) continue;
+      g.globalAlpha=alpha*(.5+.5*Math.sin(t*p.tw+p.ph));
+      g.fillRect(x,y,p.sz*szMul,p.sz*szMul);
+    }
+  }
+  g.globalAlpha=1; g.globalCompositeOperation="source-over";
+}
+
+/* --- 流星雨（对角拖尾 + 尾迹碎星） --- */
+const meteors=[]; let meteorTimer=2.4;
+function spawnMeteor(){
+  const ang=(26+Math.random()*24)/180*Math.PI;
+  const v=740+Math.random()*560;
+  meteors.push({ x:Math.random()*W*.96-40, y:-30-Math.random()*90,
+    vx:Math.cos(ang)*v, vy:Math.sin(ang)*v, life:0, max:.85+Math.random()*.6,
+    teal:Math.random()<.32, sparks:[] });
+}
+function drawMeteors(dt){
+  ctx.globalCompositeOperation="lighter"; ctx.lineCap="round";
+  for(let i=meteors.length-1;i>=0;i--){ const m=meteors[i];
+    m.life+=dt; m.x+=m.vx*dt; m.y+=m.vy*dt;
+    const k=m.life/m.max;
+    if(k>=1||m.x>W+80||m.y>H+80){ meteors.splice(i,1); continue; }
+    const fade=Math.sin(Math.PI*Math.min(1,k));
+    const tx=m.x-m.vx*.15, ty=m.y-m.vy*.15;
+    const col=m.teal?"126,235,214":"255,224,150";
+    const g=ctx.createLinearGradient(m.x,m.y,tx,ty);
+    g.addColorStop(0,"rgba("+col+","+(.9*fade)+")"); g.addColorStop(1,"rgba("+col+",0)");
+    ctx.strokeStyle=g; ctx.lineWidth=1.7;
+    ctx.beginPath(); ctx.moveTo(m.x,m.y); ctx.lineTo(tx,ty); ctx.stroke();
+    ctx.globalAlpha=fade;
+    drawGlow(m.x,m.y,8,m.teal?"#7de8d6":"#ffe6a0","#ffffff");
+    if(Math.random()<.55) m.sparks.push({x:m.x,y:m.y,vx:(Math.random()-.5)*30,vy:16+Math.random()*34,life:0});
+    for(let j=m.sparks.length-1;j>=0;j--){ const s=m.sparks[j]; s.life+=dt;
+      if(s.life>.7){ m.sparks.splice(j,1); continue; }
+      s.x+=s.vx*dt; s.y+=s.vy*dt;
+      ctx.globalAlpha=(1-s.life/.7)*.75*fade;
+      ctx.fillStyle="rgb("+col+")"; ctx.fillRect(s.x,s.y,1.5,1.5);
+    }
+    ctx.globalAlpha=1;
+  }
+  ctx.globalCompositeOperation="source-over";
+}
+
+/* --- 毛色星云：猫聚簇处的星云颜色 = 该簇主流毛色（懒构建） --- */
+const COAT_NEB={ "橘":"rgba(255,178,96,.5)", "狸花":"rgba(214,181,120,.5)",
+  "三花":"rgba(255,148,190,.5)", "黑白":"rgba(186,209,255,.5)" };
+let clNeb=null;
+function buildClNeb(){
+  const blobs=[];
+  for(const c of CATS){
+    const p=catPos(c);
+    let b=blobs.find(b=>Math.hypot(b.x-p.x,b.y-p.y)<.075);
+    if(!b){ b={x:p.x,y:p.y,n:0,votes:{},ph:Math.random()*TAU}; blobs.push(b); }
+    b.n++; b.votes[c.coatGroup]=(b.votes[c.coatGroup]||0)+1;
+  }
+  clNeb=blobs.filter(b=>b.n>=2).sort((a,b)=>b.n-a.n).slice(0,14)
+    .map(b=>{ const g=Object.entries(b.votes).sort((x,y)=>y[1]-x[1])[0][0];
+      return { x:b.x, y:b.y, r:.045+Math.min(.05,b.n*.006),
+        col:COAT_NEB[g]||"rgba(201,166,255,.5)", ph:b.ph }; });
+}
+function drawClNeb(){
+  if(!clNeb) buildClNeb();
+  ctx.globalCompositeOperation="lighter";
+  for(const b of clNeb){
+    const s=toScreen(b.x,b.y);
+    if(s.x<-300||s.x>W+300||s.y<-300||s.y>H+300) continue;
+    const rad=Math.min(460,Math.max(70,b.r*MW*cam.z));
+    ctx.globalAlpha=.05+.032*Math.sin(animT*.24+b.ph);
+    drawGlow(s.x,s.y,rad,b.col);
+  }
+  ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
+}
+
+/* --- 实况天色：按真实时刻给夜空叠加极淡的晨昏色调 --- */
+function skyTint(){
+  const h=new Date().getHours();
+  if(h>=5&&h<8)   return ["rgba(255,150,110,.05)","rgba(120,90,160,.085)"];
+  if(h>=8&&h<16)  return ["rgba(140,170,255,.045)","rgba(90,120,200,.06)"];
+  if(h>=16&&h<19) return ["rgba(255,170,120,.05)","rgba(255,120,150,.06)"];
+  if(h>=22||h<5)  return ["rgba(40,60,140,.05)","rgba(10,15,40,.09)"];
+  return null;
+}
+
+/* --- 访客彗星：周期性掠过并短暂照亮一颗猫星 --- */
+const visitor={t:-1,dur:8,p0:null,p1:null,p2:null,p3:null,cat:null,said:false,lx:0,ly:0};
+let visitorTimer=14;
+const q2=(a,b,c,t)=>(1-t)*(1-t)*a+2*(1-t)*t*b+t*t*c;
+function spawnVisitor(){
+  const vis=CATS.filter(catVisible); if(!vis.length){ visitorTimer=8; return; }
+  const c=vis[Math.floor(Math.random()*vis.length)];
+  const s=toScreen(catPos(c).x,catPos(c).y);
+  const m=140, edge=Math.floor(Math.random()*4);
+  const p0=edge===0?{x:Math.random()*W,y:-m}:edge===1?{x:W+m,y:Math.random()*H}
+    :edge===2?{x:Math.random()*W,y:H+m}:{x:-m,y:Math.random()*H};
+  const p3=edge===0?{x:Math.random()*W,y:H+m}:edge===1?{x:-m,y:Math.random()*H}
+    :edge===2?{x:Math.random()*W,y:-m}:{x:W+m,y:Math.random()*H};
+  const mid={x:(p0.x+p3.x)/2,y:(p0.y+p3.y)/2};
+  const dx=s.x-mid.x, dy=s.y-mid.y;
+  visitor.p0=p0; visitor.p1={x:mid.x+dx*.62,y:mid.y+dy*.62}; visitor.p2={x:s.x,y:s.y}; visitor.p3=p3;
+  visitor.cat=c; visitor.t=0; visitor.dur=7+Math.random()*3.5; visitor.said=false;
+  visitor.lx=p0.x; visitor.ly=p0.y;
+}
+function drawVisitor(dt){
+  if(phase!=="live"){ visitor.t=-1; return; }
+  if(visitor.t<0){ visitorTimer-=dt; if(visitorTimer<=0) spawnVisitor(); return; }
+  visitor.t+=dt; const T=visitor.t/visitor.dur;
+  if(T>=1){ visitor.t=-1; visitorTimer=20+Math.random()*18; return; }
+  let x,y;
+  if(T<.5){ const k=easeIO(T/.5); x=q2(visitor.p0.x,visitor.p1.x,visitor.p2.x,k); y=q2(visitor.p0.y,visitor.p1.y,visitor.p2.y,k); }
+  else{ const k=easeIO((T-.5)/.5), c1={x:visitor.p2.x+(visitor.p2.x-visitor.p1.x)*.4,y:visitor.p2.y+(visitor.p2.y-visitor.p1.y)*.4};
+    x=q2(visitor.p2.x,c1.x,visitor.p3.x,k); y=q2(visitor.p2.y,c1.y,visitor.p3.y,k); }
+  const vx=x-visitor.lx, vy=y-visitor.ly, v=Math.hypot(vx,vy)||1;
+  const near=Math.exp(-Math.pow((T-.5)*5.5,2));            // 掠过星时的亮度峰值
+  if(near>.55&&!visitor.said&&visitor.cat){ visitor.said=true;
+    toast("☄ 彗星到访 ·「"+visitor.cat.name+"」的星域被照亮了"); }
+  ctx.save(); ctx.translate(x,y); ctx.rotate(Math.atan2(vy,vx)+Math.PI);   // 尾巴背向行进方向
+  const L=90+near*70;
+  const g=ctx.createLinearGradient(0,0,L,0);
+  g.addColorStop(0,"rgba(190,242,255,"+(.75+near*.2)+")"); g.addColorStop(1,"rgba(140,180,255,0)");
+  ctx.strokeStyle=g; ctx.lineWidth=2.4; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(L,0); ctx.stroke();
+  for(let i=10;i>=1;i--){ const t=i/10;
+    ctx.globalAlpha=(1-t)*.4; ctx.fillStyle=i%2?"#bfeaff":"#9fc3ff";
+    ctx.beginPath(); ctx.arc(t*L,Math.sin(t*9+animT*6)*3,Math.max(.5,3*(1-t*.75)),0,7); ctx.fill(); }
+  ctx.globalAlpha=1;
+  const hg=ctx.createRadialGradient(0,0,0,0,0,12+near*8);
+  hg.addColorStop(0,"rgba(240,252,255,.95)"); hg.addColorStop(.45,"rgba(160,220,255,.5)"); hg.addColorStop(1,"rgba(120,180,255,0)");
+  ctx.fillStyle=hg; ctx.beginPath(); ctx.arc(0,0,12+near*8,0,7); ctx.fill();
+  ctx.restore();
+  if(near>0){ ctx.globalCompositeOperation="lighter";
+    ctx.globalAlpha=near*.5; drawGlow(visitor.p2.x,visitor.p2.y,44+near*40,"rgba(170,225,255,.6)");
+    ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over"; }
+  visitor.lx=x; visitor.ly=y;
+}
+
+/* --- 首页极光幕帘：三色垂帘（底边最亮·竖纹闪烁）+ 径向暗角纵深 --- */
+function drawAurora(t){
+  ctx.globalCompositeOperation="lighter";
+  const bands=[ {y:.17,amp:34,h:230,base:"125,232,214",sp:.21,k:1.2},
+    {y:.215,amp:30,h:270,base:"216,148,255",sp:.15,k:1.58},
+    {y:.115,amp:26,h:160,base:"255,200,120",sp:.26,k:.8} ];
+  for(let bi=0;bi<bands.length;bi++){ const b=bands[bi], y0=H*b.y;
+    for(let x=-20;x<W+20;x+=10){
+      const wv=Math.sin(x*.004+t*b.sp+bi*2.1)*b.amp+Math.sin(x*.013-t*b.sp*.7)*b.amp*.4;
+      const curtain=.72+.28*Math.sin(x*.008+t*.35+bi*1.7);
+      const top=y0+wv-b.h*curtain;
+      const shimmer=.5+.5*Math.sin(x*.052+t*1.7+bi);
+      const a=(.11+.18*shimmer)*b.k;
+      const g=ctx.createLinearGradient(0,top,0,y0+wv);
+      g.addColorStop(0,"rgba("+b.base+",0)");
+      g.addColorStop(.7,"rgba("+b.base+","+(a*.8).toFixed(3)+")");
+      g.addColorStop(1,"rgba("+b.base+","+(a*1.6).toFixed(3)+")");
+      ctx.fillStyle=g; ctx.fillRect(x,top,10.5,y0+wv-top);
+    }
+  }
+  ctx.globalCompositeOperation="source-over";
+  const vg=ctx.createRadialGradient(W/2,H*.42,Math.min(W,H)*.28,W/2,H*.42,Math.max(W,H)*.72);
+  vg.addColorStop(0,"rgba(0,0,5,0)"); vg.addColorStop(1,"rgba(0,0,6,.4)");  // 径向暗角
+  ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+}
+
+/* --- 开场：金色粒子从星海汇聚成「中北喵星图」 --- */
+const TITLE="中北喵星图";
+let introPts=[], introMode=0, introT0=0, dispT=0;   // 0汇聚 1驻留 2散逸
+function buildIntro(){
+  if(Math.min(W,H)<200) return;                          // 视口未就绪（后台标签）则回退纯文案
+  const off=document.createElement("canvas");
+  const fs=Math.min(W*.148,158);
+  let g=off.getContext("2d");
+  g.font='900 '+fs+'px "PingFang SC","Microsoft YaHei",sans-serif';
+  const tw=Math.ceil(g.measureText(TITLE).width);
+  off.width=tw+40; off.height=Math.ceil(fs*1.5);
+  g=off.getContext("2d");
+  g.font='900 '+fs+'px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.textBaseline="middle"; g.fillStyle="#fff"; g.fillText(TITLE,20,off.height/2);
+  const px=g.getImageData(0,0,off.width,off.height).data;
+  const step=Math.max(3,Math.round(fs/32));   // 更密采样 → 笔画连续
+  const ox=W/2-off.width/2, oy=H*.40-off.height/2;
+  introPts=[];
+  for(let y=0;y<off.height;y+=step)for(let x=0;x<off.width;x+=step){
+    if(px[(y*off.width+x)*4+3]>140){
+      const ang=Math.random()*TAU, pz=.4+Math.random()*.6,
+        rr=Math.max(W,H)*.66*(.72+Math.random()*.42)*(.55+.6*pz);
+      introPts.push({ x:W/2+Math.cos(ang)*rr, y:H*.42+Math.sin(ang)*rr*.72,
+        tx:ox+x, ty:oy+y, vx:0, vy:0, pz,
+        d:.65+Math.random()*.6, sz:1.5+Math.random()*2.3,
+        ph:Math.random()*TAU, sp:.55+Math.random()*1.35,
+        ci:Math.max(0,Math.min(2,Math.floor((x/off.width)/.36+(Math.random()-.5)*.22))) });   // 金→青→紫 极光色谱
+    }
+  }
+  introT0=performance.now()/1000; introMode=0;
+}
+function disperseIntro(){
+  for(const p of introPts){
+    const dx=p.tx-W/2, dy=p.ty-H*.42, dd=Math.hypot(dx,dy)||1;
+    p.vx=dx/dd*(240+Math.random()*430); p.vy=dy/dd*(240+Math.random()*430)-70;
+  }
+  introMode=2; dispT=0;
+}
+function drawIntro(dt,t){
+  if(!introPts.length) return;
+  const el=t-introT0;
+  ctx.globalCompositeOperation="lighter";
+  let alive=false;
+  for(let pi=0;pi<introPts.length;pi++){ const p=introPts[pi];
+    let x,y,a;
+    if(introMode===2){
+      dispT+=dt; const k=clamp(dispT/1.15,0,1);
+      if(k>=1) continue;
+      p.tx+=p.vx*dt; p.ty+=p.vy*dt; p.vx*=.995; p.vy=p.vy*.995+26*dt;
+      x=p.tx; y=p.ty; a=(1-k)*(.4+.6*Math.sin(t*2.2+p.ph)*.5+.3);
+      alive=true;
+    }else{
+      const kk=easeIO(clamp((el-p.d)/2.0,0,1));
+      x=p.x+(p.tx-p.x)*kk; y=p.y+(p.ty-p.y)*kk;
+      if(kk>=1){ x+=Math.sin(t*p.sp+p.ph)*1.4; y+=Math.cos(t*p.sp*.82+p.ph)*1.6;
+        if(comet.on){ x+=(comet.tx-W/2)*.007*(1-p.pz); y+=(comet.ty-H/2)*.007*(1-p.pz); } } // 纵深视差
+      a=(.42+.58*kk)*(.5+.5*Math.sin(t*2.2+p.ph))*(.72+.28*p.pz);
+      alive=true;
+    }
+    ctx.globalAlpha=Math.max(.14,a);
+    const TITLE_C=["#ffe2a0","#b6f8ee","#e8c4ff"], TITLE_G=["rgba(255,215,106,.55)","rgba(140,240,225,.5)","rgba(216,160,255,.55)"];
+    const psz=p.sz*(.55+.75*p.pz);
+    ctx.fillStyle=TITLE_C[p.ci];
+    ctx.globalAlpha=Math.max(.14,a)*.2;                       // 低透明光晕 → 笔画连成一体
+    ctx.fillRect(x-psz*1.15,y-psz*1.15,psz*3.3,psz*3.3);
+    ctx.globalAlpha=Math.max(.14,a);                          // 高透明核心
+    ctx.fillRect(x,y,psz,psz);
+    if((pi&3)===0) drawGlow(x+psz/2,y+psz/2,psz*5,TITLE_G[p.ci]);
+  }
+  ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
+  if(introMode===0&&el>2.75) introMode=1;
+  if(introMode===2&&!alive) introPts=[];
+}
+
+/* --- 点击星芒爆发 & 诞生涟漪 --- */
+const bursts=[], ripples=[];
+function spawnBurst(x,y,color){
+  const n=26;
+  for(let i=0;i<n;i++){
+    const a=i/n*TAU+Math.random()*.35, v=64+Math.random()*190;
+    bursts.push({ x,y, vx:Math.cos(a)*v, vy:Math.sin(a)*v, life:0, max:.6+Math.random()*.32, color });
+  }
+}
+function spawnRipple(x,y,color){ ripples.push({x,y,life:0,max:.9,color}); }
+function drawFx(dt){
+  ctx.globalCompositeOperation="lighter";
+  for(let i=bursts.length-1;i>=0;i--){ const b=bursts[i]; b.life+=dt;
+    const k=b.life/b.max; if(k>=1){ bursts.splice(i,1); continue; }
+    b.x+=b.vx*dt; b.y+=b.vy*dt; b.vx*=.955; b.vy*=.955;
+    ctx.globalAlpha=(1-k)*.85;
+    drawGlow(b.x,b.y,(1-k)*6.5+2,b.color,"#fff");
+  }
+  for(let i=ripples.length-1;i>=0;i--){ const r=ripples[i]; r.life+=dt;
+    const k=r.life/r.max; if(k>=1){ ripples.splice(i,1); continue; }
+    ctx.globalAlpha=(1-k)*.6;
+    ctx.strokeStyle=r.color; ctx.lineWidth=2*(1-k)+.5;
+    ctx.beginPath(); ctx.arc(r.x,r.y,4+k*46,0,TAU); ctx.stroke();
+  }
+  ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
+}
+
+/* --- 星域关系网（实证搭档）+ 区域名册标注 --- */
+const REL=[
+  { a:"CAT-058", b:"CAT-059", label:"摔跤 × 陪练 · 排水格栅日日过招" },
+  { a:"CAT-063", b:"CAT-064", label:"小黑帽 × 小虎 · 投喂点勾肩搭背" },
+];
+const AREAS=[
+  {x:.628,y:.582,t:"居民楼红砖地"},{x:.375,y:.697,t:"老旧房区"},{x:.294,y:.403,t:"排水格栅打闹区"},
+  {x:.439,y:.581,t:"石台灌木猫群"},{x:.576,y:.551,t:"红砖地投喂点"},{x:.691,y:.487,t:"电动车停放区"},
+  {x:.487,y:.375,t:"道路沿线"},{x:.333,y:.516,t:"山脚草地"},{x:.635,y:.325,t:"金属护栏"},
+  {x:.835,y:.445,t:"铁栅栏围墙"},{x:.415,y:.440,t:"教学楼瓷砖区"},{x:.482,y:.626,t:"绿门粉砖地"},
+];
+let showNet=false, trailsOn=false;
+const catById=id=>CATS.find(c=>c.id===id);
+function drawRelations(){
+  for(const r of REL){
+    const A=catById(r.a), B=catById(r.b); if(!A||!B) continue;
+    const sa=toScreen(catPos(A).x,catPos(A).y), sb=toScreen(catPos(B).x,catPos(B).y);
+    const hot=selected===A||selected===B||hovered===A||hovered===B;
+    const g=ctx.createLinearGradient(sa.x,sa.y,sb.x,sb.y);
+    g.addColorStop(0,"rgba(125,232,216,"+(hot?.9:.42)+")");
+    g.addColorStop(1,"rgba(196,140,255,"+(hot?.9:.42)+")");
+    ctx.strokeStyle=g; ctx.lineWidth=hot?1.9:1.1;
+    ctx.setLineDash([6,7]); ctx.lineDashOffset=-animT*26;
+    ctx.beginPath(); ctx.moveTo(sa.x,sa.y); ctx.lineTo(sb.x,sb.y); ctx.stroke();
+    ctx.setLineDash([]);
+    if(cam.z>1.12||hot){
+      ctx.font='11px "PingFang SC","Microsoft YaHei"'; ctx.textAlign="center";
+      const mx=(sa.x+sb.x)/2, my=(sa.y+sb.y)/2-11;
+      const tw=ctx.measureText(r.label).width;
+      ctx.fillStyle="rgba(4,8,18,.74)";
+      ctx.beginPath(); ctx.roundRect(mx-tw/2-9,my-12,tw+18,19,9); ctx.fill();
+      ctx.strokeStyle="rgba(125,232,216,.3)"; ctx.lineWidth=.8; ctx.stroke();
+      ctx.fillStyle=hot?"#d9fff6":"#8fd8cc"; ctx.fillText(r.label,mx,my+1.5);
+    }
+  }
+}
+function drawAreas(){
+  ctx.font='10px "PingFang SC","Microsoft YaHei"'; ctx.textAlign="left";
+  for(const a of AREAS){
+    const s=toScreen(a.x,a.y);
+    if(s.x<-60||s.x>W+60||s.y<-40||s.y>H+40) continue;
+    ctx.globalAlpha=.72;
+    ctx.strokeStyle="rgba(255,215,106,.42)"; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(s.x,s.y,3.5,0,TAU); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(s.x+6,s.y-5); ctx.lineTo(s.x+14,s.y-12); ctx.stroke();
+    ctx.fillStyle="rgba(255,233,168,.78)";
+    ctx.fillText("· "+a.t,s.x+18,s.y-9);
+  }
+  ctx.globalAlpha=1;
+}
+
+/* ---------- 星光配色 ---------- */
+const COAT_COLORS={ "橘":["#ffd28a","#ff9d3c"], "狸花":["#eed9a4","#c09655"],
+  "三花":["#ffc0d4","#f075a8"], "玳瑁":["#ffc0d4","#f075a8"], "黑白":["#e6efff","#a9c3f0"],
+  "黑":["#d6dcff","#93a1d8"], "白":["#ffffff","#d8e6ff"], "其他":["#cdf0ff","#86cde8"] };
+function starColors(c){ for(const k in COAT_COLORS)
+  if(c.coatGroup===k||(c.coat||"").includes(k)) return COAT_COLORS[k]; return COAT_COLORS["其他"]; }
+
+/* ---------- 状态 ---------- */
+let filter="all", query="", editMode=false, hovered=null, selected=null;
+let dragInfo=null, starDrag=null, T=0;
+
+function catVisible(c){
+  if(filter!=="all"){
+    if(filter==="黑白"){ if(!/黑白|奶牛|纯黑|纯白/.test(c.coat)&&c.coatGroup!=="黑白") return false; }
+    else if(filter==="三花"){ if(!/三花|玳瑁/.test(c.coat)) return false; }
+    else if(c.coatGroup!==filter&&!(c.coat||"").includes(filter)) return false;
+  }
+  if(query){ const q=query.toLowerCase();
+    if(!(c.name+c.rank+(c.title||"")+c.coat+c.features).toLowerCase().includes(q)) return false; }
+  return true;
+}
+
+/* ---------- 渲染 ---------- */
+function drawStar(c,s,bk){
+  const [c1,c2]=starColors(c);
+  const hot=hovered===c||selected===c;
+  const breathe=1+.1*Math.sin(animT*1.5+hashStr(c.id)%9);
+  let R=(3.4+3*(c.brightness||.7)+.3*Math.min(4,(c.photoCount||1)>>1))*Math.sqrt(cam.z)*breathe*(hot?1.42:1);
+  if(bk<1){ if(bk<=0) return; R*=Math.max(.001,easeOutBack(bk)); }
+  ctx.globalCompositeOperation="lighter";
+  drawGlow(s.x,s.y,R*6.2,c2);                                   // 外晕
+  const ray=R*(2.4+.5*Math.sin(animT*2+hashStr(c.id)))*(hot?1.35:1);
+  ctx.globalAlpha=.9;
+  ctx.drawImage(raySprite(c1),s.x-ray,s.y-1.7,ray*2,3.4);       // 横星芒
+  ctx.drawImage(raySprite(c1),s.x-1.7,s.y-ray,3.4,ray*2);       // 纵星芒
+  drawGlow(s.x,s.y,R*1.85,c1,"#ffffff");                        // 内辉 + 星核
+  // 环绕光点 = 收录照片数（"恒星有它的行星"）
+  const ns=Math.min(3,1+((c.photoCount||1)>>1));
+  if(cam.z>.62&&bk>.6){
+    for(let i=0;i<ns;i++){
+      const oa=animT*(.5+.22*i)*(i%2?1:-1)+hashStr(c.id)%7+i*2.1;
+      const orR=R*2.35+i*R*.9;
+      ctx.globalAlpha=.62;
+      drawGlow(s.x+Math.cos(oa)*orR,s.y+Math.sin(oa)*orR*.58,2.7,c1,"#fff");
+    }
+  }
+  ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
+  if(SEEN.has(c.id)&&bk>.85){                            // 图鉴金环（已遇见 · 缓转虚线）
+    ctx.strokeStyle="rgba(255,215,106,.5)"; ctx.lineWidth=1;
+    ctx.setLineDash([3,4]); ctx.lineDashOffset=-animT*10;
+    ctx.beginPath(); ctx.arc(s.x,s.y,R*2.05,0,7); ctx.stroke(); ctx.setLineDash([]);
+  }
+  // 选中/悬停双环
+  if(hot){
+    ctx.strokeStyle="rgba(255,233,168,.9)"; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.arc(s.x,s.y,R*2.4+4+2*Math.sin(animT*3),0,7); ctx.stroke();
+    ctx.strokeStyle="rgba(255,233,168,.35)";
+    ctx.beginPath(); ctx.arc(s.x,s.y,R*3.1+8+3*Math.sin(animT*3),0,7); ctx.stroke();
+  }
+  // 名称标签
+  if((cam.z>1.05||hot)&&bk>.85){
+    ctx.font="12px 'PingFang SC','Microsoft YaHei'"; ctx.textAlign="center";
+    const label=c.name, tw=ctx.measureText(label).width;
+    ctx.globalAlpha=Math.min(1,(bk-.85)/.15);
+    ctx.fillStyle="rgba(4,8,18,.72)";
+    ctx.beginPath(); ctx.roundRect(s.x-tw/2-8, s.y+R*2.4+7, tw+16, 19, 9); ctx.fill();
+    ctx.strokeStyle="rgba(255,215,106,.3)"; ctx.lineWidth=.8; ctx.stroke();
+    ctx.fillStyle=hot?"#ffe9a8":"#cfd9f5"; ctx.fillText(label, s.x, s.y+R*2.4+21);
+    ctx.globalAlpha=1;
+  }
+}
+
+/* ---------- 主循环（intro → fly 入场飞行 → live 常驻） ---------- */
+let phase="intro", animT=0, lastTs=0, entry=null, starBirth=null;
+const comet={ x:innerWidth/2, y:innerHeight/2, tx:innerWidth/2, ty:innerHeight/2,
+  on:matchMedia("(pointer:fine)").matches };           // 鼠标彗星（桌面端）
+addEventListener("mousemove",e=>{ comet.tx=e.clientX; comet.ty=e.clientY; },{passive:true});
+function birthK(c,now){                                  // 入场时星星依次点亮
+  if(!starBirth) return 1;
+  const p=catPos(c);
+  const delay=Math.hypot(p.x-starBirth.fx,p.y-starBirth.fy)*1150+(hashStr(c.id)%97)*4.6;
+  return clamp((now-starBirth.t0-delay)/620,0,1);
+}
+function startEntry(){
+  phase="fly";
+  disperseIntro();
+  document.getElementById("intro").classList.add("fade");
+  const f=catPos(catById("CAT-060")||CATS[0]);          // 从最密的猫群深处起飞
+  const sz=8.2, tz=Math.max(W/MW,H/MH);
+  entry={ t0:performance.now(), sx:W/2-f.x*MW*sz, sy:H/2-f.y*MH*sz, sz,
+    tx:(W-MW*tz)/2, ty:(H-MH*tz)/2, tz };
+  starBirth={ t0:performance.now()+1500, fx:f.x, fy:f.y };
+  setTimeout(()=>{ document.body.classList.add("live"); },1600);
+  setTimeout(()=>{ document.getElementById("hint").classList.add("gone"); },7200);
+}
+function draw(ts){
+  requestAnimationFrame(draw);
+  if(!lastTs) lastTs=ts;
+  const dt=Math.min(.05,(ts-lastTs)/1000); lastTs=ts;   // 120Hz 屏不加速
+  animT+=dt;
+  const now=performance.now();
+  if(phase==="fly"&&entry){
+    const k=easeIO(clamp((now-entry.t0)/2600,0,1));     // 2.6s 深空拉镜
+    cam.x=entry.sx+(entry.tx-entry.sx)*k; cam.y=entry.sy+(entry.ty-entry.sy)*k;
+    cam.z=entry.sz+(entry.tz-entry.sz)*k;
+    if(k>=1) phase="live";
+  }
+  ctx.fillStyle="#03060f"; ctx.fillRect(0,0,W,H);
+  // 星云底色（缓漂）
+  const nx=Math.sin(animT*.05)*26, ny=Math.cos(animT*.04)*18;
+  ctx.globalAlpha=phase==="intro"?.92:.75; ctx.drawImage(neb,nx-40,ny-30,W+80,H+60); ctx.globalAlpha=1;
+  // 螺旋星系（诗云式三旋臂 · 相机视差）；星轨模式：星系画进独立层做长曝光累积
+  const gA=(phase==="intro"?.42:phase==="fly"?.34:.5)*(trailsOn?1.6:1);
+  if(trailsOn&&phase!=="intro"){
+    gctx.clearRect(0,0,W,H);
+    drawGalaxy(gctx,animT*3.8,gA,-cam.x*.03,-cam.y*.03,2.6);   // 加粗沉积 → 长曝光光带
+    tctx.globalCompositeOperation="source-over";               // 黑色透明衰减（不引入色雾），只累积星系层
+    tctx.fillStyle="rgba(0,0,0,.018)"; tctx.fillRect(0,0,W,H);
+    tctx.globalCompositeOperation="lighter"; tctx.globalAlpha=.45;
+    tctx.drawImage(galCv,0,0,W,H);
+    tctx.globalAlpha=1; tctx.globalCompositeOperation="source-over";
+    ctx.globalCompositeOperation="lighter";
+    ctx.drawImage(trailCv,0,0,W,H);
+    ctx.globalCompositeOperation="source-over";
+  } else drawGalaxy(ctx,animT*.5,gA,-cam.x*.03,-cam.y*.03,1);
+  if(phase==="intro") drawAurora(animT);
+  // 夜空校园底图
+  if(mapReady&&phase!=="intro"){
+    const ma=(phase==="fly"?clamp((now-entry.t0-450)/1700,0,1)*.82:.82)*(trailsOn?.38:1);  // 星轨模式：地景退为鬼影
+    ctx.save(); ctx.globalAlpha=ma;
+    ctx.drawImage(mapImg,cam.x,cam.y,MW*cam.z,MH*cam.z); ctx.restore();
+    const vg=ctx.createLinearGradient(0,0,0,H);
+    vg.addColorStop(0,"rgba(6,10,26,.25)"); vg.addColorStop(1,"rgba(3,6,15,.5)");
+    ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+    const st=skyTint();                                        // 实况天色（按真实时刻）
+    if(st){ const tg=ctx.createLinearGradient(0,0,0,H);
+      tg.addColorStop(0,st[0]); tg.addColorStop(1,st[1]);
+      ctx.fillStyle=tg; ctx.fillRect(0,0,W,H); }
+    drawClNeb();                                               // 毛色星云（聚簇着色）
+  }
+  // 屏幕空间星尘（视差慢层；星轨模式下缓慢漂移拉出细线）
+  const dBoost=phase==="intro"?1.4:1;                    // 首页星尘更亮，撑住深空
+  const dDrift=trailsOn?animT*.012:0;
+  for(const d of dustScr){
+    const a=(.18+.16*Math.sin(animT*d.sp+d.ph))*dBoost;
+    ctx.globalAlpha=Math.max(.04,a); ctx.fillStyle="#93a7e0";
+    ctx.fillRect(((d.x+dDrift)%1)*W,d.y*H,d.r*1.6,d.r*1.6);
+  }
+  // 地图空间星尘
+  if(phase!=="intro") for(const d of dustMap){
+    const s=toScreen(d.x,d.y);
+    if(s.x<-10||s.x>W+10||s.y<-10||s.y>H+10) continue;
+    const a=.22+.2*Math.sin(animT*d.sp+d.ph);
+    ctx.globalAlpha=Math.max(.05,a); ctx.fillStyle=d.warm?"#ffe1ad":"#b7c6f2";
+    ctx.fillRect(s.x,s.y,d.r*1.6*Math.sqrt(cam.z),d.r*1.6*Math.sqrt(cam.z));
+  }
+  // 鼠标彗星（缓动跟随 · 金核 + 蓝紫渐隐长尾，尾长随移速伸展）
+  if(comet.on){
+    comet.x+=(comet.tx-comet.x)*.14; comet.y+=(comet.ty-comet.y)*.14;
+    const dx=comet.x-comet.tx, dy=comet.y-comet.ty;
+    const L=24+Math.min(80,Math.hypot(dx,dy)*.9);
+    ctx.save(); ctx.translate(comet.x,comet.y); ctx.rotate(Math.atan2(dy,dx));
+    for(let i=16;i>=1;i--){ const t=i/16;
+      ctx.globalAlpha=(1-t)*.5; ctx.fillStyle=i%2?"#aebdff":"#8f9dff";
+      ctx.beginPath(); ctx.arc(t*L,0,Math.max(.4,3.4*(1-t*.8)),0,7); ctx.fill(); }
+    ctx.globalAlpha=1;
+    const g=ctx.createRadialGradient(0,0,0,0,0,9);
+    g.addColorStop(0,"rgba(255,244,214,.95)"); g.addColorStop(.4,"rgba(255,220,150,.5)"); g.addColorStop(1,"rgba(255,200,120,0)");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,9,0,7); ctx.fill();
+    ctx.fillStyle="#fff6dd"; ctx.beginPath(); ctx.arc(0,0,1.8,0,7); ctx.fill();
+    ctx.restore();
+  }
+  ctx.globalAlpha=1;
+  // 星域网络（搭档连线）
+  if(showNet&&phase==="live") drawRelations();
+  // 区域名册标注
+  if(phase==="live"&&cam.z>1.55) drawAreas();
+  // 选中星的"星轨"连线（连向最近的 3 颗）
+  if(selected&&phase==="live"){
+    const sp=toScreen(catPos(selected).x,catPos(selected).y);
+    const others=CATS.filter(c=>c!==selected&&catVisible(c))
+      .map(c=>({c,s:toScreen(catPos(c).x,catPos(c).y)}))
+      .sort((a,b)=>Math.hypot(a.s.x-sp.x,a.s.y-sp.y)-Math.hypot(b.s.x-sp.x,b.s.y-sp.y)).slice(0,3);
+    for(const o of others){
+      const lg=ctx.createLinearGradient(sp.x,sp.y,o.s.x,o.s.y);
+      lg.addColorStop(0,"rgba(255,233,168,.5)"); lg.addColorStop(1,"rgba(255,233,168,.04)");
+      ctx.strokeStyle=lg; ctx.lineWidth=1;
+      ctx.setLineDash([3,6]); ctx.lineDashOffset=-animT*20;
+      ctx.beginPath(); ctx.moveTo(sp.x,sp.y); ctx.lineTo(o.s.x,o.s.y); ctx.stroke(); ctx.setLineDash([]);
+    }
+  }
+  // 猫咪星（入场时按离焦点距离依次点亮）
+  if(phase!=="intro"){
+    for(const c of CATS){ if(!catVisible(c)) continue;
+      const p=catPos(c), s=toScreen(p.x,p.y);
+      if(s.x<-60||s.x>W+60||s.y<-60||s.y>H+60) continue;
+      drawStar(c,s,birthK(c,now));
+    }
+  }
+  // 特效层
+  drawFx(dt);
+  meteorTimer-=dt;                                        // 流星雨全程陪伴（intro 更稀疏）
+  if(meteorTimer<=0){ spawnMeteor();
+    meteorTimer=(phase==="live"?2.6:5.2)+Math.random()*(phase==="live"?4.2:3.4); }
+  drawMeteors(dt);
+  drawVisitor(dt);                                            // 访客彗星
+  auTick(dt);                                                 // 星语环境音（开启时）
+  if(phase!=="live") drawIntro(dt,animT);
+}
+requestAnimationFrame(draw);
+
+/* ---------- 星语 · WebAudio 生成式环境音（零音频文件 · 默认关闭） ---------- */
+const AU={on:false,ctx:null,master:null,delaySend:null,pluckT:3};
+function auInit(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return false;
+    const ac=new AC();
+    const master=ac.createGain(); master.gain.value=0; master.connect(ac.destination);
+    const filter=ac.createBiquadFilter(); filter.type="lowpass"; filter.frequency.value=420; filter.Q.value=.6;
+    const delay=ac.createDelay(1.2); delay.delayTime.value=.42;
+    const fb=ac.createGain(); fb.gain.value=.34;
+    delay.connect(fb); fb.connect(delay); delay.connect(master);
+    filter.connect(master); filter.connect(delay);
+    const droneGain=ac.createGain(); droneGain.gain.value=.05; droneGain.connect(filter);
+    [[55,"sine",.5],[110,"sine",.34],[164.81,"triangle",.16],[220.6,"sine",.06]].forEach(([f,ty,v])=>{
+      const o=ac.createOscillator(); o.type=ty; o.frequency.value=f;
+      const g=ac.createGain(); g.gain.value=v;
+      o.connect(g); g.connect(droneGain); o.start(); });
+    const lfo=ac.createOscillator(); lfo.frequency.value=.05;
+    const lg=ac.createGain(); lg.gain.value=90; lfo.connect(lg); lg.connect(filter.frequency); lfo.start();
+    AU.ctx=ac; AU.master=master; AU.delaySend=delay;
+    return true;
+  }catch(e){ return false; }
+}
+const PENTA=[523.25,587.33,659.25,783.99,880,1046.5];
+function auPluck(freq,vol,type,dur){
+  if(!AU.on||!AU.ctx) return;
+  try{
+    const ac=AU.ctx, t=ac.currentTime;
+    const o=ac.createOscillator(); o.type=type||"sine"; o.frequency.value=freq;
+    const g=ac.createGain();
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol||.045,t+.02);
+    g.gain.exponentialRampToValueAtTime(.0004,t+(dur||2.2));
+    o.connect(g); g.connect(AU.master); g.connect(AU.delaySend);
+    o.start(t); o.stop(t+(dur||2.2)+.1);
+  }catch(e){}
+}
+function auTick(dt){
+  if(!AU.on||!AU.ctx) return;
+  AU.pluckT-=dt;
+  if(AU.pluckT<=0){ AU.pluckT=4.5+Math.random()*4.5;
+    auPluck(PENTA[Math.floor(Math.random()*PENTA.length)],.032+Math.random()*.02); }
+}
+
+/* ---------- 交互 ---------- */
+function starAt(sx,sy){
+  let best=null,bd=1e9;
+  for(const c of CATS){ if(!catVisible(c)) continue;
+    const s=toScreen(catPos(c).x,catPos(c).y);
+    const d=Math.hypot(s.x-sx,s.y-sy);
+    const hit=Math.max(16,(3.4+3*(c.brightness||.7))*Math.sqrt(cam.z)*2.4);
+    if(d<hit&&d<bd){ bd=d; best=c; } }
+  return best;
+}
+canvas.addEventListener("mousedown",e=>{
+  const c=starAt(e.clientX,e.clientY);
+  if(editMode&&c) starDrag=c; else dragInfo={ sx:e.clientX, sy:e.clientY, cx:cam.x, cy:cam.y };
+  canvas.classList.add("dragging");
+});
+addEventListener("mousemove",e=>{
+  if(starDrag){ const n=toNorm(e.clientX,e.clientY);
+    n.x=Math.min(.985,Math.max(.015,n.x)); n.y=Math.min(.985,Math.max(.015,n.y));
+    setPos(starDrag,{x:+n.x.toFixed(4),y:+n.y.toFixed(4)}); flushOv(); return; }
+  if(dragInfo){ cam.x=dragInfo.cx+(e.clientX-dragInfo.sx); cam.y=dragInfo.cy+(e.clientY-dragInfo.sy); clampCam(); return; }
+  hovered=starAt(e.clientX,e.clientY);
+  canvas.style.cursor=editMode?"crosshair":(hovered?"pointer":"grab");
+});
+addEventListener("mouseup",e=>{
+  canvas.classList.remove("dragging");
+  if(starDrag){ starDrag=null; return; }
+  if(dragInfo){ const moved=Math.hypot(e.clientX-dragInfo.sx,e.clientY-dragInfo.sy); dragInfo=null;
+    if(moved<6&&!editMode){ const c=starAt(e.clientX,e.clientY); if(c) openCard(c); } }
+});
+canvas.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const k=Math.exp(-e.deltaY*.0012), nz=cam.z*k, mx=e.clientX, my=e.clientY;
+  cam.x=mx-(mx-cam.x)*(nz/cam.z); cam.y=my-(my-cam.y)*(nz/cam.z); cam.z=nz; clampCam();
+},{passive:false});
+canvas.addEventListener("touchstart",e=>{ const t=e.touches[0], c=starAt(t.clientX,t.clientY);
+  if(editMode&&c) starDrag=c; else dragInfo={sx:t.clientX,sy:t.clientY,cx:cam.x,cy:cam.y}; },{passive:true});
+canvas.addEventListener("touchmove",e=>{ const t=e.touches[0];
+  if(starDrag){ const n=toNorm(t.clientX,t.clientY);
+    n.x=Math.min(.985,Math.max(.015,n.x)); n.y=Math.min(.985,Math.max(.015,n.y));
+    setPos(starDrag,{x:+n.x.toFixed(4),y:+n.y.toFixed(4)}); flushOv(); return; }
+  if(dragInfo){ cam.x=dragInfo.cx+(t.clientX-dragInfo.sx); cam.y=dragInfo.cy+(t.clientY-dragInfo.sy); clampCam(); }
+},{passive:true});
+canvas.addEventListener("touchend",e=>{
+  if(starDrag){ starDrag=null; return; }
+  if(dragInfo){ const t=e.changedTouches[0];
+    const moved=Math.hypot(t.clientX-dragInfo.sx,t.clientY-dragInfo.sy); dragInfo=null;
+    if(moved<10&&!editMode){ const c=starAt(t.clientX,t.clientY); if(c) openCard(c); } }
+});
+/* 双指捏合缩放（移动端 V1.1） */
+let pinch=null;
+canvas.addEventListener("touchstart",e=>{ if(e.touches.length===2){
+  pinch={ d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),
+    z:cam.z, cx:(e.touches[0].clientX+e.touches[1].clientX)/2, cy:(e.touches[0].clientY+e.touches[1].clientY)/2 };
+  dragInfo=null; starDrag=null; } },{passive:true});
+canvas.addEventListener("touchmove",e=>{ if(pinch&&e.touches.length===2){
+  const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+  const nz=clamp(pinch.z*d/Math.max(24,pinch.d),.3,9);
+  cam.x=pinch.cx-(pinch.cx-cam.x)*(nz/cam.z); cam.y=pinch.cy-(pinch.cy-cam.y)*(nz/cam.z);
+  cam.z=nz; clampCam(); } },{passive:true});
+canvas.addEventListener("touchend",e=>{ if(e.touches.length<2) pinch=null; },{passive:true});
+
+/* ---------- 军衔勋章体系（正规军事勋章：勋表绶带+齿轮章体+珐琅底+级别星） ---------- */
+const RANK_TIER={
+  "列兵":{m:"#dfe8f8",d:"#5d6f96",n:1},"下士":{m:"#e09a5e",d:"#6e3d12",n:1},
+  "中士":{m:"#e09a5e",d:"#6e3d12",n:2},"上士":{m:"#e09a5e",d:"#6e3d12",n:3},
+  "中尉":{m:"#eef4ff",d:"#7e93b8",n:1},"上尉":{m:"#eef4ff",d:"#7e93b8",n:2},
+  "少校":{m:"#ffe08a",d:"#a3741a",n:1},"上校":{m:"#ffe08a",d:"#a3741a",n:2},
+  "喵校长":{m:"#fff0b4",d:"#b8860b",n:3,sup:true},
+};
+const rankTier=r=>RANK_TIER[r]||RANK_TIER["列兵"];
+const _starPath="M0,-3 L0.71,-0.97 L2.85,-0.93 L1.14,0.37 L1.76,2.43 L0,1.2 L-1.76,2.43 L-1.14,0.37 L-2.85,-0.93 L-0.71,-0.97 Z";
+const _ENAMEL="#16233f";                                  // 珐琅底统一深蓝
+function medalSVG(rank,s){
+  const t=rankTier(rank), gid="mg"+rank.replace(/[^\u4e00-\u9fa5\w]/g,"");
+  const P=t.n===1?[[12,19.5,1.75]]:t.n===2?[[8.7,19.5,1.32],[15.3,19.5,1.32]]
+    :[[12,17.1,1.14],[8.9,21.6,1.14],[15.1,21.6,1.14]];
+  let stars=""; for(const [sx,sy,k] of P)
+    stars+='<path d="'+_starPath+'" transform="translate('+sx+" "+sy+") scale("+k+')" fill="'+t.m+'" stroke="'+t.d+'" stroke-width=".3"/>';
+  let rays=""; if(t.sup){ for(let i=0;i<16;i++){ const a=i*Math.PI/8;
+    rays+='<line x1="'+(12+Math.cos(a)*10.3).toFixed(2)+'" y1="'+(19.5+Math.sin(a)*10.3).toFixed(2)+
+      '" x2="'+(12+Math.cos(a)*12.1).toFixed(2)+'" y2="'+(19.5+Math.sin(a)*12.1).toFixed(2)+
+      '" stroke="'+t.m+'" stroke-width=".7" opacity=".9"/>'; }
+    for(let i=0;i<4;i++){ const a=i*Math.PI/2+Math.PI/4;                 // 校长十字长光
+      rays+='<line x1="'+(12+Math.cos(a)*10.6).toFixed(2)+'" y1="'+(19.5+Math.sin(a)*10.6).toFixed(2)+
+        '" x2="'+(12+Math.cos(a)*14.6).toFixed(2)+'" y2="'+(19.5+Math.sin(a)*14.6).toFixed(2)+
+        '" stroke="'+t.m+'" stroke-width="1" opacity=".95"/>'; } }
+  return '<svg viewBox="0 0 24 33" width="'+s+'" height="'+(s*1.375)+'" aria-hidden="true" '+
+    'style="flex-shrink:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6)) drop-shadow(0 0 7px '+t.m+'77)">'+
+    '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="1">'+
+    '<stop offset="0" stop-color="'+t.m+'"/><stop offset=".5" stop-color="'+t.d+'"/>'+
+    '<stop offset="1" stop-color="'+t.m+'"/></linearGradient></defs>'+rays+
+    '<rect x="4.6" y="0" width="14.8" height="5.4" rx=".8" fill="#8a1f2e"/>'+     // 兵工红勋表
+    '<rect x="4.6" y="0" width="3.5" height="5.4" fill="url(#'+gid+')"/>'+        // 衔级条纹
+    '<rect x="15.9" y="0" width="3.5" height="5.4" fill="url(#'+gid+')"/>'+
+    '<rect x="11.6" y="0" width=".8" height="5.4" fill="'+t.m+'"/>'+
+    '<rect x="10.7" y="5.4" width="2.6" height="2.2" fill="url(#'+gid+')"/>'+      // 挂环
+    '<circle cx="12" cy="19.5" r="8.9" fill="none" stroke="url(#'+gid+')" stroke-width="2.4" stroke-dasharray="2.32 1.16"/>'+  // 齿轮外圈
+    '<circle cx="12" cy="19.5" r="7.6" fill="url(#'+gid+')"/>'+                   // 金属章体
+    '<path d="M7.2 15.9 A6.4 6.4 0 0 1 16.2 14.7" fill="none" stroke="#ffffff" stroke-width=".8" opacity=".5"/>'+  // 金属上缘高光
+    '<circle cx="12" cy="19.5" r="5.9" fill="'+_ENAMEL+'"/>'+                     // 珐琅底
+    '<circle cx="12" cy="19.5" r="5.9" fill="none" stroke="'+t.d+'" stroke-width=".45"/>'+
+    '<path d="M8.6 16.7 A4.6 4.6 0 0 1 15.1 16.1" fill="none" stroke="#9fb6e8" stroke-width=".7" opacity=".45"/>'+  // 珐琅釉面高光
+    stars+'</svg>';
+}
+function drawMedal(g,x,y,s,rank){                    // Canvas 版（分享卡/寻猫海报）
+  const t=rankTier(rank);
+  const st=(sx,sy,r)=>{ g.beginPath();
+    for(let i=0;i<10;i++){ const R=i%2?r*.4:r, a=-Math.PI/2+i*Math.PI/5;
+      const px=sx+Math.cos(a)*R, py=sy+Math.sin(a)*R; i?g.lineTo(px,py):g.moveTo(px,py); }
+    g.closePath(); g.fill(); };
+  g.fillStyle="#8a1f2e"; g.fillRect(x-s*.58,y-s*1.84,s*1.16,s*.64);            // 勋表
+  g.fillStyle=t.m;
+  g.fillRect(x-s*.58,y-s*1.84,s*.27,s*.64); g.fillRect(x+s*.31,y-s*1.84,s*.27,s*.64);
+  g.fillRect(x-s*.035,y-s*1.84,s*.07,s*.64);
+  g.fillStyle=t.d; g.fillRect(x-s*.09,y-s*1.24,s*.18,s*.2);                     // 挂环
+  if(t.sup){ g.strokeStyle=t.m; g.lineWidth=Math.max(.9,s*.08);                 // 校长光芒
+    for(let i=0;i<16;i++){ const a=i*Math.PI/8;
+      g.beginPath(); g.moveTo(x+Math.cos(a)*s*1.2,y+Math.sin(a)*s*1.2);
+      g.lineTo(x+Math.cos(a)*s*1.42,y+Math.sin(a)*s*1.42); g.stroke(); }
+    g.lineWidth=Math.max(1.1,s*.1);
+    for(let i=0;i<4;i++){ const a=i*Math.PI/2+Math.PI/4;                 // 十字长光
+      g.beginPath(); g.moveTo(x+Math.cos(a)*s*1.24,y+Math.sin(a)*s*1.24);
+      g.lineTo(x+Math.cos(a)*s*1.7,y+Math.sin(a)*s*1.7); g.stroke(); } }
+  g.strokeStyle=t.m; g.lineWidth=s*.27; g.setLineDash([s*.27,s*.13]);           // 齿轮圈
+  g.beginPath(); g.arc(x,y,s*1.03,0,7); g.stroke(); g.setLineDash([]);
+  g.fillStyle=t.m; g.beginPath(); g.arc(x,y,s*.88,0,7); g.fill();
+  g.fillStyle=_ENAMEL; g.beginPath(); g.arc(x,y,s*.68,0,7); g.fill();
+  g.strokeStyle="rgba(159,182,232,.4)"; g.lineWidth=Math.max(.5,s*.06);          // 珐琅釉面高光
+  g.beginPath(); g.arc(x,y,s*.52,-2.4,-.9); g.stroke();
+  g.fillStyle=t.m;
+  if(t.n===1) st(x,y,s*.45);
+  else if(t.n===2){ st(x-s*.31,y,s*.34); st(x+s*.31,y,s*.34); }
+  else{ st(x,y-s*.25,s*.3); st(x-s*.3,y+s*.22,s*.3); st(x+s*.3,y+s*.22,s*.3); }
+}
+
+/* ---------- 档案卡 ---------- */
+const card=document.getElementById("card");
+function openCard(c){
+  selected=c;
+  if(TOUR.active) endTour();
+  if(findPanel.classList.contains("open")) closeFind();
+  auPluck(659.25,.05); setTimeout(()=>auPluck(987.77,.028),110);   // 开卡双音
+  if(typeof statsPanel!=="undefined"&&statsPanel.classList.contains("open")){
+    statsPanel.classList.remove("open"); document.getElementById("btnStats").classList.remove("on"); }
+  const img=document.getElementById("cardImg");
+  img.onerror=()=>{ img.onerror=null;                 // 照片缺失兜底：换成星夜占位图
+    img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="408" height="264">'+
+      '<defs><radialGradient id="g" cx="50%" cy="42%" r="75%">'+
+      '<stop offset="0" stop-color="#1c2c5e"/><stop offset="1" stop-color="#0a1228"/></radialGradient></defs>'+
+      '<rect width="408" height="264" fill="url(#g)"/>'+
+      '<circle cx="204" cy="116" r="36" fill="none" stroke="rgba(255,215,106,.5)" stroke-width="1.4"/>'+
+      '<text x="204" y="130" font-size="34" fill="rgba(255,231,168,.6)" text-anchor="middle" '+
+      'font-family="PingFang SC,Microsoft YaHei,sans-serif">喵</text></svg>'); };
+  img.style.display=c.photo?"block":"none"; if(c.photo) img.src=c.photo;
+  document.getElementById("cardName").textContent=c.name;
+  document.getElementById("cardRank").innerHTML=medalSVG(c.rank,30)+"<span>"+c.rank+(c.title?" · "+c.title:"")+"</span>";
+  document.getElementById("cardTitle").textContent=c.id+" ｜ 中北大学猫咪编制委员会 · 登记在册";
+  document.getElementById("kvCoat").textContent=c.coat;
+  document.getElementById("kvFeat").textContent=c.features;
+  document.getElementById("kvArea").textContent=c.area;
+  document.getElementById("cardBio").textContent=c.bio;
+  const cal=!!(loadOv()[c.id]||CALIB[c.id]);
+  document.getElementById("cardPhotos").innerHTML=
+    "📷 收录照片 "+(c.photoCount||1)+" 张"+
+    (cal?'<span class="pill cal">✎ 位置待你校准</span>':'<span class="pill cal">随机分布 · 待校准</span>');
+  const sp=toScreen(catPos(c).x,catPos(c).y);                 // 点星仪式感：星芒爆发 + 诞生涟漪
+  spawnBurst(sp.x,sp.y,starColors(c)[0]); spawnRipple(sp.x,sp.y,starColors(c)[1]);
+  refreshSeenBtn();
+  card.classList.add("open");
+  flyTo(c);
+}
+document.getElementById("cardClose").onclick=()=>{ card.classList.remove("open"); selected=null; };
+
+function flyTo(c){
+  const p=catPos(c), tz=Math.max(1.7,cam.z);
+  const tx=W*.42-p.x*MW*tz, ty=H*.5-p.y*MH*tz;
+  const sx=cam.x, sy=cam.y, sz=cam.z, t0=performance.now();
+  (function step(t){ const k=Math.min(1,(t-t0)/750), e=1-Math.pow(1-k,3);
+    cam.x=sx+(tx-sx)*e; cam.y=sy+(ty-sy)*e; cam.z=sz+(tz-sz)*e; clampCam();
+    if(k<1) requestAnimationFrame(step); })(t0);
+}
+
+/* ---------- 星图志（统计看板 V1.2） ---------- */
+const statsPanel=document.getElementById("stats");
+const COAT_BAR={ "橘":"#ff9d3c","狸花":"#c09655","三花":"#f075a8","黑白":"#a9c3f0","其他":"#86cde8" };
+function openStats(){
+  if(card.classList.contains("open")){ card.classList.remove("open"); selected=null; }
+  if(findPanel.classList.contains("open")) closeFind();
+  document.getElementById("stN").textContent=CATS.length;
+  document.getElementById("stP").textContent=CATS.reduce((s,c)=>s+(c.photoCount||1),0);
+  document.getElementById("stA").textContent=AREAS.length;
+  const groups={}; for(const c of CATS) groups[c.coatGroup]=(groups[c.coatGroup]||0)+1;
+  document.getElementById("stCoat").innerHTML=Object.entries(groups).sort((a,b)=>b[1]-a[1]).map(([k,n])=>
+    `<div class="stRow"><span class="nm">${k}</span><span class="bar"><i data-w="${Math.round(n/CATS.length*100)}" style="background:linear-gradient(90deg,${COAT_BAR[k]||COAT_BAR["其他"]},${(COAT_BAR[k]||COAT_BAR["其他"])+"aa"})"></i></span><span class="ct">${n} 只</span></div>`).join("");
+  const ranks={}; for(const c of CATS) ranks[c.rank]=(ranks[c.rank]||0)+1;
+  document.getElementById("stRank").innerHTML=Object.entries(ranks).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,n])=>
+    `<div class="stRow"><span class="nm">${medalSVG(k,14)}${k}</span><span class="bar"><i data-w="${Math.round(n/CATS.length*100)}" style="background:linear-gradient(90deg,${rankTier(k).m},${rankTier(k).m}88)"></i></span><span class="ct">${n} 位</span></div>`).join("");
+  const top=[...CATS].sort((a,b)=>(b.photoCount||1)-(a.photoCount||1)).slice(0,5);
+  document.getElementById("stTop").innerHTML=top.map((c,i)=>
+    `<div class="stRow" data-id="${c.id}"><span class="nm" style="width:auto;flex:1;text-align:left">${i+1}. <span style="display:inline-block;width:44px">${c.name}</span>${medalSVG(c.rank,12)}${c.rank}</span><span class="ct">${c.photoCount||1} 张</span></div>`).join("");
+  statsPanel.classList.add("open");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{          // 双帧后再展开条形图
+    statsPanel.querySelectorAll(".bar i").forEach(el=>el.style.width=el.dataset.w+"%"); }));
+  statsPanel.querySelectorAll("#stTop .stRow").forEach(r=>r.onclick=()=>openCard(catById(r.dataset.id)));
+}
+document.getElementById("btnStats").onclick=e=>{
+  if(statsPanel.classList.contains("open")){ statsPanel.classList.remove("open"); e.currentTarget.classList.remove("on"); }
+  else{ e.currentTarget.classList.add("on"); openStats(); } };
+document.getElementById("statsClose").onclick=()=>{ statsPanel.classList.remove("open");
+  document.getElementById("btnStats").classList.remove("on"); };
+
+/* ---------- 喵星分享卡（星海报 · 不含照片避免画布污染） ---------- */
+function wrapText(g,text,x,y,maxW,lh){
+  let line="",yy=y;
+  for(const ch of [...text]){
+    if(g.measureText(line+ch).width>maxW&&line){ g.fillText(line,x,yy); line=ch; yy+=lh; }
+    else line+=ch; }
+  if(line){ g.fillText(line,x,yy); yy+=lh; }
+  return yy;
+}
+function makePoster(c){
+  const pw=720,ph=1000,p=document.createElement("canvas"); p.width=pw; p.height=ph;
+  const g=p.getContext("2d");
+  g.fillStyle="#03060f"; g.fillRect(0,0,pw,ph);
+  g.globalAlpha=.85; g.drawImage(neb,-40,-30,pw+80,ph+60); g.globalAlpha=1;
+  for(let i=0;i<140;i++){                                        // 撒一层星屑
+    g.globalAlpha=.14+Math.random()*.5;
+    g.fillStyle=Math.random()<.25?"#ffe2a0":"#b7c6f2";
+    const r=Math.random()*1.7+.3; g.fillRect(Math.random()*pw,Math.random()*ph,r,r); }
+  g.globalAlpha=1;
+  const [c1,c2]=starColors(c), cx=pw/2, cy=296, R=24;            // 毛色主星
+  g.globalCompositeOperation="lighter";
+  const gr=g.createRadialGradient(cx,cy,0,cx,cy,R*7);
+  gr.addColorStop(0,c1); gr.addColorStop(.35,c2+"77"); gr.addColorStop(1,"rgba(0,0,0,0)");
+  g.fillStyle=gr; g.beginPath(); g.arc(cx,cy,R*7,0,7); g.fill();
+  g.strokeStyle=c1; g.lineCap="round"; g.lineWidth=2.6;
+  g.beginPath(); g.moveTo(cx-R*3.6,cy); g.lineTo(cx+R*3.6,cy);
+  g.moveTo(cx,cy-R*3.6); g.lineTo(cx,cy+R*3.6); g.stroke();
+  g.fillStyle="#ffffff"; g.beginPath(); g.arc(cx,cy,7,0,7); g.fill();
+  g.globalCompositeOperation="source-over";
+  g.textAlign="center";
+  g.fillStyle="#ffe9a8"; g.font='600 58px "PingFang SC","Microsoft YaHei"'; g.fillText(c.name,cx,470);
+  g.fillStyle="#ffd76a"; g.font='23px "PingFang SC","Microsoft YaHei"';
+  const _rk=c.rank+(c.title?" · "+c.title:""), _rw=g.measureText(_rk).width;
+  g.fillText(_rk,cx,516); drawMedal(g,cx-_rw/2-26,506,13,c.rank);
+  g.strokeStyle="rgba(255,215,106,.35)"; g.lineWidth=1;
+  g.beginPath(); g.moveTo(pw/2-120,548); g.lineTo(pw/2+120,548); g.stroke();
+  g.fillStyle="#c2cfef"; g.font='22px "PingFang SC","Microsoft YaHei"';
+  const yEnd=wrapText(g,c.bio,cx,598,pw-150,40);
+  g.fillStyle="#7f92c0"; g.font='19px "PingFang SC","Microsoft YaHei"';
+  g.fillText(c.coat+" ｜ "+c.area,cx,yEnd+16);
+  g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
+  g.fillText("中北喵星图 · NUC CAT GALAXY",cx,ph-76);
+  g.fillStyle="#8a97bd"; g.font='17px "PingFang SC","Microsoft YaHei"';
+  g.fillText("喵图鉴 · 已遇见 "+SEEN.size+" / "+CATS.length,cx,ph-50);
+  g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
+  g.fillText("2026-08 实地普查 · 第 "+(+c.id.slice(4))+" 号星",cx,ph-26);
+  const a=document.createElement("a");
+  a.href=p.toDataURL("image/png"); a.download="喵星分享卡-"+c.name+".png"; a.click();
+  toast("⤓ 已生成分享卡："+c.name);
+}
+document.getElementById("cardShare").onclick=()=>{ if(selected) makePoster(selected); };
+
+/* ---------- 顶栏 / 控件 ---------- */
+document.querySelectorAll(".chip.filter").forEach(ch=>ch.onclick=()=>{
+  document.querySelectorAll(".chip.filter").forEach(x=>x.classList.remove("on"));
+  ch.classList.add("on"); filter=ch.dataset.f;
+});
+document.getElementById("search").oninput=e=>{ query=e.target.value.trim(); };
+document.getElementById("btnMeet").onclick=()=>{
+  const pool=CATS.filter(catVisible); if(!pool.length) return;
+  const c=pool[Math.floor(Math.random()*pool.length)];
+  openCard(c); toast("✦ 今日偶遇 · "+c.name+"（"+c.rank+"）");
+};
+document.getElementById("btnNet").onclick=e=>{ showNet=!showNet;
+  e.currentTarget.classList.toggle("on",showNet);
+  toast(showNet?"✧ 星域网络已开启 · 搭档连线亮起":"星域网络已关闭"); };
+document.getElementById("btnTrails").onclick=e=>{
+  trailsOn=!trailsOn; e.currentTarget.classList.toggle("on",trailsOn);
+  if(trailsOn) tctx.clearRect(0,0,W,H);
+  toast(trailsOn?"◎ 星轨模式 · 星光开始长曝光":"星轨模式已关闭"); };
+document.getElementById("btnAudio").onclick=e=>{
+  if(!AU.ctx&&!auInit()){ toast("当前浏览器不支持音频，星语无法开启"); return; }
+  AU.on=!AU.on; e.currentTarget.classList.toggle("on",AU.on);
+  const t=AU.ctx.currentTime;
+  AU.master.gain.cancelScheduledValues(t);
+  AU.master.gain.setValueAtTime(Math.max(.0001,AU.master.gain.value),t);
+  if(AU.on){ AU.ctx.resume(); AU.master.gain.linearRampToValueAtTime(1,t+1.6);
+    toast("♪ 星语已开启 · 建议戴耳机感受喵星系"); auPluck(659.25,.05); }
+  else{ AU.master.gain.linearRampToValueAtTime(0,t+.5);
+    setTimeout(()=>{ if(!AU.on&&AU.ctx) AU.ctx.suspend(); },700);
+    toast("星语已关闭"); }
+};
+document.getElementById("zin").onclick=()=>{ cam.z*=1.3; clampCam(); };
+document.getElementById("zout").onclick=()=>{ cam.z/=1.3; clampCam(); };
+document.getElementById("zfit").onclick=()=>{ fitMap(); };
+
+const btnEdit=document.getElementById("btnEdit"), editbar=document.getElementById("editbar"), hint=document.getElementById("hint");
+btnEdit.onclick=()=>{ editMode=true; btnEdit.classList.add("on"); editbar.classList.add("show");
+  hint.style.display="none"; toast("校准模式：按住星星拖到它常出没的位置"); };
+document.getElementById("btnEditDone").onclick=()=>{ editMode=false; btnEdit.classList.remove("on");
+  editbar.classList.remove("show"); hint.style.display=""; toast("校准结果已保存到本地"); };
+document.getElementById("btnReset").onclick=()=>{ localStorage.removeItem(LS_KEY); OV={}; POS.clear(); toast("已清除手动校准 · 恢复固化星位"); };
+document.getElementById("btnExport").onclick=()=>{
+  const data={ map:"中北大学校园图2023秋季版", exported:new Date().toISOString(), positions:loadOv() };
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
+  a.download="猫咪星图-位置校准.json"; a.click();
+  toast("已导出校准 JSON，发回给我即可固化名册");
+};
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.opacity=1;
+  clearTimeout(t._tm); t._tm=setTimeout(()=>t.style.opacity=0,2400); }
+
+/* ---------- 喵图鉴 · 遇见收集 ---------- */
+const SEEN=new Set((()=>{ try{ return JSON.parse(localStorage.getItem("nuc-cat-seen")||"[]"); }catch(e){ return []; } })());
+const saveSeen=()=>{ try{ localStorage.setItem("nuc-cat-seen",JSON.stringify([...SEEN])); }catch(e){} };
+let seenMile=[10,30,50,76].filter(m=>SEEN.size>=m).pop()||0;   // 初始化不补放烟花
+function updateSeen(){
+  const n=SEEN.size, tot=CATS.length;
+  document.getElementById("seenCount").textContent="喵图鉴 · 已遇见 "+n+" / "+tot+"（开卡即可打卡）";
+  document.getElementById("seenFill").style.width=(n/tot*100)+"%";
+  document.getElementById("stS").textContent=n;
+  const m=[10,30,50,76].find(x=>x>seenMile&&n>=x);
+  if(m){ seenMile=m;
+    for(let i=0;i<14;i++) setTimeout(spawnMeteor,i*150);      // 里程碑流星雨
+    [523.25,659.25,783.99,1046.5].forEach((f,i)=>setTimeout(()=>auPluck(f,.045),i*110));  // 里程碑琶音
+    toast(m===76?"🏆 喵图鉴全收集！你就是中北猫王！":"🎉 喵图鉴里程碑 · 已遇见 "+m+" 只！"); }
+}
+function refreshSeenBtn(){
+  const b=document.getElementById("cardSeen"); if(!selected) return;
+  const on=SEEN.has(selected.id);
+  b.classList.toggle("on",on);
+  b.textContent=on?"★ 已录入图鉴（点击取消）":"✓ 我遇见过它";
+}
+document.getElementById("cardSeen").onclick=()=>{ if(!selected) return;
+  SEEN.has(selected.id)?SEEN.delete(selected.id):SEEN.add(selected.id);
+  saveSeen(); refreshSeenBtn(); updateSeen(); };
+
+/* ---------- 今日喵签（一天一签 · 日期确定性抽取） ---------- */
+const GRADES=["大吉","中吉","小吉","吉"];
+const FORT_TPL=[
+  c=>c.name+"用尾巴尖替你扫掉了一整天的水逆。",
+  c=>"路过的"+c.name+"回头看了你一眼，好运被它记在了心里。",
+  c=>"今天适合慢一点，"+c.title+"的"+c.name+"也是这么打算的。",
+  c=>c.coat+"的"+c.name+"说：想吃的饭、想见的人，都值得专程一趟。",
+  c=>"摸鱼五分钟，快乐两小时——这是"+c.rank+c.name+"的编制内哲学。",
+  c=>c.name+"在"+c.area+"替你占好了一个晒太阳的位置。",
+  c=>"烦恼交给"+c.name+"，它睡一觉就帮你消化掉了。",
+  c=>"今天的运气藏在「"+c.features.split("、")[0]+"」里，像"+c.name+"一样好认。",
+];
+function drawFortune(){
+  const day=Math.floor(Date.now()/864e5);
+  const c=CATS[day%CATS.length], grade=GRADES[(day>>2)%4];
+  document.getElementById("fGrade").textContent="今日喵签 · "+grade;
+  document.getElementById("fName").textContent=c.name;
+  document.getElementById("fRank").innerHTML=medalSVG(c.rank,20)+"<span>"+c.rank+(c.title?" · "+c.title:"")+"</span>";
+  document.getElementById("fText").textContent=FORT_TPL[day%FORT_TPL.length](c);
+  document.getElementById("fortune").classList.add("open");
+  auPluck(660,.05,"sine",3); setTimeout(()=>auPluck(990,.025,"sine",3),160);   // 签铃
+  document.getElementById("fGo").onclick=()=>{ document.getElementById("fortune").classList.remove("open"); openCard(c); };
+}
+document.getElementById("btnFortune").onclick=drawFortune;
+document.getElementById("fClose").onclick=()=>document.getElementById("fortune").classList.remove("open");
+document.getElementById("fortune").addEventListener("click",e=>{
+  if(e.target.id==="fortune") e.currentTarget.classList.remove("open"); });
+
+/* ---------- 实地寻猫目录（按星域分组的行动指南） ---------- */
+const findPanel=document.getElementById("find"), btnFind=document.getElementById("btnFind");
+function closeFind(){ findPanel.classList.remove("open"); btnFind.classList.remove("on"); }
+const AREA_KEYS=[["排水格栅",2],["电动车",5],["铁栅栏",9],["栅栏",9],["护栏",8],["栏杆",8],
+  ["绿门",11],["粉色砖",11],["投喂",4],["石台灌木",3],["灌木小径",3],["灌木丛",3],
+  ["老旧",1],["红砖",0],["瓷砖",10],["大厅",10],["教室",10],["课桌",10],
+  ["草地",7],["草丛",7],["植被",7],["枯草",7],["落叶",7],
+  ["柏油",6],["沥青",6],["路面",6],["道路",6],["路边",6],["路缘",6]];
+function areaIndexOf(c){
+  for(const [k,i] of AREA_KEYS) if(c.area&&c.area.includes(k)) return i;   // 语义优先
+  const p=catPos(c); let bi=0,bd=1e9;                                      // 几何回退
+  AREAS.forEach((a,i)=>{ const d=(a.x-p.x)**2+(a.y-p.y)**2; if(d<bd){ bd=d; bi=i; } });
+  return bi; }
+function openFind(){
+  if(card.classList.contains("open")){ card.classList.remove("open"); selected=null; }
+  if(statsPanel.classList.contains("open")){ statsPanel.classList.remove("open"); document.getElementById("btnStats").classList.remove("on"); }
+  const gs=AREAS.map(()=>[]);
+  for(const c of CATS) gs[areaIndexOf(c)].push(c);
+  document.getElementById("fdBody").innerHTML=gs.map((g,i)=>{
+    if(!g.length) return "";
+    g.sort((a,b)=>(b.photoCount||1)-(a.photoCount||1));
+    return '<div class="fdGroup"><b>'+AREAS[i].t+'</b><span>'+g.length+' 只常驻</span></div>'+
+      g.map(c=>'<div class="fRow" data-id="'+c.id+'">'+
+        (c.photo?'<img loading="lazy" src="'+c.photo+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
+        '<span class="fi"><span class="fn">'+c.name+'<i style="color:'+rankTier(c.rank).m+'">'+medalSVG(c.rank,12)+c.rank+'</i></span>'+
+        '<span class="ff">'+(c.features||"").split("、")[0]+'</span></span></div>').join("");
+  }).join("");
+  findPanel.querySelectorAll(".fRow").forEach(r=>r.onclick=()=>{ closeFind(); openCard(catById(r.dataset.id)); });
+  findPanel.classList.add("open"); btnFind.classList.add("on");
+  auPluck(587.33,.04);
+}
+btnFind.onclick=()=>findPanel.classList.contains("open")?closeFind():openFind();
+document.getElementById("findClose").onclick=closeFind;
+document.getElementById("cardPhotos").onclick=e=>{ if(e.target.classList.contains("pill")){ card.classList.remove("open"); btnEdit.click(); } };
+
+/* ---------- 寻猫海报（纯矢量星图 · 避免画布污染） ---------- */
+function makeFieldPoster(){
+  const pw=1080, ph=1440, cv=document.createElement("canvas"); cv.width=pw; cv.height=ph;
+  const g=cv.getContext("2d"), FT='"PingFang SC","Microsoft YaHei",sans-serif';
+  const bg=g.createLinearGradient(0,0,0,ph); bg.addColorStop(0,"#0d1a38"); bg.addColorStop(.55,"#0a1228"); bg.addColorStop(1,"#050914");
+  g.fillStyle=bg; g.fillRect(0,0,pw,ph);
+  for(let i=0;i<170;i++){ g.fillStyle="rgba("+(180+Math.random()*70|0)+","+(200+Math.random()*40|0)+",255,"+(Math.random()*.5+.1).toFixed(2)+")";
+    g.fillRect(Math.random()*pw,Math.random()*ph,Math.random()<.12?2:1,1); }
+  g.textAlign="center"; g.fillStyle="#ffe9b8"; g.font="700 66px "+FT;
+  g.shadowColor="rgba(255,215,106,.55)"; g.shadowBlur=26; g.fillText("中北寻猫地图",pw/2,118); g.shadowBlur=0;
+  g.font='300 25px '+FT; g.fillStyle="#93a8d8";
+  g.fillText("跟着星图走遍它们的地盘 · "+CATS.length+" 只在编基米 · 2026-08 实地普查",pw/2,166);
+  const BX=.33,BY=.16,BW=.52,BH=.67, MWt=560, MHt=MWt*BH/BW, MX=(pw-MWt)/2, MY=224;
+  g.strokeStyle="rgba(125,232,214,.32)"; g.lineWidth=1.5; g.setLineDash([7,7]); g.strokeRect(MX,MY,MWt,MHt); g.setLineDash([]);
+  const px=p=>MX+(p.x-BX)/BW*MWt, py=p=>MY+(p.y-BY)/BH*MHt;
+  for(const c of CATS){ const p=catPos(c);
+    g.fillStyle=starColors(c)[0]; g.beginPath(); g.arc(px(p),py(p),3.2+Math.min(3,(c.photoCount||1)*.45),0,7); g.fill();
+    g.strokeStyle="rgba(255,255,255,.25)"; g.lineWidth=.6; g.stroke(); }
+  g.textAlign="left"; g.font='600 19px '+FT;
+  for(const a of AREAS){ const x=px(a),y=py(a),t=a.t,w=g.measureText(t).width;
+    if(x>MX+MWt-w-22||y<MY+18) continue;
+    g.fillStyle="rgba(4,8,18,.74)"; g.beginPath(); g.roundRect(x+8,y-15,w+16,23,8); g.fill();
+    g.strokeStyle="rgba(125,232,214,.38)"; g.lineWidth=.8; g.stroke();
+    g.fillStyle="#a9ece2"; g.fillText(t,x+16,y+1); }
+  const stars=[["CAT-001","喵校长 · 宿舍楼玻璃门前石台"],["CAT-060","纯黑玄铁 · 石台灌木小径"],
+    ["CAT-058","摔跤×陪练 · 排水格栅擂台"],["CAT-075","纯白初雪 · 铁栅栏边"]];
+  g.font='600 27px '+FT; g.fillStyle="#ffd76a"; g.fillText("⌖ 明星指路 · 实地优先找它们",90,1030);
+  stars.forEach((s,i)=>{ const c=catById(s[0]), y=1074+i*47;
+    g.fillStyle=starColors(c)[0]; g.beginPath(); g.arc(104,y-9,7,0,7); g.fill();
+    drawMedal(g,122,y,8,c.rank);
+    g.font='600 25px '+FT; g.fillStyle="#ffe9b8"; g.fillText(c.name+"  ·  "+s[1],136,y); });
+  g.textAlign="center"; g.font='300 19px '+FT; g.fillStyle="#6d7ba6";
+  g.fillText("打开「中北喵星图」点击任意星星，即可查看它的档案与出没星域",pw/2,1298);
+  g.font='600 23px '+FT; g.fillStyle="#a9ece2";
+  g.fillText("中北大学—校园猫咪档案Skill · 人民兵工第一校的喵星编制",pw/2,1352);
+  const a=document.createElement("a"); a.href=cv.toDataURL("image/png"); a.download="中北寻猫海报.png"; a.click();
+  toast("寻猫海报已导出 · 存好就能带去实地寻访");
+}
+document.getElementById("fdPoster").onclick=makeFieldPoster;
+
+/* ---------- 喵星导览（自动剧场 · 字幕巡航） ---------- */
+const btnTour=document.getElementById("btnTour"), tourBar=document.getElementById("tourBar"),
+      tourStep=document.getElementById("tourStep"), tourCap=document.getElementById("tourCap");
+const TOUR_STOPS=[
+  ["CAT-001","序章 · 墩墩，喵校长。宿舍楼玻璃门前的石台是他的办公桌——肚皮一翻，谁来都得先打招呼；摸可以，醒是不可能醒的。"],
+  ["CAT-060","第一站 · 玄铁，全校唯一的纯黑编制。装备保密员通体自带隐身涂层，石台灌木深处，路灯亮起才看得清他的轮廓。"],
+  ["CAT-058","第二站 · 摔跤，体能训练员。排水格栅就是擂台，白围脖一系像戴了护颈，翻滚扑咬样样在行。"],
+  ["CAT-059","第三站 · 陪练，背披圆斑护具的乐天派。被摔的永远是它，第二天照样准时出勤打卡。"],
+  ["CAT-075","第四站 · 初雪，新兵连学员。纯白小猫蹲在铁栅栏边，像入冬第一场雪落错了地方，盯着镜头毫不怯场。"],
+  ["CAT-048","第五站 · 独眼，夜巡队长。左眼一圈黑斑像戴了眼罩，夜里路面上一走，路灯都得让三分。"],
+];
+const TOUR={ active:false, i:0, tm:[] };
+function tourType(text){ let i=0; tourCap.textContent="";
+  (function tick(){ if(!TOUR.active) return;
+    if(i<=text.length){ tourCap.textContent=text.slice(0,i++)+(i%2?"▏":""); TOUR.tm.push(setTimeout(tick,33)); }
+    else tourCap.textContent=text; })(); }
+function tourPlay(){
+  const fin=TOUR.i===TOUR_STOPS.length;
+  tourStep.textContent=fin?"FINALE · 终章":"STAGE "+TOUR.i+" / "+TOUR_STOPS.length;
+  let cap;
+  if(fin){ fitMap(); cap="终章 · "+CATS.length+" 颗星都已就位。点击任意星星开启档案，「⌖ 实地寻猫」带你走遍它们的工位。"; }
+  else{ const c=catById(TOUR_STOPS[TOUR.i][0]); flyTo(c);
+    TOUR.tm.push(setTimeout(()=>{ if(!TOUR.active) return;
+      const s=toScreen(catPos(c).x,catPos(c).y); spawnBurst(s.x,s.y,starColors(c)[0]); },820));
+    auPluck(493.88*Math.pow(2,TOUR.i/6),.04);
+    cap=TOUR_STOPS[TOUR.i][1]; }
+  tourType(cap);
+  TOUR.tm.push(setTimeout(tourNext,Math.max(4300,cap.length*95+1500)));
+}
+function tourNext(){ if(!TOUR.active) return;
+  if(++TOUR.i>TOUR_STOPS.length){ endTour(true); return; } tourPlay(); }
+function startTour(){ if(TOUR.active) return;
+  TOUR.active=true; TOUR.i=0;
+  if(card.classList.contains("open")){ card.classList.remove("open"); selected=null; }
+  closeFind(); tourBar.classList.add("on"); btnTour.classList.add("on");
+  toast("▶ 喵星导览开始 · 轻触字幕跳到下一站"); auPluck(659.25,.05);
+  tourPlay(); }
+function endTour(fin){ if(!TOUR.active&&!fin) return;
+  TOUR.active=false; TOUR.tm.forEach(clearTimeout); TOUR.tm=[];
+  tourBar.classList.remove("on"); btnTour.classList.remove("on"); tourCap.textContent="";
+  if(fin) toast("导览结束 · 开始你的寻喵之旅吧"); }
+btnTour.onclick=()=>TOUR.active?endTour():startTour();
+tourBar.onclick=()=>{ if(TOUR.active) tourNext(); };
+
+/* ---------- 时辰问候 + 副标题打字机 ---------- */
+const _g=(h=>h<5?"凌晨了 · 夜巡的猫刚换岗":h<8?"晨光里 · 早班猫已就位":h<12?"上午好 · 工位猫正在摸鱼"
+  :h<14?"午间 · 晒太阳的橘星最亮":h<18?"下午好 · 留意路过的猫学员":h<22?"入夜 · 喵星系正在升起":"深夜 · 星星和猫都不睡")(new Date().getHours());
+hint.textContent=_g+" ｜ 拖动漫游 · 滚轮缩放 · 点击星星看档案";
+(function(){ const el=document.querySelector("#intro .sub"); const t=el.textContent; el.textContent="";
+  let i=0; const tick=()=>{ if(i<=t.length){ el.textContent=t.slice(0,i++)+(i%2?"▏":""); setTimeout(tick,66); } else el.textContent=t; };
+  setTimeout(tick,850); })();
+updateSeen();
+
+/* ---------- 入场 ---------- */
+document.getElementById("introBtn").onclick=startEntry;
+// 测试参数：?skipintro 直接入场；&card=ID 直接开卡
+if(location.search.includes("skipintro")){
+  document.getElementById("intro").style.display="none"; phase="live"; fitMap();
+  document.body.classList.add("live");
+}else{
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve())
+    .then(()=>requestAnimationFrame(()=>{ try{
+      buildIntro();
+      if(introPts.length) document.getElementById("intro").classList.add("fx");
+    }catch(e){} }));
+}
+const _cm=location.search.match(/card=([A-Za-z0-9-]+)/);
+if(_cm){ const _c=CATS.find(c=>c.id===_cm[1]); if(_c) setTimeout(()=>openCard(_c),300); }
+</script>
+</body></html>
