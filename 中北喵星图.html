@@ -1387,7 +1387,7 @@ const AREAS=[
   {x:.487,y:.375,t:"道路沿线"},{x:.333,y:.516,t:"山脚草地"},{x:.635,y:.325,t:"金属护栏"},
   {x:.835,y:.445,t:"铁栅栏围墙"},{x:.415,y:.440,t:"教学楼瓷砖区"},{x:.482,y:.626,t:"绿门粉砖地"},
 ];
-let showNet=false, trailsOn=false;
+let showNet=false, trailsOn=false, trailBurst=0, dustDrift=0;   // trailBurst：入场星轨秀计时；dustDrift：星尘漂移累积
 const catById=id=>CATS.find(c=>c.id===id);
 function drawRelations(){
   for(const r of REL){
@@ -1532,30 +1532,32 @@ function draw(ts){
     const k=easeIO(clamp((now-entry.t0)/2600,0,1));     // 2.6s 深空拉镜
     cam.x=entry.sx+(entry.tx-entry.sx)*k; cam.y=entry.sy+(entry.ty-entry.sy)*k;
     cam.z=entry.sz+(entry.tz-entry.sz)*k;
-    if(k>=1) phase="live";
+    if(k>=1){ phase="live"; trailBurst=2; tctx.clearRect(0,0,W,H); }   // 抵达即召唤星轨秀：0.4s 渐显→0.8s 长曝光→0.8s 自然收起
   }
   ctx.fillStyle="#03060f"; ctx.fillRect(0,0,W,H);
   // 星云底色（缓漂）
   const nx=Math.sin(animT*.05)*26, ny=Math.cos(animT*.04)*18;
   ctx.globalAlpha=phase==="intro"?.92:.75; ctx.drawImage(neb,nx-40,ny-30,W+80,H+60); ctx.globalAlpha=1;
   // 螺旋星系（诗云式三旋臂 · 相机视差）；星轨模式：星系画进独立层做长曝光累积
-  const gA=(phase==="intro"?.42:phase==="fly"?.34:.5)*(trailsOn?1.6:1);
-  if(trailsOn&&phase!=="intro"){
+  if(trailBurst>0) trailBurst=Math.max(0,trailBurst-dt);   // 星轨秀走表：前0.4s渐显，中0.8s满格长曝光，末0.8s自然收起
+  const trailK=trailsOn?1:trailBurst>0?clamp(trailBurst/.8,0,1)*clamp((2-trailBurst)/.4,0,1):0;
+  const gA=(phase==="intro"?.42:phase==="fly"?.34:.5)*(1+trailK*.6);
+  if(trailK>0&&phase!=="intro"){
     gctx.clearRect(0,0,W,H);
     drawGalaxy(gctx,animT*3.8,gA,-cam.x*.03,-cam.y*.03,2.6);   // 加粗沉积 → 长曝光光带
     tctx.globalCompositeOperation="source-over";               // 黑色透明衰减（不引入色雾），只累积星系层
-    tctx.fillStyle="rgba(0,0,0,.018)"; tctx.fillRect(0,0,W,H);
-    tctx.globalCompositeOperation="lighter"; tctx.globalAlpha=.45;
+    tctx.fillStyle="rgba(0,0,0,"+(.018+(1-trailK)*.05)+")"; tctx.fillRect(0,0,W,H);   // 收起期衰减加速，沉积光带融掉
+    tctx.globalCompositeOperation="lighter"; tctx.globalAlpha=.45*trailK;
     tctx.drawImage(galCv,0,0,W,H);
     tctx.globalAlpha=1; tctx.globalCompositeOperation="source-over";
-    ctx.globalCompositeOperation="lighter";
+    ctx.globalCompositeOperation="lighter"; ctx.globalAlpha=trailK;
     ctx.drawImage(trailCv,0,0,W,H);
-    ctx.globalCompositeOperation="source-over";
+    ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
   } else drawGalaxy(ctx,animT*.5,gA,-cam.x*.03,-cam.y*.03,1);
   if(phase==="intro"){ drawAurora(animT); drawHorizon(animT); }
   // 夜空校园底图
   if(mapReady&&phase!=="intro"){
-    const ma=(phase==="fly"?clamp((now-entry.t0-450)/1700,0,1)*.82:.82)*(trailsOn?.38:1);  // 星轨模式：地景退为鬼影
+    const ma=(phase==="fly"?clamp((now-entry.t0-450)/1700,0,1)*.82:.82)*(1-.62*trailK);  // 星轨模式：地景退为鬼影
     ctx.save(); ctx.globalAlpha=ma;
     ctx.drawImage(mapImg,cam.x,cam.y,MW*cam.z,MH*cam.z); ctx.restore();
     const vg=ctx.createLinearGradient(0,0,0,H);
@@ -1569,7 +1571,8 @@ function draw(ts){
   }
   // 屏幕空间星尘（视差慢层；星轨模式下缓慢漂移拉出细线）
   const dBoost=phase==="intro"?1.4:1;                    // 首页星尘更亮，撑住深空
-  const dDrift=trailsOn?animT*.012:0;
+  dustDrift+=dt*.012*trailK;                            // 星轨期间星尘缓慢漂移；累积量随包络归零缓缓停住，不跳变
+  const dDrift=dustDrift;
   for(const d of dustScr){
     const a=(.18+.16*Math.sin(animT*d.sp+d.ph))*dBoost;
     ctx.globalAlpha=Math.max(.04,a); ctx.fillStyle="#93a7e0";
@@ -2261,6 +2264,7 @@ document.getElementById("introBtn").onclick=startEntry;
 // 测试参数：?skipintro 直接入场；&card=ID 直接开卡
 if(location.search.includes("skipintro")){
   document.getElementById("intro").style.display="none"; phase="live"; fitMap();
+  trailBurst=2; tctx.clearRect(0,0,W,H);                 // 跳过路径同样召唤星轨秀
   document.body.classList.add("live");
 }else{
   (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve())
