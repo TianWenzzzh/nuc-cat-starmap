@@ -470,6 +470,93 @@
       animation-duration:.01ms !important; animation-iteration-count:1 !important;
       transition-duration:.01ms !important; scroll-behavior:auto !important; }
   }
+  /* ===== v2.1 十二星宿 · 星尘变身 · 纪录片 · 本命猫 · 表情包 · 护照 ===== */
+  #constP,#memeP,#passP{ position:fixed; top:66px; right:16px; z-index:55; width:342px;
+    max-height:calc(100vh - 84px); overflow-y:auto; padding:16px 14px 14px; border-radius:16px;
+    background:rgba(7,12,26,.93); border:1px solid rgba(125,232,214,.16); backdrop-filter:blur(14px);
+    opacity:0; pointer-events:none; transform:translateX(14px); transition:.28s var(--ease); }
+  #constP.open,#memeP.open,#passP.open{ opacity:1; pointer-events:auto; transform:none; }
+  #constP>span,#memeP>span,#passP>span{ position:absolute; top:10px; right:12px; cursor:pointer;
+    color:#6d7ba6; font-size:15px; padding:4px 6px; border-radius:8px; }
+  #constP>span:hover,#memeP>span:hover,#passP>span:hover{ color:#fff; background:rgba(140,170,255,.12); }
+  .cpTitle{ color:#a9ece2; font-size:14px; letter-spacing:.14em; font-weight:600; margin-bottom:6px; }
+  #cpMeta{ font-size:11px; color:#8fd8cc; opacity:.85; margin-bottom:9px; }
+  #cpStory{ font-size:12.5px; line-height:1.8; color:#c9d4f2; padding:10px 12px; border-radius:10px;
+    background:rgba(125,232,214,.05); border-left:2px solid rgba(125,232,214,.4); margin-bottom:10px; }
+  #cardX{ display:flex; gap:8px; margin-top:10px; }
+  #cardRadio,#cardMeme{ flex:1; padding:10px 6px; text-align:center; border-radius:12px; cursor:pointer;
+    border:1px solid rgba(125,232,214,.25); color:#a9ece2; font-size:12.5px; transition:.2s; }
+  #cardRadio:hover,#cardMeme:hover{ background:rgba(125,232,214,.1); color:#d9fff6; }
+  #cardRadio.playing{ background:rgba(125,232,216,.16); color:#d9fff6; animation:radioPulse 1s infinite; }
+  @keyframes radioPulse{ 50%{ box-shadow:0 0 16px rgba(125,232,216,.45); } }
+  #btnRec{ position:absolute; top:9px; right:11px; width:27px; height:27px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:5;
+    color:#c9d4f2; font-size:13px; border:1px solid rgba(200,210,255,.3); background:rgba(8,14,30,.7);
+    transition:.2s; }
+  #btnRec:hover{ color:#fff; border-color:rgba(200,210,255,.6); }
+  #btnRec.on{ color:#ff5d5d; border-color:rgba(255,93,93,.55); background:rgba(60,10,14,.6); }
+  #btnRec.on::after{ content:""; position:absolute; inset:-5px; border-radius:50%;
+    border:1.5px solid rgba(255,93,93,.5); animation:recPing 1.1s infinite; }
+  @keyframes recPing{ to{ transform:scale(1.55); opacity:0; } }
+  #fSpeak{ margin-top:9px; padding:9px; text-align:center; border-radius:10px; cursor:pointer; font-size:12px;
+    color:#9fb3dd; border:1px solid rgba(140,170,255,.22); transition:.2s; }
+  #fSpeak:hover{ color:#d9fff6; border-color:rgba(125,232,214,.4); }
+  #soulP{ position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center;
+    background:rgba(2,4,10,.66); backdrop-filter:blur(7px); opacity:0; pointer-events:none; transition:.3s; }
+  #soulP.open{ opacity:1; pointer-events:auto; }
+  .sqCard{ position:relative; width:min(432px,88vw); max-height:86vh; overflow-y:auto;
+    padding:26px 24px 22px; border-radius:20px; text-align:center;
+    background:linear-gradient(165deg,rgba(16,26,52,.96),rgba(8,12,28,.97));
+    border:1px solid rgba(255,215,106,.22); box-shadow:0 24px 80px rgba(0,0,0,.6);
+    transform:translateY(14px); transition:.35s var(--ease); }
+  #soulP.open .sqCard{ transform:none; }
+  #sqClose{ position:absolute; top:10px; right:13px; cursor:pointer; color:#6d7ba6; font-size:15px; padding:4px 6px; }
+  #sqClose:hover{ color:#fff; }
+  .sqHead{ color:var(--gold-soft,#ffe9b8); font-size:13px; letter-spacing:.26em; font-weight:600; margin-bottom:14px; }
+  .sqDots{ display:flex; gap:5px; justify-content:center; margin-bottom:14px; }
+  .sqDots i{ width:6px; height:6px; border-radius:50%; background:rgba(140,170,255,.25); transition:.3s; }
+  .sqDots i.on{ background:#ffd76a; box-shadow:0 0 7px rgba(255,215,106,.7); }
+  .sqQ{ font-size:16.5px; font-weight:600; color:#ffe9b8; margin:4px 0 15px; }
+  .sqOpt{ display:block; width:100%; text-align:left; padding:12px 14px; margin-bottom:9px; border-radius:12px;
+    border:1px solid rgba(140,170,255,.18); background:rgba(16,26,50,.5); color:#cfe0ff;
+    font-size:13.5px; cursor:pointer; transition:.16s; }
+  .sqOpt:hover{ border-color:rgba(125,232,214,.5); background:rgba(22,42,62,.65); color:#fff; }
+  .sqRImg{ width:118px; height:118px; border-radius:50%; object-fit:cover; margin:6px auto 12px; display:block;
+    border:2px solid rgba(255,215,106,.45); box-shadow:0 0 34px rgba(255,215,106,.25); }
+  .sqRName{ font-size:24px; font-weight:700; color:#ffe9b8; }
+  .sqRRank{ font-size:13px; color:#ffd76a; margin:5px 0 10px; }
+  .sqRWhy{ font-size:12.5px; line-height:1.85; color:#c9d4f2; padding:10px 13px; border-radius:10px;
+    background:rgba(125,232,214,.06); margin-bottom:14px; text-align:left; }
+  .sqRBtns{ display:flex; gap:8px; }
+  .sqRBtns>div{ flex:1; padding:11px 4px; border-radius:12px; cursor:pointer; font-size:12.5px;
+    border:1px solid rgba(125,232,214,.3); color:#a9ece2; transition:.2s; }
+  .sqRBtns>div:hover{ background:rgba(125,232,216,.12); color:#d9fff6; }
+  #memeCv{ width:100%; border-radius:12px; display:block; border:1px solid rgba(125,232,214,.22); margin-bottom:10px; }
+  #memeCaps{ margin-bottom:2px; }
+  .mCap{ display:inline-block; margin:3px 4px 3px 0; padding:6px 10px; border-radius:14px; font-size:12px;
+    border:1px solid rgba(140,170,255,.22); color:#c9d4f2; cursor:pointer; transition:.16s; }
+  .mCap.on,.mCap:hover{ border-color:#ffd76a; color:#ffe9b8; background:rgba(255,215,106,.09); }
+  #memeInput{ width:100%; margin-top:9px; padding:9px 12px; border-radius:10px; font-size:13px;
+    border:1px solid rgba(140,170,255,.22); background:rgba(10,16,34,.85); color:#e6ecfa; outline:none; }
+  #memeInput:focus{ border-color:rgba(125,232,214,.5); }
+  #memeGo,#ppGo{ margin-top:11px; padding:11px; text-align:center; border-radius:12px; cursor:pointer;
+    font-size:13px; color:#ffe9b8; border:1px solid rgba(255,215,106,.35); transition:.2s; }
+  #memeGo:hover,#ppGo:hover{ background:rgba(255,215,106,.12); }
+  #ppMeta{ font-size:12px; color:#8fd8cc; margin:8px 0 12px; line-height:1.7; }
+  #ppMeta b{ color:#ffe9b8; font-size:15px; }
+  .ppGrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .ppStamp{ aspect-ratio:1/1; border-radius:12px; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:3px; border:1.5px dashed rgba(140,170,255,.28); color:rgba(140,170,255,.5);
+    font-size:10.5px; cursor:pointer; transition:.2s; }
+  .ppStamp b{ font-size:15px; font-weight:600; letter-spacing:.06em; }
+  .ppStamp.on{ border:1.5px solid rgba(255,215,106,.55); color:#ffe9b8; background:rgba(255,215,106,.06);
+    box-shadow:inset 0 0 20px rgba(255,215,106,.1); }
+  .ppStamp:hover{ border-color:rgba(125,232,214,.5); }
+  @media (max-width:760px){
+    #constP,#memeP,#passP{ top:auto; bottom:0; right:0; left:0; width:100%; max-height:62vh;
+      border-radius:18px 18px 0 0; transform:translateY(20px); }
+    #constP.open,#memeP.open,#passP.open{ transform:none; }
+  }
 </style>
 </head>
 <body>
@@ -499,6 +586,7 @@
     <span class="chip act" id="btnTour" tabindex="0" role="button"><span class="aIco">▶</span>喵星导览</span>
     <span class="chip act" id="btnFind" tabindex="0" role="button"><span class="aIco">⌖</span>实地寻猫</span>
     <span class="chip act" id="btnNet" tabindex="0" role="button"><span class="aIco">✧</span>星域网络</span>
+    <span class="chip act" id="btnConst" tabindex="0" role="button"><span class="aIco">◈</span>十二星宿</span>
     <span class="chip act" id="btnTrails" tabindex="0" role="button"><span class="aIco">◎</span>星轨</span>
     <span class="chip act" id="btnMore" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"><span class="aIco">⋯</span></span>
   </div>
@@ -508,6 +596,8 @@
 
 <div id="moreMenu" class="ui" role="menu" aria-label="更多功能">
   <span class="chip mItem" id="btnStats" tabindex="0" role="button"><span class="aIco">▤</span>星图志</span>
+  <span class="chip mItem" id="btnSoul" tabindex="0" role="button"><span class="aIco">❖</span>本命猫测试</span>
+  <span class="chip mItem" id="btnPassport" tabindex="0" role="button"><span class="aIco">▣</span>喵星护照</span>
   <span class="chip mItem" id="btnFortune" tabindex="0" role="button"><span class="aIco">🎋</span>喵签</span>
   <span class="chip mItem" id="btnAudio" tabindex="0" role="button"><span class="aIco">♪</span>星语</span>
   <span class="chip mItem" id="btnEdit" tabindex="0" role="button"><span class="aIco">✎</span>校准位置</span>
@@ -554,6 +644,10 @@
     <div id="cardBio" class="anim"></div>
     <div id="cardPhotos" class="anim"></div>
     <div id="cardShare" class="anim" tabindex="0" role="button">⤓ 生成喵星分享卡</div>
+    <div id="cardX" class="anim">
+      <div id="cardRadio" tabindex="0" role="button">♪ 它的主题曲</div>
+      <div id="cardMeme" tabindex="0" role="button">✎ 做成表情包</div>
+    </div>
     <div id="cardSeen" class="anim" tabindex="0" role="button">✓ 我遇见过它</div>
   </div>
 </div>
@@ -583,6 +677,7 @@
   <div id="fdPoster" tabindex="0" role="button">⤓ 一键导出寻猫海报</div>
 </div>
 <div id="tourBar" tabindex="0" role="button" aria-label="导览字幕，轻触前往下一站">
+  <span id="btnRec" tabindex="0" role="button" aria-label="录制喵星纪录片" title="录制纪录片">⏺</span>
   <div id="tourStep"></div>
   <div id="tourCap"></div>
   <div id="tourSkip">轻触字幕 · 前往下一站</div>
@@ -600,11 +695,43 @@
     <div class="fRank" id="fRank"></div>
     <div class="fText" id="fText"></div>
     <div class="fGo" id="fGo" tabindex="0" role="button">→ 去看它的那颗星</div>
+    <div id="fSpeak" tabindex="0" role="button">🔊 朗读签文</div>
   </div>
 </div>
+<div id="constP" aria-label="星宿档案">
+  <span id="cpClose" tabindex="0" role="button" aria-label="关闭星宿">✕</span>
+  <div class="cpTitle" id="cpTitle"></div>
+  <div id="cpMeta"></div>
+  <div id="cpStory"></div>
+  <div id="cpBody"></div>
+</div>
+<div id="soulP" aria-label="本命猫测试">
+  <div class="sqCard">
+    <span id="sqClose" tabindex="0" role="button" aria-label="关闭测试">✕</span>
+    <div class="sqHead">本命猫测试 · SOUL CAT</div>
+    <div class="sqDots" id="sqDots"></div>
+    <div id="sqBody"></div>
+  </div>
+</div>
+<div id="memeP" aria-label="表情包工坊">
+  <span id="mmClose" tabindex="0" role="button" aria-label="关闭表情包工坊">✕</span>
+  <div class="cpTitle" id="mmTitle">表情包工坊 · MEME LAB</div>
+  <canvas id="memeCv" width="750" height="750"></canvas>
+  <div id="memeCaps"></div>
+  <input id="memeInput" placeholder="或写你自己的梗…" maxlength="18">
+  <div id="memeGo" tabindex="0" role="button">⤓ 导出表情包 PNG</div>
+</div>
+<div id="passP" aria-label="喵星护照">
+  <span id="ppClose" tabindex="0" role="button" aria-label="关闭护照">✕</span>
+  <div class="cpTitle">喵星护照 · CAT PASSPORT</div>
+  <div id="ppMeta"></div>
+  <div id="ppBody" class="ppGrid"></div>
+  <div id="ppGo" tabindex="0" role="button">⤓ 导出我的喵星护照</div>
+</div>
 <div id="toast" role="status"></div>
+<script src="assets/photo-data-01.js"></script><script src="assets/photo-data-02.js"></script><script src="assets/photo-data-03.js"></script><script src="assets/photo-data-04.js"></script><script src="assets/photo-data-05.js"></script><script src="assets/photo-data-06.js"></script><script src="assets/photo-data-07.js"></script><script src="assets/photo-data-08.js"></script><script>function PH(p){var k=String(p||"").split("/").pop();return (window.__PHOTOS&&window.__PHOTOS[k])||p}</script>
 
-<script src="assets/photo-data-01.js"></script><script src="assets/photo-data-02.js"></script><script src="assets/photo-data-03.js"></script><script src="assets/photo-data-04.js"></script><script src="assets/photo-data-05.js"></script><script src="assets/photo-data-06.js"></script><script src="assets/photo-data-07.js"></script><script src="assets/photo-data-08.js"></script><script>function PH(p){var k=String(p||"").split("/").pop();return (window.__PHOTOS&&window.__PHOTOS[k])||p}</script><script>
+<script>
 /* ============================================================
  * 中北喵星图 · 校园猫咪星系  v2（诗云级视觉打磨版）
  * 底图: 校园地图-夜空版-web.jpg | 数据: CATS（76只真猫名册 · 2026-08普查）
@@ -1536,7 +1663,7 @@ function draw(ts){
   }
   ctx.fillStyle="#03060f"; ctx.fillRect(0,0,W,H);
   // 星云底色（缓漂）
-  const nx=Math.sin(animT*.05)*26, ny=Math.cos(animT*.04)*18;
+  const nx=Math.sin(animT*.05)*26+TILT.x*16, ny=Math.cos(animT*.04)*18+TILT.y*12;
   ctx.globalAlpha=phase==="intro"?.92:.75; ctx.drawImage(neb,nx-40,ny-30,W+80,H+60); ctx.globalAlpha=1;
   // 螺旋星系（诗云式三旋臂 · 相机视差）；星轨模式：星系画进独立层做长曝光累积
   if(trailBurst>0) trailBurst=Math.max(0,trailBurst-dt);   // 星轨秀走表：前0.4s渐显，中0.8s满格长曝光，末0.8s自然收起
@@ -1576,7 +1703,7 @@ function draw(ts){
   for(const d of dustScr){
     const a=(.18+.16*Math.sin(animT*d.sp+d.ph))*dBoost;
     ctx.globalAlpha=Math.max(.04,a); ctx.fillStyle="#93a7e0";
-    ctx.fillRect(((d.x+dDrift)%1)*W,d.y*H,d.r*1.6,d.r*1.6);
+    ctx.fillRect((((d.x+dDrift+TILT.x*.014)%1)+1)%1*W,(d.y+TILT.y*.014)*H,d.r*1.6,d.r*1.6);
   }
   // 地图空间星尘
   if(phase!=="intro") for(const d of dustMap){
@@ -1605,6 +1732,8 @@ function draw(ts){
   ctx.globalAlpha=1;
   // 星域网络（搭档连线）
   if(showNet&&phase==="live") drawRelations();
+  // 十二星宿（星座连线 + 宿名标注）
+  if(showConst&&phase==="live") drawConstellations();
   // 区域名册标注
   if(phase==="live"&&cam.z>1.55) drawAreas();
   // 选中星的"星轨"连线（连向最近的 3 颗）
@@ -1631,6 +1760,9 @@ function draw(ts){
   }
   // 特效层
   drawFx(dt);
+  drawMorph(dt);                                               // 星尘变身：开卡时星散成粒子重组成猫
+  drawLeaves(dt);                                              // 秋季限定：开学季星尘飘金叶
+  drawRecBadge();                                              // 纪录片录制中：角标水印
   meteorTimer-=dt;                                        // 流星雨全程陪伴（intro 更稀疏）
   if(meteorTimer<=0){ spawnMeteor();
     meteorTimer=(phase==="live"?2.6:5.2)+Math.random()*(phase==="live"?4.2:3.4); }
@@ -1705,13 +1837,17 @@ addEventListener("mousemove",e=>{
     setPos(starDrag,{x:+n.x.toFixed(4),y:+n.y.toFixed(4)}); flushOv(); return; }
   if(dragInfo){ cam.x=dragInfo.cx+(e.clientX-dragInfo.sx); cam.y=dragInfo.cy+(e.clientY-dragInfo.sy); clampCam(); return; }
   hovered=starAt(e.clientX,e.clientY);
-  canvas.style.cursor=editMode?"crosshair":(hovered?"pointer":"grab");
+  if(showConst){ constHover=-1;                                    // 星宿宿名悬停高亮
+    for(const h of constHits){ if(e.clientX>=h.x&&e.clientX<=h.x+h.w&&e.clientY>=h.y&&e.clientY<=h.y+h.h){ constHover=h.i; break; } } }
+  canvas.style.cursor=constHover>=0?"pointer":editMode?"crosshair":(hovered?"pointer":"grab");
 });
 addEventListener("mouseup",e=>{
   canvas.classList.remove("dragging");
   if(starDrag){ starDrag=null; return; }
   if(dragInfo){ const moved=Math.hypot(e.clientX-dragInfo.sx,e.clientY-dragInfo.sy); dragInfo=null;
-    if(moved<6&&!editMode){ const c=starAt(e.clientX,e.clientY); if(c) openCard(c); } }
+    if(moved<6&&!editMode){ const ai=constHit(e.clientX,e.clientY);          // 星宿宿名点击 → 星宿档案
+      if(ai>=0) openConst(ai);
+      else{ const c=starAt(e.clientX,e.clientY); if(c) openCard(c); } } }
 });
 canvas.addEventListener("wheel",e=>{
   e.preventDefault();
@@ -1730,7 +1866,9 @@ canvas.addEventListener("touchend",e=>{
   if(starDrag){ starDrag=null; return; }
   if(dragInfo){ const t=e.changedTouches[0];
     const moved=Math.hypot(t.clientX-dragInfo.sx,t.clientY-dragInfo.sy); dragInfo=null;
-    if(moved<10&&!editMode){ const c=starAt(t.clientX,t.clientY); if(c) openCard(c); } }
+    if(moved<10&&!editMode){ const ai=constHit(t.clientX,t.clientY);         // 星宿宿名点击 → 星宿档案
+      if(ai>=0) openConst(ai);
+      else{ const c=starAt(t.clientX,t.clientY); if(c) openCard(c); } } }
 });
 /* 双指捏合缩放（移动端 V1.1） */
 let pinch=null;
@@ -1826,6 +1964,7 @@ function openCard(c){
   if(TOUR.active) endTour();
   if(findPanel.classList.contains("open")) closeFind();
   auPluck(659.25,.05); setTimeout(()=>auPluck(987.77,.028),110);   // 开卡双音
+  if(typeof RADIO!=="undefined"&&RADIO.on) radioStop();            // 换卡时停掉上一首主题曲
   if(typeof statsPanel!=="undefined"&&statsPanel.classList.contains("open")){
     statsPanel.classList.remove("open"); document.getElementById("btnStats").classList.remove("on"); }
   const img=document.getElementById("cardImg");
@@ -1838,7 +1977,7 @@ function openCard(c){
       '<circle cx="204" cy="116" r="36" fill="none" stroke="rgba(255,215,106,.5)" stroke-width="1.4"/>'+
       '<text x="204" y="130" font-size="34" fill="rgba(255,231,168,.6)" text-anchor="middle" '+
       'font-family="PingFang SC,Microsoft YaHei,sans-serif">喵</text></svg>'); };
-  img.style.display=c.photo?"block":"none"; if(c.photo) img.src=PH(c.photo);
+  img.style.display=c.photo?"block":"none"; if(c.photo) img.src=c.photo;
   document.getElementById("cardName").textContent=c.name;
   document.getElementById("cardRank").innerHTML=medalSVG(c.rank,30)+"<span>"+c.rank+(c.title?" · "+c.title:"")+"</span>";
   document.getElementById("cardTitle").textContent=c.id+" ｜ 中北大学猫咪编制委员会 · 登记在册";
@@ -1852,6 +1991,7 @@ function openCard(c){
     (cal?'<span class="pill cal">✎ 位置待你校准</span>':'<span class="pill cal">随机分布 · 待校准</span>');
   const sp=toScreen(catPos(c).x,catPos(c).y);                 // 点星仪式感：星芒爆发 + 诞生涟漪
   spawnBurst(sp.x,sp.y,starColors(c)[0]); spawnRipple(sp.x,sp.y,starColors(c)[1]);
+  startMorph(c,sp.x,sp.y);                                    // 星尘变身：星星炸开、重组成这只猫的照片
   refreshSeenBtn();
   card.classList.add("open");
   flyTo(c);
@@ -2153,7 +2293,7 @@ function openFind(){
     g.sort((a,b)=>(b.photoCount||1)-(a.photoCount||1));
     return '<div class="fdGroup"><b>'+AREAS[i].t+'</b><span>'+g.length+' 只常驻</span></div>'+
       g.map(c=>'<div class="fRow" data-id="'+c.id+'">'+
-        (c.photo?'<img loading="lazy" src="'+PH(c.photo)+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
+        (c.photo?'<img loading="lazy" src="'+c.photo+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
         '<span class="fi"><span class="fn">'+c.name+'<i style="color:'+rankTier(c.rank).m+'">'+medalSVG(c.rank,12)+c.rank+'</i></span>'+
         '<span class="ff">'+(c.features||"").split("、")[0]+'</span></span></div>').join("");
   }).join("");
@@ -2245,6 +2385,7 @@ function startTour(){ if(TOUR.active) return;
 function endTour(fin){ if(!TOUR.active&&!fin) return;
   TOUR.active=false; TOUR.tm.forEach(clearTimeout); TOUR.tm=[];
   tourBar.classList.remove("on"); btnTour.classList.remove("on"); tourCap.textContent="";
+  if(REC.on) recStop();                                        // 导览结束 → 纪录片自动成片
   if(fin) toast("导览结束 · 开始你的寻喵之旅吧"); }
 btnTour.onclick=()=>TOUR.active?endTour():startTour();
 tourBar.onclick=()=>{ if(TOUR.active) tourNext(); };
@@ -2275,4 +2416,599 @@ if(location.search.includes("skipintro")){
 }
 const _cm=location.search.match(/card=([A-Za-z0-9-]+)/);
 if(_cm){ const _c=CATS.find(c=>c.id===_cm[1]); if(_c) setTimeout(()=>openCard(_c),300); }
+
+/* ============================================================
+ * v2.1 创意升级 · 十二星宿 / 星尘变身 / 喵星纪录片 / 本命猫
+ *        表情包工坊 / 喵星护照 / 主题曲 / 签文朗读 / 秋季限定
+ * ============================================================ */
+const _FT='"PingFang SC","Microsoft YaHei",sans-serif';
+const _eoc=k=>1-Math.pow(1-k,3);
+const photoSrc=c=>{ try{ return (typeof PH==="function")?PH(c.photo):c.photo; }catch(e){ return c.photo; } };
+
+/* ---------- 陀螺仪视差（移动端倾斜手机 · 星层轻微位移） ---------- */
+const TILT={x:0,y:0};
+addEventListener("deviceorientation",e=>{
+  if(e.gamma==null||!isFinite(e.gamma)||!isFinite(e.beta)) return;
+  TILT.x=Math.max(-1,Math.min(1,e.gamma/28));
+  TILT.y=Math.max(-1,Math.min(1,(e.beta-45)/28));
+});
+
+/* ---------- 十二星宿：12大出没区升格为12座星座 ---------- */
+const CONST=[
+ {n:"守望者座",en:"THE WATCHERS",s:"楼宇之间的眼睛。窗台、桌布、红砖地，守望者座把宿舍区的灯火统统收进眼底——谁的晚归，都逃不过它的注视。"},
+ {n:"岁月座",en:"THE AGES",s:"老旧房区的深处藏着最年长的星光。砖缝里长出的猫，比墙上任何一张告示都清楚，这里发生过什么。"},
+ {n:"擂台座",en:"THE ARENA",s:"排水格栅是他们的擂台。摔跤与陪练日日过招，胜负从不重要——重要的是明天照样准时出勤。"},
+ {n:"藏锋座",en:"THE HIDDEN",s:"石台灌木深处，锋芒尽敛。全编制唯一的纯黑星就藏在这里，路灯亮起，才看得清他的轮廓。"},
+ {n:"烟火座",en:"THE HEARTH",s:"投喂点是人间烟火最浓的星域。这里的星最懂感恩：谁递过罐头，谁蹲下过身子，都被一颗颗星记着。"},
+ {n:"游侠座",en:"THE KNIGHTS",s:"车轮之间，自有一套骑士精神。他们不抢车位，只挑最暖的那台引擎盖，替晚归的人看管人间。"},
+ {n:"巡夜座",en:"THE PATROL",s:"沿道路延展的一串星，是夜巡队长的巡逻线。左眼一圈黑斑像戴着眼罩，路灯都得让三分。"},
+ {n:"隐士座",en:"THE HERMITS",s:"山脚草地的修行者。远离人群不是孤僻，是选择——最好的阳光和最安静的下午，都在山的那一边。"},
+ {n:"哨位座",en:"THE SENTRY",s:"金属护栏是不换岗的哨位。栏杆上的星站姿永远笔挺，白手套一抬，谁过都得目送。"},
+ {n:"边关座",en:"THE FRONTIER",s:"铁栅栏围墙是校园的边关。新兵初雪在这里站第一班岗，纯白的一身，盯着镜头毫不怯场。"},
+ {n:"书声座",en:"THE SCHOLARS",s:"教学楼瓷砖区的星沾着书卷气。上过课桌的课代表是这里的长官：听课不听课，全看心情。"},
+ {n:"花影座",en:"THE BLOSSOM",s:"绿门粉砖地是全校最温柔的星域。花影摇曳处，连打盹都带着三分春意。"},
+];
+let showConst=false, constHover=-1, constGroups=null;
+const constHits=[], constP=document.getElementById("constP");
+function buildConstGroups(){
+  constGroups=AREAS.map(()=>[]);
+  for(const c of CATS){ try{ constGroups[areaIndexOf(c)].push(c); }catch(e){} }
+}
+function constMST(pts){                                          // Prim 最小生成树：星座连线不交叉
+  if(pts.length<2) return [];
+  const inT=[0], rest=[], edges=[];
+  for(let i=1;i<pts.length;i++) rest.push(i);
+  while(rest.length){
+    let bi=0,bj=0,bd=1e9;
+    for(const a of inT) for(let r=0;r<rest.length;r++){
+      const b=rest[r], d=(pts[a].x-pts[b].x)**2+(pts[a].y-pts[b].y)**2;
+      if(d<bd){ bd=d; bi=a; bj=r; }
+    }
+    edges.push([bi,rest[bj]]); inT.push(rest[bj]); rest.splice(bj,1);
+  }
+  return edges;
+}
+function drawConstellations(){
+  if(!constGroups) buildConstGroups();
+  constHits.length=0;
+  ctx.save();
+  ctx.font='600 12px "PingFang SC","Microsoft YaHei"';
+  for(let i=0;i<CONST.length;i++){
+    const grp=constGroups[i]; if(grp.length<2) continue;
+    const pts=grp.map(c=>catPos(c));
+    const hot=constHover===i;
+    ctx.globalCompositeOperation="lighter";                     // 星座连线
+    for(const [a,b] of constMST(pts)){
+      const sa=toScreen(pts[a].x,pts[a].y), sb=toScreen(pts[b].x,pts[b].y);
+      const g2=ctx.createLinearGradient(sa.x,sa.y,sb.x,sb.y);
+      g2.addColorStop(0,"rgba(255,215,140,"+(hot?.55:.18)+")");
+      g2.addColorStop(1,"rgba(125,232,216,"+(hot?.55:.18)+")");
+      ctx.strokeStyle=g2; ctx.lineWidth=hot?1.7:1;
+      ctx.setLineDash(hot?[]:[7,9]); ctx.lineDashOffset=-animT*8;
+      ctx.beginPath(); ctx.moveTo(sa.x,sa.y); ctx.lineTo(sb.x,sb.y); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    let cx=0,cy=0; for(const p of pts){ cx+=p.x; cy+=p.y; } cx/=pts.length; cy/=pts.length;
+    const lp=toScreen(cx,cy-.032);                              // 宿名标注（可点击）
+    if(lp.x>46&&lp.x<W-46&&lp.y>54&&lp.y<H-30){
+      const label="◈ "+CONST[i].n, tw=ctx.measureText(label).width;
+      const bx=lp.x-tw/2-9, by=lp.y-11, bw=tw+18, bh=21;
+      ctx.globalCompositeOperation="source-over";
+      ctx.fillStyle=hot?"rgba(255,225,150,.16)":"rgba(4,8,18,.66)";
+      ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,10); ctx.fill();
+      ctx.strokeStyle=hot?"rgba(255,215,106,.65)":"rgba(255,215,106,.3)"; ctx.lineWidth=1; ctx.stroke();
+      ctx.fillStyle=hot?"#ffe9b8":"rgba(255,233,184,.88)";
+      ctx.textAlign="center"; ctx.fillText(label,lp.x,by+14.5);
+      constHits.push({x:bx,y:by,w:bw,h:bh,i});
+    }
+  }
+  ctx.restore();
+}
+function constHit(x,y){ for(const h of constHits)
+  if(x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h) return h.i; return -1; }
+function closeConst(){ constP.classList.remove("open"); }
+function openConst(i){
+  const grp=constGroups[i]; if(!grp||!grp.length) return;
+  if(card.classList.contains("open")){ card.classList.remove("open"); selected=null; }
+  document.getElementById("cpTitle").textContent=CONST[i].n+" · "+CONST[i].en;
+  const seenN=grp.filter(c=>SEEN.has(c.id)).length;
+  document.getElementById("cpMeta").textContent=grp.length+" 颗星 · 图鉴点亮 "+seenN+"/"+grp.length;
+  document.getElementById("cpStory").textContent=CONST[i].s;
+  document.getElementById("cpBody").innerHTML=grp.slice()
+    .sort((a,b)=>(b.photoCount||1)-(a.photoCount||1))
+    .map(c=>'<div class="fRow" data-id="'+c.id+'">'+
+      (c.photo?'<img loading="lazy" src="'+photoSrc(c)+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
+      '<span class="fi"><span class="fn">'+c.name+'<i style="color:'+rankTier(c.rank).m+'">'+medalSVG(c.rank,12)+c.rank+'</i></span>'+
+      '<span class="ff">'+(c.features||"").split("、")[0]+'</span></span></div>').join("");
+  constP.querySelectorAll(".fRow").forEach(r=>r.onclick=()=>{ closeConst(); openCard(catById(r.dataset.id)); });
+  constP.classList.add("open");
+}
+const btnConst=document.getElementById("btnConst");
+btnConst.onclick=()=>{
+  showConst=!showConst; btnConst.classList.toggle("on",showConst);
+  if(showConst){ buildConstGroups(); toast("◈ 十二星宿已点亮 · 点击宿名听它的故事"); }
+};
+document.getElementById("cpClose").onclick=closeConst;
+
+/* ---------- 星尘变身：开卡瞬间星星炸开、重组成这只猫的照片 ---------- */
+const MORPH={pts:[],t:0,dur:1.05,hold:.62,gone:.55,x:0,y:0,wide:300};
+function startMorph(c,sx,sy){
+  MORPH.pts=[]; MORPH.t=0; MORPH.x=sx; MORPH.y=sy;
+  if(!c.photo) return;
+  const small=Math.min(W,H)<700;
+  const gw=small?60:96, gh=Math.round(gw*2/3);
+  MORPH.wide=small?Math.min(230,W*.72):Math.min(400,W*.34);
+  const img=new Image();
+  img.onload=()=>{
+    try{
+      const cv=document.createElement("canvas"); cv.width=gw; cv.height=gh;
+      const g=cv.getContext("2d",{willReadFrequently:true});
+      const ir=img.width/img.height, tr=gw/gh; let sw,sh,sx0,sy0;
+      if(ir>tr){ sh=img.height; sw=sh*tr; sx0=(img.width-sw)/2; sy0=0; }
+      else{ sw=img.width; sh=sw/tr; sx0=0; sy0=(img.height-sh)/2; }
+      g.drawImage(img,sx0,sy0,sw,sh,0,0,gw,gh);
+      const data=g.getImageData(0,0,gw,gh).data;                // file:// 离线直开会被浏览器判为污染画布 → 静默降级
+      const pts=[];
+      for(let y=0;y<gh;y++) for(let x=0;x<gw;x++){
+        const k=(y*gw+x)*4;
+        if(data[k+3]<60) continue;
+        const lum=(data[k]*.299+data[k+1]*.587+data[k+2]*.114)/255;
+        if(lum<.14) continue;
+        pts.push({fx:x/(gw-1)-.5,fy:y/(gh-1)-.5,r:.6+lum*1.5,
+          col:"rgb("+data[k]+","+data[k+1]+","+data[k+2]+")",
+          sa:Math.random()*TAU,sr:60+Math.random()*180,ph:Math.random()*TAU});
+      }
+      const cap=small?1100:2400;
+      if(pts.length>cap){ const st=Math.ceil(pts.length/cap),p2=[];
+        for(let i=0;i<pts.length;i+=st) p2.push(pts[i]); MORPH.pts=p2; }
+      else MORPH.pts=pts;
+    }catch(e){ MORPH.pts=[]; }
+  };
+  img.onerror=()=>{};
+  img.src=photoSrc(c);
+}
+function drawMorph(dt){
+  const M=MORPH; if(!M.pts.length) return;
+  M.t+=dt;
+  const D=M.dur,HO=M.hold,GO=M.gone;
+  if(M.t>=D+HO+GO){ M.pts=[]; return; }
+  const wpx=M.wide,hpx=wpx*2/3, small=Math.min(W,H)<700;
+  let cx,cy;
+  if(small){ cx=clamp(M.x,wpx/2+10,W-wpx/2-10); cy=clamp(M.y-hpx*.5,hpx*.5+70,H*.62); }
+  else{ cx=clamp(M.x,wpx/2+14,Math.max(wpx/2+14,W-460-wpx/2)); cy=clamp(M.y-hpx*.42,hpx*.65,H-hpx*.65-90); }
+  let alpha=1,fade=0;
+  if(M.t<D) alpha=Math.min(1,M.t/.22);
+  else if(M.t>D+HO) fade=clamp((M.t-D-HO)/GO,0,1);
+  ctx.save(); ctx.globalCompositeOperation="lighter";
+  if(M.t>D*.72){                                                 // 显影框：照片在星野中成像
+    const fk=clamp((M.t-D*.72)/(D*.5),0,1)*(1-fade);
+    if(fk>.02){ ctx.globalAlpha=fk*.55; ctx.strokeStyle="rgba(125,232,214,.9)"; ctx.lineWidth=1.2;
+      ctx.setLineDash([5,7]); ctx.lineDashOffset=-animT*14;
+      ctx.beginPath(); ctx.roundRect(cx-wpx/2-9,cy-hpx/2-9,wpx+18,hpx+18,10); ctx.stroke();
+      ctx.setLineDash([]); }
+  }
+  const sz=small?1.6:2.0;
+  for(const p of M.pts){
+    const st=Math.min(.3,(Math.abs(p.fx)+Math.abs(p.fy))*.42);  // 径向波：中心先到、边缘后到
+    const k=clamp((M.t-st*.35)/(D-st*.35),0,1); if(k<=0) continue;
+    const e=_eoc(k);
+    const ex=cx+p.fx*wpx, ey=cy+p.fy*hpx;
+    const R0=p.sr*Math.min(1,k*4);                               // 前1/4程：先炸开
+    const bx0=M.x+Math.cos(p.sa)*R0, by0=M.y+Math.sin(p.sa)*R0;
+    let x=bx0+(ex-bx0)*e, y=by0+(ey-by0)*e;
+    x+=Math.sin(e*Math.PI+p.ph)*(1-e)*22; y+=Math.cos(e*Math.PI+p.ph*1.3)*(1-e)*22;
+    if(fade>0) y-=fade*(26+(p.ph%1)*40);                         // 散场：化作星尘上飘
+    let a=alpha*(.35+.65*e)*(1-fade);
+    if(M.t>D) a*=.82+.18*Math.sin(animT*7+p.ph*3);               // 成像后微闪
+    if(a<=.012) continue;
+    ctx.globalAlpha=a; ctx.fillStyle=p.col;
+    const r=p.r*sz*(.7+.3*e);
+    ctx.fillRect(x-r/2,y-r/2,r,r);
+  }
+  ctx.restore();
+}
+
+/* ---------- 喵星纪录片：导览全程一键录屏成片 ---------- */
+const REC={on:false,mr:null,chunks:[],t0:0};
+const btnRec=document.getElementById("btnRec");
+function recStart(){
+  if(REC.on){ recStop(); return; }
+  try{
+    if(!canvas.captureStream||typeof MediaRecorder==="undefined"){ toast("当前浏览器不支持录屏"); return; }
+    const mime=["video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm","video/mp4"]
+      .find(m=>MediaRecorder.isTypeSupported(m));
+    if(!mime){ toast("当前浏览器不支持WebM录制"); return; }
+    REC.mr=new MediaRecorder(canvas.captureStream(30),{mimeType:mime,videoBitsPerSecond:6e6});
+    REC.chunks=[];
+    REC.mr.ondataavailable=e=>{ if(e.data&&e.data.size) REC.chunks.push(e.data); };
+    REC.mr.onstop=recSave;
+    REC.mr.start(250); REC.on=true; REC.t0=performance.now();
+    btnRec.classList.add("on");
+    toast("⏺ 纪录片开拍 · 再点一次停止并成片");
+    if(!TOUR.active) startTour();
+  }catch(e){ toast("录屏启动失败"); }
+}
+function recStop(){ if(REC.mr&&REC.mr.state!=="inactive") REC.mr.stop(); }
+function recSave(){
+  const had=REC.on; REC.on=false; btnRec.classList.remove("on");
+  if(!had||!REC.chunks.length) return;
+  try{
+    const blob=new Blob(REC.chunks,{type:REC.mr.mimeType||"video/webm"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download="喵星纪录片-"+new Date().toISOString().slice(0,10)+
+      ((REC.mr.mimeType||"").includes("mp4")?".mp4":".webm");
+    a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    toast("🎬 纪录片已导出 · 发抖音/小红书去");
+  }catch(e){ toast("导出失败："+(e.message||"")); }
+}
+btnRec.onclick=e=>{ e.stopPropagation(); recStart(); };
+const _fmtT=s=>{ s|=0; return ((s/60)|0)+":"+String(s%60).padStart(2,"0"); };
+function drawRecBadge(){
+  if(!REC.on) return;
+  const t=(performance.now()-REC.t0)/1000;
+  ctx.save();
+  ctx.font='600 12px "PingFang SC","Microsoft YaHei"'; ctx.textAlign="right";
+  const txt=_fmtT(t)+" ｜ 图鉴 "+SEEN.size+"/"+CATS.length+" ｜ 中北喵星图";
+  const tw=ctx.measureText(txt).width;
+  ctx.fillStyle="rgba(4,8,18,.6)";
+  ctx.beginPath(); ctx.roundRect(W-tw-34,H-34,tw+24,22,11); ctx.fill();
+  ctx.fillStyle="rgba(255,93,93,"+(.55+.45*Math.sin(t*5))+")";
+  ctx.beginPath(); ctx.arc(W-tw-22,H-23,4,0,TAU); ctx.fill();
+  ctx.fillStyle="#cfd9f5"; ctx.fillText(txt,W-14,H-19);
+  ctx.restore();
+}
+
+/* ---------- 本命猫测试：5题测出你的本命猫 ---------- */
+const SQ=[
+ {q:"开学第一周，你的状态更像？",o:[
+   ["课表排满也要节节全到",{橘:.9,rank:.4,extro:.15}],
+   ["先睡到自然醒再说",{狸花:.7,night:.35}],
+   ["跟着室友走就有饭吃",{三花:.6,黑白:.15,extro:.1}]]},
+ {q:"深夜十二点，你在干嘛？",o:[
+   ["在赶due",{橘:.4,rank:.35}],
+   ["游戏/剧/手机，戒不掉",{黑白:.6,night:.5}],
+   ["早就睡了，养生模式",{狸花:.4,三花:.3}]]},
+ {q:"你的社交电量？",o:[
+   ["人来疯，越聚越嗨",{橘:.5,extro:.4}],
+   ["独处才充电，人多就累",{黑白:.45,night:.35,extro:-.3}],
+   ["看场合，可进可退",{三花:.4,extro:.1}]]},
+ {q:"朋友眼里的你更像？",o:[
+   ["靠谱的军师/课代表",{橘:.4,rank:.4}],
+   ["安静的怪才",{黑白:.5,night:.2}],
+   ["气氛担当显眼包",{三花:.5,extro:.3}]]},
+ {q:"抽中隐藏款盲盒，你会？",o:[
+   ["立刻晒给全世界",{橘:.3,extro:.3}],
+   ["默默收好自己看",{狸花:.4,其他:.3}],
+   ["转手送给有缘人",{三花:.3,extro:.2}]]},
+];
+const SOUL_COAT={"橘":"自带暖场的橘光体质","狸花":"低调靠谱的实干派","三花":"有趣又难懂的灵魂","黑白":"冷静清醒的夜行派","其他":"独一份的稀有款"};
+const SOUL={result:null};
+let sqI=0; const sqAns=[];
+function sqOpen(){ sqI=0; sqAns.length=0; sqShow();
+  document.getElementById("soulP").classList.add("open"); }
+function sqClose(){ document.getElementById("soulP").classList.remove("open"); }
+function sqShow(){
+  document.getElementById("sqDots").innerHTML=SQ.map((_,i)=>"<i class='"+(i<sqI?"on":"")+"'></i>").join("");
+  const Q=SQ[sqI];
+  document.getElementById("sqBody").innerHTML="<div class='sqQ'>"+Q.q+"</div>"+
+    Q.o.map((o,i)=>"<button class='sqOpt' data-i='"+i+"'>"+o[0]+"</button>").join("");
+  document.querySelectorAll(".sqOpt").forEach(b=>b.onclick=()=>{
+    sqAns.push(Q.o[+b.dataset.i][1]); sqI++;
+    if(sqI<SQ.length) sqShow(); else sqResult(); });
+}
+function sqResult(){
+  const w={橘:0,狸花:0,三花:0,黑白:0,其他:0,night:0,extro:0,rank:0};
+  for(const a of sqAns) for(const k in a) w[k]+=a[k];
+  let best=null,bs=-1e9;
+  for(const c of CATS){
+    let s=(w[c.coatGroup]||0)*1.15;
+    const night=/夜|晚上|深夜|凌晨/.test(c.bio+c.features)?1:0;
+    s+=w.night*night*1.15-w.night*(1-night)*.25;
+    const extro=Math.min(1,((c.photoCount||1)/6)*.65+(c.brightness||.7)*.35);
+    s+=w.extro*extro;
+    s+=w.rank*(rankTier(c.rank).n/3*.7+(/校长|少校|上校/.test(c.rank)?.45:0));
+    s+=(hashStr(c.id)%7)*.02;
+    if(s>bs){ bs=s; best=c; }
+  }
+  const top=Object.entries(w).filter(([k])=>SOUL_COAT[k]).sort((a,b)=>b[1]-a[1])[0][0];
+  let why="你的答案指向"+SOUL_COAT[top]+"：";
+  if(w.night>.8) why+="能量高峰在夜里，深夜的星和你同频；";
+  if(w.extro>.8) why+="社交电量很足，人群里最亮的那颗就是你；";
+  else if(w.extro<.2) why+="独处才能充电，星光不吵不闹刚刚好；";
+  if(w.rank>1) why+="天生带点领袖气场，和它的军衔很配。";
+  SOUL.result={cat:best,why};
+  document.getElementById("sqDots").innerHTML="";
+  document.getElementById("sqBody").innerHTML=
+    (best.photo?"<img class='sqRImg' src='"+photoSrc(best)+"' alt='"+best.name+"'>":"")+
+    "<div class='sqRName'>"+best.name+"</div>"+
+    "<div class='sqRRank'>"+medalSVG(best.rank,18)+" "+best.rank+(best.title?" · "+best.title:"")+"</div>"+
+    "<div class='sqRWhy'>"+why+"<br>"+best.bio+"</div>"+
+    "<div class='sqRBtns'><div id='sqGo'>→ 去看它的那颗星</div><div id='sqCard'>⤓ 专属卡</div><div id='sqRe'>↺ 再测一次</div></div>";
+  document.getElementById("sqGo").onclick=()=>{ sqClose(); openCard(best); };
+  document.getElementById("sqCard").onclick=()=>makeSoulCard(best,why);
+  document.getElementById("sqRe").onclick=sqOpen;
+}
+document.getElementById("btnSoul").onclick=()=>{
+  const mm=document.getElementById("moreMenu");
+  if(mm.classList.contains("open")){ mm.classList.remove("open");
+    document.getElementById("btnMore").setAttribute("aria-expanded","false"); }
+  sqOpen(); };
+document.getElementById("sqClose").onclick=sqClose;
+function makeSoulCard(c,why){
+  const pw=720,ph=1000,p=document.createElement("canvas"); p.width=pw; p.height=ph;
+  const finish=im=>{
+    const g=p.getContext("2d");
+    g.fillStyle="#03060f"; g.fillRect(0,0,pw,ph);
+    g.globalAlpha=.85; g.drawImage(neb,-40,-30,pw+80,ph+60); g.globalAlpha=1;
+    for(let i=0;i<140;i++){ g.globalAlpha=.14+Math.random()*.5;
+      g.fillStyle=Math.random()<.25?"#ffe2a0":"#b7c6f2";
+      const r=Math.random()*1.7+.3; g.fillRect(Math.random()*pw,Math.random()*ph,r,r); }
+    g.globalAlpha=1; g.textAlign="center";
+    const cx=pw/2;
+    if(im){ g.save(); g.beginPath(); g.arc(cx,300,128,0,TAU); g.clip();
+      const ir=im.width/im.height; let sw,sh;
+      if(ir>1){ sh=im.height; sw=sh; } else{ sw=im.width; sh=sw; }
+      g.drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,cx-128,172,256,256); g.restore();
+      g.strokeStyle="rgba(255,215,106,.55)"; g.lineWidth=2.5;
+      g.beginPath(); g.arc(cx,300,128,0,TAU); g.stroke();
+    }else{
+      const [c1,c2]=starColors(c);
+      const gr=g.createRadialGradient(cx,300,0,cx,300,128);
+      gr.addColorStop(0,c1); gr.addColorStop(.4,c2+"66"); gr.addColorStop(1,"rgba(0,0,0,0)");
+      g.globalCompositeOperation="lighter"; g.fillStyle=gr;
+      g.beginPath(); g.arc(cx,300,128,0,TAU); g.fill(); g.globalCompositeOperation="source-over";
+    }
+    g.fillStyle="#93a8d8"; g.font='300 24px '+_FT;
+    g.fillText("今日份宇宙仪 · 你的本命猫是——",cx,492);
+    g.fillStyle="#ffe9a8"; g.font='700 62px '+_FT;
+    g.shadowColor="rgba(255,215,106,.5)"; g.shadowBlur=24;
+    g.fillText(c.name,cx,568); g.shadowBlur=0;
+    g.fillStyle="#ffd76a"; g.font='24px '+_FT;
+    g.fillText(c.rank+(c.title?" · "+c.title:""),cx,612);
+    g.strokeStyle="rgba(255,215,106,.35)"; g.lineWidth=1;
+    g.beginPath(); g.moveTo(pw/2-110,646); g.lineTo(pw/2+110,646); g.stroke();
+    g.fillStyle="#c2cfef"; g.font='22px '+_FT;
+    const yEnd=wrapText(g,why,cx,692,pw-160,38);
+    g.fillStyle="#8a97bd"; g.font='19px '+_FT;
+    g.fillText("和它一样：真实、在编、被记录在册的中北猫",cx,yEnd+18);
+    g.fillStyle="#54648f"; g.font='16px '+_FT;
+    g.fillText("中北喵星图 · NUC CAT GALAXY",cx,ph-74);
+    g.fillText("76只在编基米 · 2026-08实地普查 · 图鉴 "+SEEN.size+"/"+CATS.length,cx,ph-48);
+    const a=document.createElement("a"); a.href=p.toDataURL("image/png");
+    a.download="本命猫-"+c.name+".png"; a.click();
+    toast("⤓ 本命猫专属卡已生成："+c.name);
+  };
+  if(c.photo){ const im=new Image();
+    im.onload=()=>finish(im); im.onerror=()=>finish(null); im.src=photoSrc(c); }
+  else finish(null);
+}
+
+/* ---------- 表情包工坊：档案照片一键变梗图 ---------- */
+const MEME_CAPS=["本喵今日不上班","摸鱼中 · 勿cue","别卷了 躺平","投喂请排队","刚睡醒 勿扰","罐头呢？",
+ "此路是我开","看到就蹭一下","非请勿摸（可请）","下雨天 不营业","在编 · 有军衔","学长认证 · 好摸"];
+const MEME={cat:null,img:null,cap:MEME_CAPS[0]};
+const memePanel=document.getElementById("memeP");
+function memeClose(){ memePanel.classList.remove("open"); }
+function _strokeText(g,t,x,y){ g.strokeText(t,x,y); g.fillStyle="#fff"; g.fillText(t,x,y); }
+function memeRender(){
+  const cv=document.getElementById("memeCv"), g=cv.getContext("2d"), S=cv.width;
+  g.clearRect(0,0,S,S); g.textAlign="center"; g.lineJoin="round";
+  if(MEME.img){
+    const ir=MEME.img.width/MEME.img.height; let sw,sh;
+    if(ir>1){ sh=MEME.img.height; sw=sh; } else{ sw=MEME.img.width; sh=sw; }
+    g.drawImage(MEME.img,(MEME.img.width-sw)/2,(MEME.img.height-sh)/2,sw,sh,0,0,S,S);
+  }else{
+    const bg=g.createLinearGradient(0,0,0,S);
+    bg.addColorStop(0,"#1c2c5e"); bg.addColorStop(1,"#0a1228");
+    g.fillStyle=bg; g.fillRect(0,0,S,S);
+    g.fillStyle="rgba(255,231,168,.6)"; g.font='400 150px '+_FT; g.fillText("喵",S/2,S/2+52);
+  }
+  const vg=g.createLinearGradient(0,S*.5,0,S);
+  vg.addColorStop(0,"rgba(3,6,15,0)"); vg.addColorStop(1,"rgba(3,6,15,.82)");
+  g.fillStyle=vg; g.fillRect(0,S*.5,S,S*.5);
+  const cap=MEME.cap||"喵";
+  g.font='700 72px '+_FT; g.lineWidth=10; g.strokeStyle="rgba(0,0,0,.88)";
+  if(g.measureText(cap).width>S-90){
+    const mid=Math.ceil(cap.length/2);
+    _strokeText(g,cap.slice(0,mid),S/2,S-160); _strokeText(g,cap.slice(mid),S/2,S-80);
+  }else _strokeText(g,cap,S/2,S-100);
+  g.font='600 24px '+_FT; g.lineWidth=5; g.textAlign="left";
+  _strokeText(g,"中北喵星图 · "+(MEME.cat?MEME.cat.name:""),26,44);
+  g.textAlign="center";
+}
+function memeOpen(){
+  if(!selected) return;
+  card.classList.remove("open");                               // 面板与卡同区，收卡防遮挡（selected保留）
+  MEME.cat=selected;
+  document.getElementById("mmTitle").textContent="表情包工坊 · "+selected.name;
+  const inp=document.getElementById("memeInput");
+  inp.value=(MEME.cap&&!MEME_CAPS.includes(MEME.cap))?MEME.cap:"";
+  document.getElementById("memeCaps").innerHTML=MEME_CAPS.map(s=>
+    "<span class='mCap"+(s===MEME.cap?" on":"")+"'>"+s+"</span>").join("");
+  document.querySelectorAll("#memeCaps .mCap").forEach(el=>el.onclick=()=>{
+    MEME.cap=el.textContent; inp.value="";
+    document.querySelectorAll("#memeCaps .mCap").forEach(x=>x.classList.toggle("on",x===el));
+    memeRender(); });
+  if(!MEME.img||MEME.img.dataset.id!==selected.id){
+    MEME.img=null;
+    if(selected.photo){ const im=new Image(); im.dataset.id=selected.id;
+      im.onload=()=>{ if(MEME.cat===selected){ MEME.img=im; memeRender(); } };
+      im.onerror=()=>{ if(MEME.cat===selected){ MEME.img=null; memeRender(); } };
+      im.src=photoSrc(selected); }
+  }
+  memeRender();
+  memePanel.classList.add("open");
+}
+document.getElementById("cardMeme").onclick=memeOpen;
+document.getElementById("mmClose").onclick=memeClose;
+document.getElementById("memeInput").addEventListener("input",e=>{
+  const v=e.target.value.trim();
+  if(v){ MEME.cap=v; document.querySelectorAll("#memeCaps .mCap").forEach(x=>x.classList.remove("on")); memeRender(); }
+});
+document.getElementById("memeGo").onclick=()=>{
+  try{ const cv=document.getElementById("memeCv");
+    const a=document.createElement("a"); a.href=cv.toDataURL("image/png");
+    a.download="表情包-"+(MEME.cat?MEME.cat.name:"")+".png"; a.click();
+    toast("⤓ 表情包已导出 · 发群里去");
+  }catch(e){ toast("本地直开时照片导出受限 · 在线版可导出"); }
+};
+
+/* ---------- 喵星护照：十二星宿集章 + 称号体系 ---------- */
+const PASS_TITLES=[[0,"初来乍到"],[10,"猫门常客"],[30,"校园通"],[50,"猫学长认证"],[76,"喵星传奇"]];
+const ppPanel=document.getElementById("passP");
+function ppClose(){ ppPanel.classList.remove("open"); }
+function ppOpen(){
+  if(!constGroups) buildConstGroups();
+  const seen=SEEN.size, title=PASS_TITLES.filter(t=>seen>=t[0]).pop()[1];
+  const lit=constGroups.filter(g=>g.some(c=>SEEN.has(c.id))).length;
+  document.getElementById("ppMeta").innerHTML=
+    "图鉴进度 <b>"+seen+" / "+CATS.length+"</b> · 当前称号 <b>"+title+"</b><br>"+
+    "十二星宿已点亮 <b>"+lit+" / 12</b> · 每座星宿遇见 1 只即盖章";
+  document.getElementById("ppBody").innerHTML=CONST.map((k,i)=>{
+    const g=constGroups[i]||[], n=g.filter(c=>SEEN.has(c.id)).length;
+    return "<div class='ppStamp"+(n?" on":"")+"' data-i='"+i+"'><b>"+k.n.slice(0,2)+"</b><span>"+
+      (n?n+" / "+g.length:g.length+" 只")+"</span></div>";
+  }).join("");
+  document.querySelectorAll(".ppStamp").forEach(s=>s.onclick=()=>{ ppClose(); openConst(+s.dataset.i); });
+  ppPanel.classList.add("open");
+}
+document.getElementById("btnPassport").onclick=()=>{
+  const mm=document.getElementById("moreMenu");
+  if(mm.classList.contains("open")){ mm.classList.remove("open");
+    document.getElementById("btnMore").setAttribute("aria-expanded","false"); }
+  ppOpen(); };
+document.getElementById("ppClose").onclick=ppClose;
+document.getElementById("ppGo").onclick=()=>{
+  if(!constGroups) buildConstGroups();
+  const seen=SEEN.size, title=PASS_TITLES.filter(t=>seen>=t[0]).pop()[1];
+  const pw=1080,ph=1440,p=document.createElement("canvas"); p.width=pw; p.height=ph;
+  const g=p.getContext("2d");
+  const bg=g.createLinearGradient(0,0,0,ph);
+  bg.addColorStop(0,"#0d1a38"); bg.addColorStop(.55,"#0a1228"); bg.addColorStop(1,"#050914");
+  g.fillStyle=bg; g.fillRect(0,0,pw,ph);
+  for(let i=0;i<170;i++){ g.fillStyle="rgba("+(180+Math.random()*70|0)+","+(200+Math.random()*40|0)+",255,"+(Math.random()*.5+.1).toFixed(2)+")";
+    g.fillRect(Math.random()*pw,Math.random()*ph,Math.random()<.12?2:1,1); }
+  g.textAlign="center";
+  g.fillStyle="#ffe9b8"; g.font='700 64px '+_FT;
+  g.shadowColor="rgba(255,215,106,.55)"; g.shadowBlur=26;
+  g.fillText("喵星护照",pw/2,108); g.shadowBlur=0;
+  g.font='300 24px '+_FT; g.fillStyle="#93a8d8";
+  g.fillText("CAT PASSPORT · "+CATS.length+" 颗星 · 十二星宿集章之旅",pw/2,152);
+  g.fillStyle="#ffd76a"; g.font='600 30px '+_FT;
+  g.fillText("称号「"+title+"」 · 已遇见 "+seen+" / "+CATS.length,pw/2,214);
+  g.strokeStyle="rgba(255,215,106,.35)"; g.lineWidth=1.5; g.setLineDash([7,7]);
+  g.strokeRect(60,246,pw-120,1120); g.setLineDash([]);
+  for(let i=0;i<CONST.length;i++){
+    const col=i%3, row=(i/3)|0;
+    const cx=200+col*340, cy=392+row*256;
+    const grp=constGroups[i]||[], n=grp.filter(c=>SEEN.has(c.id)).length;
+    g.save();
+    if(n){ g.strokeStyle="rgba(255,215,106,.65)"; g.fillStyle="rgba(255,215,106,.06)"; g.lineWidth=2.5; }
+    else{ g.strokeStyle="rgba(140,170,255,.3)"; g.setLineDash([6,7]); g.lineWidth=1.6; }
+    g.beginPath(); g.arc(cx,cy,92,0,TAU); g.fill(); g.stroke(); g.setLineDash([]);
+    if(n){ g.fillStyle="#ffd76a"; g.font='400 22px '+_FT; g.fillText("✦",cx,cy-52); }
+    g.fillStyle=n?"#ffe9b8":"rgba(140,170,255,.5)";
+    g.font='600 32px '+_FT; g.fillText(CONST[i].n.slice(0,2),cx,cy+8);
+    g.font='300 20px '+_FT;
+    g.fillText(n?("点亮 "+n+"/"+grp.length):(grp.length+" 只待寻"),cx,cy+44);
+    g.restore();
+  }
+  g.fillStyle="#6d7ba6"; g.font='300 19px '+_FT;
+  g.fillText("打开「中北喵星图」· 按十二星宿寻访 · 遇见即可盖章",pw/2,1408);
+  g.fillStyle="#a9ece2"; g.font='600 23px '+_FT;
+  g.fillText("中北大学—校园猫咪档案Skill · 人民兵工第一校的喵星编制",pw/2,1424);
+  const a=document.createElement("a"); a.href=p.toDataURL("image/png");
+  a.download="喵星护照-"+title+".png"; a.click();
+  toast("⤓ 喵星护照已导出 · 称号「"+title+"」");
+};
+
+/* ---------- 猫星主题曲：每只猫的数据谱成一段旋律 ---------- */
+const RADIO={on:false,tm:[],gain:null};
+function radioStop(){
+  RADIO.on=false; RADIO.tm.forEach(clearTimeout); RADIO.tm=[];
+  if(RADIO.gain){ try{ RADIO.gain.disconnect(); }catch(e){} RADIO.gain=null; }
+  document.getElementById("cardRadio").classList.remove("playing");
+}
+function radioPlay(c){
+  if(RADIO.on){ radioStop(); return; }
+  if(!AU.ctx) auInit();
+  const ac=AU.ctx;
+  if(!ac){ toast("当前浏览器不支持音频"); return; }
+  if(ac.state==="suspended") ac.resume();
+  const scales={"橘":[0,2,4,5,7,9,11],"狸花":[0,2,4,7,9],"三花":[0,2,3,5,7,8,10],"黑白":[0,3,5,6,7,10]};
+  const sc=scales[c.coatGroup]||[0,2,4,7,11];
+  const seed=hashStr(c.id+c.name);
+  const base=220*Math.pow(2,(seed%7)/12);                        // 起始音：名字哈希决定
+  const n=10+((seed>>3)%6), step=.16+(c.brightness||.7)*.12;    // 步长：亮度决定节奏
+  RADIO.on=true;
+  document.getElementById("cardRadio").classList.add("playing");
+  toast("♪ "+c.name+" 的主题曲 · 毛色定调式、名字定动机 · 再点停止");
+  const g=ac.createGain(); g.gain.value=.5; g.connect(ac.destination); RADIO.gain=g;
+  const note=(f,t0,v,ty)=>{
+    const o=ac.createOscillator(); o.type=ty||"sine"; o.frequency.value=f;
+    const gg=ac.createGain();
+    gg.gain.setValueAtTime(0,t0); gg.gain.linearRampToValueAtTime(v,t0+.015);
+    gg.gain.exponentialRampToValueAtTime(.0004,t0+1.6);
+    o.connect(gg); gg.connect(g); o.start(t0); o.stop(t0+1.7);
+  };
+  const t0=ac.currentTime+.06;
+  note(base/2,t0,.15,"triangle");                                // 根音铺底
+  for(let i=0;i<n;i++){                                         // 动机：名字哈希的确定性序列
+    const deg=sc[((seed>>(i*2))&7)%sc.length];
+    note(base*Math.pow(2,deg/12)*(i%4===3?2:1),t0+.4+i*step,.085);
+  }
+  note(base/2,t0+.4+n*step,.13,"triangle");                     // 尾音收束
+  RADIO.tm.push(setTimeout(()=>{ if(RADIO.on) radioStop(); },(.5+n*step+1.9)*1000));
+}
+document.getElementById("cardRadio").onclick=()=>{ if(selected) radioPlay(selected); };
+
+/* ---------- 喵签朗读：签文开口说话 ---------- */
+document.getElementById("fSpeak").onclick=()=>{
+  try{
+    const day=Math.floor(Date.now()/864e5);
+    const c=CATS[day%CATS.length], grade=GRADES[(day>>2)%4],
+      text=FORT_TPL[day%FORT_TPL.length](c);
+    const u=new SpeechSynthesisUtterance("今日喵签，"+grade+"。"+c.name+"。"+text);
+    u.lang="zh-CN"; u.rate=.92;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    toast("🔊 正在朗读 · "+c.name);
+  }catch(e){ toast("当前浏览器不支持朗读"); }
+};
+
+/* ---------- 秋季限定：开学季星尘里飘金叶 ---------- */
+const AUTUMN={on:false,lv:[]};
+(function(){ const m=new Date().getMonth();                     // 9-10月开学季限定
+  if(m===8||m===9){ AUTUMN.on=true;
+    for(let i=0;i<24;i++) AUTUMN.lv.push({x:Math.random(),y:Math.random(),
+      vy:.006+Math.random()*.01,ph:Math.random()*TAU,sp:.4+Math.random()*.8,
+      r:2+Math.random()*2.6,rot:Math.random()*TAU,vr:(Math.random()-.5)*1.4});
+  }})();
+function drawLeaves(dt){
+  if(!AUTUMN.on||phase==="intro") return;
+  ctx.save();
+  for(const L of AUTUMN.lv){
+    L.y+=L.vy*dt*10; L.ph+=dt*L.sp; L.rot+=L.vr*dt;
+    if(L.y>1.04){ L.y=-.04; L.x=Math.random(); }
+    const s=toScreen(L.x+Math.sin(L.ph)*.006,L.y);
+    if(s.x<-20||s.x>W+20||s.y<-20||s.y>H+20) continue;
+    ctx.save(); ctx.translate(s.x,s.y); ctx.rotate(L.rot+Math.sin(L.ph)*.4);
+    ctx.globalAlpha=.32+.2*Math.sin(L.ph*1.7);
+    const g2=ctx.createLinearGradient(-L.r*2,0,L.r*2,0);
+    g2.addColorStop(0,"#ffb347"); g2.addColorStop(.5,"#ffd28a"); g2.addColorStop(1,"#c97b2d");
+    ctx.fillStyle=g2; ctx.beginPath(); ctx.ellipse(0,0,L.r*1.7,L.r*.75,0,0,TAU); ctx.fill();
+    ctx.strokeStyle="rgba(255,200,120,.35)"; ctx.lineWidth=.6;
+    ctx.beginPath(); ctx.moveTo(-L.r*1.7,0); ctx.lineTo(L.r*1.7,0); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+/* ---------- 新面板 Esc 关闭 ---------- */
+addEventListener("keydown",e=>{
+  if(e.key!=="Escape") return;
+  if(document.getElementById("soulP").classList.contains("open")){ sqClose(); return; }
+  if(constP.classList.contains("open")){ closeConst(); return; }
+  if(ppPanel.classList.contains("open")){ ppClose(); return; }
+  if(memePanel.classList.contains("open")){ memeClose(); return; }
+});
 </script></body></html>
