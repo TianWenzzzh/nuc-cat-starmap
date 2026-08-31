@@ -470,7 +470,7 @@
       animation-duration:.01ms !important; animation-iteration-count:1 !important;
       transition-duration:.01ms !important; scroll-behavior:auto !important; }
   }
-  /* ===== v2.1 十二星宿 · 星尘变身 · 纪录片 · 本命猫 · 表情包 · 护照 ===== */
+  /* ===== 十二星宿 · 星尘变身 · 纪录片 · 本命猫 · 表情包 · 护照 ===== */
   #constP,#memeP,#passP{ position:fixed; top:66px; right:16px; z-index:55; width:342px;
     max-height:calc(100vh - 84px); overflow-y:auto; padding:16px 14px 14px; border-radius:16px;
     background:rgba(7,12,26,.93); border:1px solid rgba(125,232,214,.16); backdrop-filter:blur(14px);
@@ -980,7 +980,7 @@ const cam = { x:0, y:0, z:1 };
 const mapImg = new Image(); let mapReady=false, MW=1920, MH=1239;
 mapImg.onload = ()=>{ mapReady=true; MW=mapImg.width; MH=mapImg.height; if(phase==="live") fitMap(); };
 mapImg.src = PH(MAP_SRC);
-/* roundRect 兜底（Safari<16 / Chrome<99 星图黑屏修复） */
+/* roundRect 兜底（Safari<16 / Chrome<99 无此方法时补齐） */
 if(!CanvasRenderingContext2D.prototype.roundRect){
   CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
     r=Math.min(r||0,w/2,h/2);
@@ -2402,24 +2402,14 @@ pickLucky();   // SEEN 已就绪 · 选出今夜幸运星
 
 /* ---------- 入场 ---------- */
 document.getElementById("introBtn").onclick=startEntry;
-// 测试参数：?skipintro 直接入场；&card=ID 直接开卡
-if(location.search.includes("skipintro")){
-  document.getElementById("intro").style.display="none"; phase="live"; fitMap();
-  trailBurst=2; tctx.clearRect(0,0,W,H);                 // 跳过路径同样召唤星轨秀
-  document.body.classList.add("live");
-}else{
-  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve())
-    .then(()=>requestAnimationFrame(()=>{ try{
-      buildIntro();
-      if(introPts.length) document.getElementById("intro").classList.add("fx");
-    }catch(e){} }));
-}
-const _cm=location.search.match(/card=([A-Za-z0-9-]+)/);
-if(_cm){ const _c=CATS.find(c=>c.id===_cm[1]); if(_c) setTimeout(()=>openCard(_c),300); }
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve())
+  .then(()=>requestAnimationFrame(()=>{ try{
+    buildIntro();
+    if(introPts.length) document.getElementById("intro").classList.add("fx");
+  }catch(e){} }));
 
 /* ============================================================
- * v2.1 创意升级 · 十二星宿 / 星尘变身 / 喵星纪录片 / 本命猫
- *        表情包工坊 / 喵星护照 / 主题曲 / 签文朗读 / 秋季限定
+ * 星宿 / 星尘变身 / 纪录片 / 本命猫 / 表情包 / 护照 / 主题曲
  * ============================================================ */
 const _FT='"PingFang SC","Microsoft YaHei",sans-serif';
 const _eoc=k=>1-Math.pow(1-k,3);
