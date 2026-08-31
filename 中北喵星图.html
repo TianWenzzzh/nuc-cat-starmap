@@ -1977,7 +1977,7 @@ function openCard(c){
       '<circle cx="204" cy="116" r="36" fill="none" stroke="rgba(255,215,106,.5)" stroke-width="1.4"/>'+
       '<text x="204" y="130" font-size="34" fill="rgba(255,231,168,.6)" text-anchor="middle" '+
       'font-family="PingFang SC,Microsoft YaHei,sans-serif">喵</text></svg>'); };
-  img.style.display=c.photo?"block":"none"; if(c.photo) img.src=c.photo;
+  img.style.display=c.photo?"block":"none"; if(c.photo) img.src=photoSrc(c);
   document.getElementById("cardName").textContent=c.name;
   document.getElementById("cardRank").innerHTML=medalSVG(c.rank,30)+"<span>"+c.rank+(c.title?" · "+c.title:"")+"</span>";
   document.getElementById("cardTitle").textContent=c.id+" ｜ 中北大学猫咪编制委员会 · 登记在册";
@@ -2293,7 +2293,7 @@ function openFind(){
     g.sort((a,b)=>(b.photoCount||1)-(a.photoCount||1));
     return '<div class="fdGroup"><b>'+AREAS[i].t+'</b><span>'+g.length+' 只常驻</span></div>'+
       g.map(c=>'<div class="fRow" data-id="'+c.id+'">'+
-        (c.photo?'<img loading="lazy" src="'+c.photo+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
+        (c.photo?'<img loading="lazy" src="'+photoSrc(c)+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
         '<span class="fi"><span class="fn">'+c.name+'<i style="color:'+rankTier(c.rank).m+'">'+medalSVG(c.rank,12)+c.rank+'</i></span>'+
         '<span class="ff">'+(c.features||"").split("、")[0]+'</span></span></div>').join("");
   }).join("");
