@@ -96,6 +96,10 @@
     border:1px solid rgba(255,215,106,.32); color:var(--gold-soft); white-space:nowrap; transition:.2s; }
   #searchHint .sChip:hover,#searchHint .sChip:focus-visible{ background:rgba(255,215,106,.13);
     border-color:rgba(255,215,106,.6); outline:none; }
+  #searchHint .sReset{ border-color:rgba(125,232,216,.45); color:var(--cyan,#7de8d8); }
+  #searchHint .sReset:hover,#searchHint .sReset:focus-visible{ background:rgba(125,232,216,.12);
+    border-color:rgba(125,232,216,.7); }
+  #searchHint .sTip{ flex-basis:100%; color:var(--dimmer); font-size:11px; }
   #chips{ display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; flex-shrink:1;
     -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 30px),transparent);
     mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 30px),transparent); }
@@ -224,6 +228,9 @@
   .cardImgWrap{ position:relative; height:264px; overflow:hidden; background:
     radial-gradient(circle at 50% 45%, #16224a 0%, #0a1228 70%); }
   #cardImg{ width:100%; height:100%; object-fit:cover; display:block; }
+  #cardImg.loading{ background:radial-gradient(ellipse at 50% 42%,#1c2c5e,#0a1228 78%);
+    animation:imgPulse 1.1s ease-in-out infinite; }
+  @keyframes imgPulse{ 0%,100%{ filter:brightness(.92); } 50%{ filter:brightness(1.22); } }
   #card.open #cardImg{ animation:kenburns 16s ease-in-out .3s infinite alternate; }
   @keyframes kenburns{ from{ transform:scale(1) translate(0,0);} to{ transform:scale(1.12) translate(-1.6%,1.2%);} }
   .cardImgWrap::before{ content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
@@ -1052,9 +1059,13 @@ const CALIB={
   /* 绿门粉砖地 */
   "CAT-080":{x:.482,y:.626}
 };
+let _lsWarn=0;                                       // 存储写入失败：10分钟最多提醒一次，防刷屏
+const lsWarn=()=>{ const now=Date.now();
+  if(now-_lsWarn<6e5) return; _lsWarn=now;
+  toast("⚠ 浏览器存储受限 · 进度可能不被保存，建议先导出喵星护照留存"); };
 const loadOv=()=>OV;
 let OV={}; try{ OV=JSON.parse(localStorage.getItem(LS_KEY)||"{}")||{}; }catch(e){ OV={}; }
-const flushOv=()=>{ try{ localStorage.setItem(LS_KEY,JSON.stringify(OV)); }catch(e){} };   // 隐私模式容错
+const flushOv=()=>{ try{ localStorage.setItem(LS_KEY,JSON.stringify(OV)); }catch(e){ lsWarn(); } };
 const POS=new Map();
 const catPos=c=>{ let p=POS.get(c.id);
   if(!p){ p=OV[c.id]||CALIB[c.id]||basePos(c); POS.set(c.id,p); } return p; };
@@ -1968,7 +1979,9 @@ function openCard(c){
   if(typeof statsPanel!=="undefined"&&statsPanel.classList.contains("open")){
     statsPanel.classList.remove("open"); document.getElementById("btnStats").classList.remove("on"); }
   const img=document.getElementById("cardImg");
+  img.classList.remove("loading");
   img.onerror=()=>{ img.onerror=null;                 // 照片缺失兜底：换成星夜占位图
+    img.classList.remove("loading"); toast("照片没加载出来 · 先用星星代替了");
     img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(
       '<svg xmlns="http://www.w3.org/2000/svg" width="408" height="264">'+
       '<defs><radialGradient id="g" cx="50%" cy="42%" r="75%">'+
@@ -1977,7 +1990,10 @@ function openCard(c){
       '<circle cx="204" cy="116" r="36" fill="none" stroke="rgba(255,215,106,.5)" stroke-width="1.4"/>'+
       '<text x="204" y="130" font-size="34" fill="rgba(255,231,168,.6)" text-anchor="middle" '+
       'font-family="PingFang SC,Microsoft YaHei,sans-serif">喵</text></svg>'); };
-  img.style.display=c.photo?"block":"none"; if(c.photo) img.src=photoSrc(c);
+  img.onload=()=>{ img.classList.remove("loading"); };
+  img.style.display=c.photo?"block":"none";
+  if(c.photo){ img.classList.add("loading"); img.src=photoSrc(c);   // 加载期间星尘呼吸占位
+    if(img.complete&&img.naturalWidth>0) img.classList.remove("loading"); }  // 缓存直出的不闪占位
   document.getElementById("cardName").textContent=c.name;
   document.getElementById("cardRank").innerHTML=medalSVG(c.rank,30)+"<span>"+c.rank+(c.title?" · "+c.title:"")+"</span>";
   document.getElementById("cardTitle").textContent=c.id+" ｜ 中北大学猫咪编制委员会 · 登记在册";
@@ -2143,21 +2159,36 @@ addEventListener("keydown",e=>{
 });
 let _sq=null;                                        // 搜索防抖：停顿 0.7s 后无结果则提示
 const sHint=document.getElementById("searchHint"), searchBox=document.getElementById("search");
-function showSearchHint(){                           // 无结果：持久建议面板，点名字直接帮你搜
+function showSearchHint(){                           // 无结果：持久建议面板，区分"筛选卡住"还是"词没对上"
   const r=searchBox.getBoundingClientRect(), keep=query; query="";
   const pool=CATS.filter(catVisible); query=keep;    // 忽略当前词、只按毛色筛，点了必有结果
   sHint.style.top=(r.bottom+8)+"px"; sHint.style.right=Math.max(10,innerWidth-r.right)+"px";
   sHint.textContent="";
   const t=document.createElement("span"); t.className="sTitle";
-  t.textContent="未找到「"+query+"」· 点一个试试："; sHint.appendChild(t);
-  const picks=[]; while(picks.length<3&&picks.length<pool.length){
-    const c=pool[Math.floor(Math.random()*pool.length)]; if(!picks.includes(c)) picks.push(c); }
-  for(const c of picks){ const b=document.createElement("span"); b.className="sChip";
-    b.textContent=c.name; b.tabIndex=0; b.setAttribute("role","button");
-    b.onclick=()=>{ searchBox.value=c.name; searchBox.dispatchEvent(new Event("input")); };
-    sHint.appendChild(b); }
+  t.textContent="未找到「"+query+"」"; sHint.appendChild(t);
+  if(filter!=="all"){                                // 毛色筛选在挡路：先给出口
+    const t2=document.createElement("span"); t2.className="sTitle";
+    t2.textContent="（当前只看「"+({橘:"橘系",狸:"狸花",三:"三花",黑:"黑白"}[filter]||filter)+"）";
+    sHint.appendChild(t2);
+    const cb=document.createElement("span"); cb.className="sChip sReset";
+    cb.textContent="清筛选 · 看全部76只"; cb.tabIndex=0; cb.setAttribute("role","button");
+    cb.onclick=()=>{ setFilter("all"); sHint.style.display="none";
+      toast("已清除毛色筛选 · 再搜一次试试"); };
+    sHint.appendChild(cb);
+  }else{
+    const picks=[]; while(picks.length<3&&picks.length<pool.length){
+      const c=pool[Math.floor(Math.random()*pool.length)]; if(!picks.includes(c)) picks.push(c); }
+    for(const c of picks){ const b=document.createElement("span"); b.className="sChip";
+      b.textContent=c.name; b.tabIndex=0; b.setAttribute("role","button");
+      b.onclick=()=>{ searchBox.value=c.name; searchBox.dispatchEvent(new Event("input")); };
+      sHint.appendChild(b); }
+    const tip=document.createElement("span"); tip.className="sTip";
+    tip.textContent="可以搜：喵名 / 军衔 / 毛色（如「橘」）"; sHint.appendChild(tip);
+  }
   sHint.style.display="flex";
-  toast("未找到「"+query+"」相关的喵 · 换个名字试试");
+  toast(filter!=="all"
+    ? "毛色筛选下没有「"+query+"」· 试试清空筛选"
+    : "未找到「"+query+"」相关的喵 · 换个名字或军衔试试");
 }
 document.addEventListener("pointerdown",e=>{         // 点到面板和搜索框以外就收起建议
   if(!sHint.contains(e.target)&&e.target!==searchBox) sHint.style.display="none"; });
@@ -2214,9 +2245,8 @@ function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg
 
 /* ---------- 喵图鉴 · 遇见收集 ---------- */
 const SEEN=new Set((()=>{ try{ return JSON.parse(localStorage.getItem("nuc-cat-seen")||"[]"); }catch(e){ return []; } })());
-let _lsWarn=false;                                   // 存储写入失败只提醒一次，不反复打扰
 const saveSeen=()=>{ try{ localStorage.setItem("nuc-cat-seen",JSON.stringify([...SEEN])); }
-  catch(e){ if(!_lsWarn){ _lsWarn=true; toast("⚠ 浏览器存储受限 · 图鉴进度可能没保存上，换非无痕窗口可恢复"); } } };
+  catch(e){ lsWarn(); } };
 let seenMile=[10,30,50,76].filter(m=>SEEN.size>=m).pop()||0;   // 初始化不补放烟花
 function updateSeen(){
   const n=SEEN.size, tot=CATS.length;
