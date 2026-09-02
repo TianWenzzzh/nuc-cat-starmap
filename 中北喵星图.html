@@ -626,6 +626,15 @@
   .ppStamp.on{ border:1.5px solid rgba(255,215,106,.55); color:#ffe9b8; background:rgba(255,215,106,.06);
     box-shadow:inset 0 0 20px rgba(255,215,106,.1); }
   .ppStamp:hover{ border-color:rgba(125,232,214,.5); }
+  #ppSync{ display:flex; gap:8px; justify-content:center; margin-top:9px; }
+  #ppSyncBox{ margin-top:9px; }
+  #ppCode{ width:100%; box-sizing:border-box; height:74px; resize:none; padding:9px 12px; border-radius:10px;
+    font-size:11px; line-height:1.5; letter-spacing:.3px; word-break:break-all;
+    border:1px solid rgba(140,170,255,.22); background:rgba(10,16,34,.85); color:#e6ecfa; outline:none; }
+  #ppCode:focus{ border-color:rgba(125,232,214,.5); }
+  #ppSyncTip{ margin-top:7px; font-size:11.5px; color:#8fa3cf; text-align:center; }
+  #ppSyncBtns{ display:flex; gap:8px; justify-content:center; margin-top:8px; }
+  #ppSyncBox [hidden]{ display:none; }                            /* .chip 的 display 会压过 hidden 属性，这里补回来 */
   @media (max-width:760px){
     #constP,#memeP,#passP{ top:auto; bottom:0; right:0; left:0; width:100%; max-height:62vh;
       border-radius:18px 18px 0 0; transform:translateY(20px); }
@@ -698,7 +707,7 @@
   <div class="gdSec">常见问题</div>
   <details class="gdQ"><summary>照片显示不出来？</summary><p>照片加载失败会自动换成星夜占位图（一颗星星图案），不影响其他功能；离线版把整包重新解压一次通常就恢复了。</p></details>
   <details class="gdQ"><summary>搜索不到想找的猫？</summary><p>搜索认喵名、军衔、岗位和毛色特征，试短词：「橘」「狸花」「三花」「校长」。搜不到时下面会给出几个可直接点的建议名。</p></details>
-  <details class="gdQ"><summary>图鉴收集的进度不见了？</summary><p>进度只存在当前浏览器的本地存储里：换浏览器、开无痕、清缓存都会清零。重要进度建议先在「喵星护照」里导出留底。</p></details>
+  <details class="gdQ"><summary>图鉴收集的进度不见了？</summary><p>进度只存在当前浏览器的本地存储里：换浏览器、开无痕、清缓存都会清零。重要进度先在「喵星护照」里点「备份进度码」，把那串码存进备忘录；换设备时点「粘贴码恢复」就能原样找回。</p></details>
   <details class="gdQ"><summary>手机上有点卡？特效变简单了？</summary><p>不会悄悄降级：星图每秒测帧率，低于 32 帧自动切「省电」档并弹提示告诉你（星系与星尘抽稀，保流畅）。想调回来去「⋯」菜单点「特效」循环换档：自动→完整→均衡→省电，选中的档位会被记住。</p></details>
   <details class="gdQ"><summary>手机和电脑体验一样吗？</summary><p>功能完全一致。手机多了底部快捷栏（喵签/本命猫/护照/星图志/指南一键直达），支持陀螺仪倾斜视差和双指缩放；电脑端是鼠标彗星与全量特效。档位自动适配各自性能，互不影响。</p></details>
   <details class="gdQ"><summary>离线版和在线版有什么区别？</summary><p>功能完全一致，数据全部内嵌、零外部请求。在线版点开就玩，离线版断网、机房照常跑。</p></details>
@@ -830,6 +839,18 @@
   <div id="ppMeta"></div>
   <div id="ppBody" class="ppGrid"></div>
   <div id="ppGo" tabindex="0" role="button">⤓ 导出我的喵星护照</div>
+  <div id="ppSync">
+    <span class="chip" id="ppBak" tabindex="0" role="button">⇧ 备份进度码</span>
+    <span class="chip" id="ppImp" tabindex="0" role="button">⇩ 粘贴码恢复</span>
+  </div>
+  <div id="ppSyncBox" hidden>
+    <textarea id="ppCode" spellcheck="false" aria-label="进度码"></textarea>
+    <div id="ppSyncTip"></div>
+    <div id="ppSyncBtns">
+      <span class="chip" id="ppCopy" tabindex="0" role="button" hidden>⧉ 复制</span>
+      <span class="chip" id="ppApply" tabindex="0" role="button" hidden>✔ 恢复进度</span>
+    </div>
+  </div>
 </div>
 <div id="toast" role="status"></div>
 <script src="assets/photo-data-01.js"></script><script src="assets/photo-data-02.js"></script><script src="assets/photo-data-03.js"></script><script src="assets/photo-data-04.js"></script><script src="assets/photo-data-05.js"></script><script src="assets/photo-data-06.js"></script><script src="assets/photo-data-07.js"></script><script src="assets/photo-data-08.js"></script><script>function PH(p){var k=String(p||"").split("/").pop();return (window.__PHOTOS&&window.__PHOTOS[k])||p}</script>
@@ -1158,7 +1179,7 @@ const CALIB={
 let _lsWarn=0;                                       // 存储写入失败：10分钟最多提醒一次，防刷屏
 const lsWarn=()=>{ const now=Date.now();
   if(now-_lsWarn<6e5) return; _lsWarn=now;
-  toast("⚠ 浏览器存储受限 · 进度可能不被保存，建议先导出喵星护照留存"); };
+  toast("⚠ 浏览器存储受限 · 进度可能不被保存，建议在「喵星护照」里备份进度码"); };
 const loadOv=()=>OV;
 let OV={}; try{ OV=JSON.parse(localStorage.getItem(LS_KEY)||"{}")||{}; }catch(e){ OV={}; }
 const flushOv=()=>{ try{ localStorage.setItem(LS_KEY,JSON.stringify(OV)); }catch(e){ lsWarn(); } };
@@ -1908,6 +1929,7 @@ function draw(ts){
   drawFx(dt);
   drawMorph(dt);                                               // 星尘变身：开卡时星散成粒子重组成猫
   drawLeaves(dt);                                              // 秋季限定：开学季星尘飘金叶
+  drawSnow(dt);                                                // 冬季限定：星尘里落初雪
   drawRecBadge();                                              // 纪录片录制中：角标水印
   meteorTimer-=dt;                                        // 流星雨全程陪伴（intro 更稀疏）
   if(meteorTimer<=0){ spawnMeteor();
@@ -3112,6 +3134,45 @@ document.getElementById("ppGo").onclick=()=>{
   toast("⤓ 喵星护照已导出 · 称号「"+title+"」");
 };
 
+/* ---------- 进度码：图鉴与手动校准打包成一段文字，换设备粘贴即可恢复 ---------- */
+const ppBox=document.getElementById("ppSyncBox"), ppCode=document.getElementById("ppCode"),
+      ppTip=document.getElementById("ppSyncTip"), ppCopy=document.getElementById("ppCopy"),
+      ppApply=document.getElementById("ppApply");
+const codeOf=()=> "MEOW1."+btoa(unescape(encodeURIComponent(JSON.stringify({v:1,seen:[...SEEN],ov:OV}))));
+document.getElementById("ppBak").onclick=()=>{
+  ppBox.hidden=false; ppCode.readOnly=true; ppCode.value=codeOf();
+  ppCopy.hidden=false; ppApply.hidden=true;
+  ppTip.textContent="把这段进度码存进备忘录，或发到新设备 · 恢复后图鉴和校准都在";
+};
+document.getElementById("ppImp").onclick=()=>{
+  ppBox.hidden=false; ppCode.readOnly=false; ppCode.value="";
+  ppCopy.hidden=true; ppApply.hidden=false;
+  ppTip.textContent="粘贴之前备份的进度码，再点「恢复进度」";
+  setTimeout(()=>ppCode.focus(),80);
+};
+ppCopy.onclick=()=>{
+  const done=()=>toast("⧉ 进度码已复制");
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ppCode.value).then(done,()=>{ ppCode.select(); document.execCommand("copy"); done(); });
+  }else{ ppCode.select(); document.execCommand("copy"); done(); }
+};
+ppApply.onclick=()=>{
+  const raw=ppCode.value.trim();
+  if(!raw.startsWith("MEOW1.")){ toast("这串码不对 · 需要完整的 MEOW1 进度码"); return; }
+  let d=null; try{ d=JSON.parse(decodeURIComponent(escape(atob(raw.slice(6))))); }catch(e){}
+  if(!d||d.v!==1||!Array.isArray(d.seen)){ toast("进度码解析失败 · 确认没有复制缺漏"); return; }
+  const ok=new Set(CATS.map(c=>c.id));
+  SEEN.clear(); d.seen.forEach(id=>{ if(ok.has(id)) SEEN.add(id); });
+  OV={};
+  if(d.ov&&typeof d.ov==="object") for(const k in d.ov){
+    const p=d.ov[k];
+    if(ok.has(k)&&p&&typeof p.x==="number"&&typeof p.y==="number") OV[k]={x:p.x,y:p.y,manual:true};
+  }
+  POS.clear(); flushOv(); saveSeen();
+  ppOpen(); ppBox.hidden=true;
+  toast("✔ 进度已恢复 · 图鉴 "+SEEN.size+" / "+CATS.length+" · 欢迎回到喵星");
+};
+
 /* ---------- 猫星主题曲：每只猫的数据谱成一段旋律 ---------- */
 const RADIO={on:false,tm:[],gain:null};
 function radioStop(){
@@ -3165,13 +3226,17 @@ document.getElementById("fSpeak").onclick=()=>{
   }catch(e){ toast("当前浏览器不支持朗读"); }
 };
 
-/* ---------- 秋季限定：开学季星尘里飘金叶 ---------- */
-const AUTUMN={on:false,lv:[]};
-(function(){ const m=new Date().getMonth();                     // 9-10月开学季限定
+/* ---------- 秋季限定：开学季星尘里飘金叶 · 冬季限定：星尘里落初雪 ---------- */
+const AUTUMN={on:false,lv:[]}, WINTER={on:false,lv:[]};
+(function(){ const m=new Date().getMonth();                     // 季节限定：9-10月金叶 · 11-2月初雪
   if(m===8||m===9){ AUTUMN.on=true;
     for(let i=0;i<24;i++) AUTUMN.lv.push({x:Math.random(),y:Math.random(),
       vy:.006+Math.random()*.01,ph:Math.random()*TAU,sp:.4+Math.random()*.8,
       r:2+Math.random()*2.6,rot:Math.random()*TAU,vr:(Math.random()-.5)*1.4});
+  }else if(m===10||m===11||m===0||m===1){ WINTER.on=true;
+    for(let i=0;i<26;i++) WINTER.lv.push({x:Math.random(),y:Math.random(),
+      vy:.004+Math.random()*.008,ph:Math.random()*TAU,sp:.3+Math.random()*.6,
+      r:1+Math.random()*1.9});
   }})();
 function drawLeaves(dt){
   if(!AUTUMN.on||phase==="intro") return;
@@ -3189,6 +3254,24 @@ function drawLeaves(dt){
     ctx.strokeStyle="rgba(255,200,120,.35)"; ctx.lineWidth=.6;
     ctx.beginPath(); ctx.moveTo(-L.r*1.7,0); ctx.lineTo(L.r*1.7,0); ctx.stroke();
     ctx.restore();
+  }
+  ctx.restore();
+}
+function drawSnow(dt){
+  if(!WINTER.on||phase==="intro") return;
+  ctx.save();
+  for(const F of WINTER.lv){
+    F.y+=F.vy*dt*10; F.ph+=dt*F.sp;
+    if(F.y>1.04){ F.y=-.04; F.x=Math.random(); }
+    const s=toScreen(F.x+Math.sin(F.ph)*.012,F.y);
+    if(s.x<-20||s.x>W+20||s.y<-20||s.y>H+20) continue;
+    const tw=.4+.3*Math.sin(F.ph*1.3);
+    if(F.r>2.2){                                          // 大片雪：先铺一层薄光晕再点芯
+      ctx.globalAlpha=tw*.35; ctx.fillStyle="rgba(200,220,255,1)";
+      ctx.beginPath(); ctx.arc(s.x,s.y,F.r*2.1,0,TAU); ctx.fill();
+    }
+    ctx.globalAlpha=tw; ctx.fillStyle="rgba(236,244,255,1)";
+    ctx.beginPath(); ctx.arc(s.x,s.y,F.r,0,TAU); ctx.fill();
   }
   ctx.restore();
 }
