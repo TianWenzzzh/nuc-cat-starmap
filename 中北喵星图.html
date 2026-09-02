@@ -368,6 +368,23 @@
     display:flex; align-items:center; justify-content:center; color:#9fb0d8; font-size:12px;
     cursor:pointer; border:1px solid rgba(140,170,255,.2); background:rgba(5,9,20,.5); transition:.2s; }
   #statsClose:hover{ color:var(--gold-soft); border-color:var(--gold); transform:rotate(90deg); }
+  /* ---------- 移动端快捷 dock（≤768px：喵签/本命猫/护照/星图志/指南，彩蛋不再藏深） ---------- */
+  #quickBar{ display:none; }
+  @media (max-width:768px){
+    #quickBar{ display:flex; position:fixed; z-index:50;
+      bottom:calc(10px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%);
+      gap:4px; padding:7px 10px; border-radius:20px;
+      background:linear-gradient(170deg, rgba(14,23,50,.88), rgba(6,10,24,.92));
+      border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(10px);
+      box-shadow:0 10px 36px rgba(0,0,0,.5); }
+    body.live #quickBar{ transform:translateX(-50%); }     /* 覆盖 .ui 的 transform:none，保持居中 */
+    #quickBar .qk{ flex-direction:column; gap:3px; padding:6px 13px; font-size:10.5px;
+      border-color:transparent; background:transparent; }
+    #quickBar .qk:active{ transform:scale(.92); }
+    #quickBar .aIco{ font-size:16px; }
+    #hint{ bottom:86px; }                                    #quickBar 在底部，提示条上移避让
+  }
+
   /* ---------- 喵星指南面板 ---------- */
   #guide{ position:fixed; top:66px; right:16px; z-index:55; width:min(320px,calc(100vw - 32px));
     max-height:calc(100vh - 84px); overflow-y:auto; padding:15px 18px 17px; border-radius:16px;
@@ -657,8 +674,17 @@
   <span class="chip mItem" id="btnPassport" tabindex="0" role="button"><span class="aIco">▣</span>喵星护照</span>
   <span class="chip mItem" id="btnFortune" tabindex="0" role="button"><span class="aIco">🎋</span>喵签</span>
   <span class="chip mItem" id="btnAudio" tabindex="0" role="button"><span class="aIco">♪</span>星语</span>
+  <span class="chip mItem" id="btnFx" tabindex="0" role="button" aria-label="切换特效档位"><span class="aIco">⚡</span><span class="fxTxt">特效 · 自动</span></span>
   <span class="chip mItem" id="btnGuide" tabindex="0" role="button"><span class="aIco">?</span>喵星指南</span>
   <span class="chip mItem" id="btnEdit" tabindex="0" role="button"><span class="aIco">✎</span>校准位置</span>
+</div>
+
+<div id="quickBar" class="ui" aria-label="快捷操作">
+  <span class="chip qk" id="qkFortune" tabindex="0" role="button"><span class="aIco">🎋</span>喵签</span>
+  <span class="chip qk" id="qkSoul" tabindex="0" role="button"><span class="aIco">❖</span>本命猫</span>
+  <span class="chip qk" id="qkPassport" tabindex="0" role="button"><span class="aIco">▣</span>护照</span>
+  <span class="chip qk" id="qkStats" tabindex="0" role="button"><span class="aIco">▤</span>星图志</span>
+  <span class="chip qk" id="qkGuide" tabindex="0" role="button"><span class="aIco">?</span>指南</span>
 </div>
 
 <div id="guide" aria-label="喵星指南">
@@ -673,7 +699,8 @@
   <details class="gdQ"><summary>照片显示不出来？</summary><p>照片加载失败会自动换成星夜占位图（一颗星星图案），不影响其他功能；离线版把整包重新解压一次通常就恢复了。</p></details>
   <details class="gdQ"><summary>搜索不到想找的猫？</summary><p>搜索认喵名、军衔、岗位和毛色特征，试短词：「橘」「狸花」「三花」「校长」。搜不到时下面会给出几个可直接点的建议名。</p></details>
   <details class="gdQ"><summary>图鉴收集的进度不见了？</summary><p>进度只存在当前浏览器的本地存储里：换浏览器、开无痕、清缓存都会清零。重要进度建议先在「喵星护照」里导出留底。</p></details>
-  <details class="gdQ"><summary>手机上有点卡？</summary><p>星空粒子效果比较重。关掉「星轨」模式、少开「星域网络」会流畅不少，体验最佳还是在电脑端。</p></details>
+  <details class="gdQ"><summary>手机上有点卡？特效变简单了？</summary><p>不会悄悄降级：星图每秒测帧率，低于 32 帧自动切「省电」档并弹提示告诉你（星系与星尘抽稀，保流畅）。想调回来去「⋯」菜单点「特效」循环换档：自动→完整→均衡→省电，选中的档位会被记住。</p></details>
+  <details class="gdQ"><summary>手机和电脑体验一样吗？</summary><p>功能完全一致。手机多了底部快捷栏（喵签/本命猫/护照/星图志/指南一键直达），支持陀螺仪倾斜视差和双指缩放；电脑端是鼠标彗星与全量特效。档位自动适配各自性能，互不影响。</p></details>
   <details class="gdQ"><summary>离线版和在线版有什么区别？</summary><p>功能完全一致，数据全部内嵌、零外部请求。在线版点开就玩，离线版断网、机房照常跑。</p></details>
   <details class="gdQ"><summary>能用在自己学校吗？</summary><p>档案数据不能（那是中北的猫），方法论可以：普查、归并、建星图到打包的完整流程都写在 SKILL.md 里。</p></details>
   <details class="gdQ"><summary>数据准吗？</summary><p>194 张照片逐张比对归并出 76 只，存疑的一律不收；每一条取舍都记在《归并决策摘要.md》，欢迎抽查。</p></details>
@@ -1202,12 +1229,13 @@ const galBuckets=[[],[],[]];               // 0 金核 1 青绿 2 紫红
   }
 }
 const GAL_C=["255,216,150","70,220,198","188,124,255"];
-function drawGalaxy(g,t,alpha,px,py,szMul){
+function drawGalaxy(g,t,alpha,px,py,szMul,stride){
   const cx=W/2+px, cy=H*.47+py;
   g.globalCompositeOperation="lighter";
   for(let b=0;b<3;b++){
     g.fillStyle="rgb("+GAL_C[b]+")";
-    for(const p of galBuckets[b]){
+    const bk=galBuckets[b], st=stride||1;          // 省电模式抽稀：每 st 个点取 1，视觉仍是雾状星云
+    for(let bi=0;bi<bk.length;bi+=st){ const p=bk[bi];
       const a=p.th+p.w*t;
       const x=cx+Math.cos(a)*p.r, y=cy+Math.sin(a)*p.r*.45;   // 倾斜投影
       if(x<-20||x>W+20||y<-20||y>H+20) continue;
@@ -1729,8 +1757,45 @@ function startEntry(){
   setTimeout(()=>{ document.body.classList.add("live"); },1600);
   setTimeout(()=>{ document.getElementById("hint").classList.add("gone"); },7200);
 }
+/* --- 性能自适应引擎：FPS 中位数驱动三档特效（手机/低配机自动省电，切档明示不悄悄降级） --- */
+const PERF={ mode:"auto",                 // auto=FPS自动驱动；full/balanced/lite=用户手动锁定
+  fps:60, gs:1, ds:1, _t:0, _n:0, _win:[], _slow:0, _fast:0 };
+{ const saved=(()=>{ try{ return localStorage.getItem("nuc-cat-fx"); }catch(e){ return null; } })();
+  if(saved==="full"||saved==="balanced"||saved==="lite"||saved==="auto") PERF.mode=saved;
+  applyFx(PERF.mode,true); }
+function applyFx(mode,silent){
+  PERF.mode=mode;
+  try{ localStorage.setItem("nuc-cat-fx",mode); }catch(e){}    // 档位记忆（存储受限则本次会话内仍生效）
+  PERF.gs = mode==="lite"?3 : mode==="balanced"?2 : 1;      // 星系点抽稀倍率
+  PERF.ds = mode==="lite"?2 : 1;                            // 地图星尘抽稀倍率
+  const label={auto:"自动",full:"完整",balanced:"均衡",lite:"省电"}[mode];
+  const btn=document.getElementById("btnFx");
+  if(btn){ const ic=btn.querySelector(".aIco"); const tx=btn.querySelector(".fxTxt");
+    if(ic) ic.textContent = mode==="auto"?"⚡":mode==="full"?"✦":mode==="balanced"?"◐":"☾";
+    if(tx) tx.textContent = "特效 · "+label; }
+  if(!silent) toast(mode==="auto"?"特效档位：自动 · 按帧率智能调节"
+    :mode==="full"?"特效档位：完整 · 全特效全量渲染"
+    :mode==="balanced"?"特效档位：均衡 · 星系粒子减半，画面依旧细腻"
+    :"特效档位：省电 · 星系与星尘抽稀，保帧率优先");
+}
+function perfTick(ts){
+  if(!PERF._t){ PERF._t=ts; return; }             // 首帧校零：避免把启动耗时算进帧率
+  PERF._n++;
+  if(ts-PERF._t<1000) return;
+  PERF.fps=Math.round(PERF._n*1000/(ts-PERF._t)); PERF._n=0; PERF._t=ts;
+  if(PERF.mode!=="auto") return;                  // 手动锁定：不自动切
+  PERF._win.push(PERF.fps); if(PERF._win.length>4) PERF._win.shift();   // 4 秒滑动窗口取中位数，防瞬时抖动
+  const med=[...PERF._win].sort((a,b)=>a-b)[Math.floor(PERF._win.length/2)];
+  if(med<32){ if(++PERF._slow>=2&&PERF._win.length>=4){ PERF._slow=0; PERF._fast=0; PERF._win=[];
+    applyFx("lite"); toast("帧率偏低 · 已自动切省电特效（可去「⋯」菜单换档）"); } }
+  else if(med<46){ if(++PERF._slow>=2&&PERF._win.length>=4&&PERF.gs===1){ PERF._slow=0; PERF._win=[];
+    applyFx("balanced"); toast("帧率一般 · 已自动切均衡特效（可去「⋯」菜单换档）"); } }
+  else { PERF._slow=0; if(++PERF._fast>=5){ PERF._fast=0; PERF._win=[];
+    if(PERF.gs!==1){ applyFx("full"); toast("性能充足 · 完整特效已恢复"); } } }
+}
 function draw(ts){
   requestAnimationFrame(draw);
+  perfTick(ts);
   if(!lastTs) lastTs=ts;
   const dt=Math.min(.05,(ts-lastTs)/1000); lastTs=ts;   // 120Hz 屏不加速
   animT+=dt;
@@ -1751,7 +1816,7 @@ function draw(ts){
   const gA=(phase==="intro"?.42:phase==="fly"?.34:.5)*(1+trailK*.6);
   if(trailK>0&&phase!=="intro"){
     gctx.clearRect(0,0,W,H);
-    drawGalaxy(gctx,animT*3.8,gA,-cam.x*.03,-cam.y*.03,2.6);   // 加粗沉积 → 长曝光光带
+    drawGalaxy(gctx,animT*3.8,gA,-cam.x*.03,-cam.y*.03,2.6,PERF.gs);   // 加粗沉积 → 长曝光光带
     tctx.globalCompositeOperation="source-over";               // 黑色透明衰减（不引入色雾），只累积星系层
     tctx.fillStyle="rgba(0,0,0,"+(.018+(1-trailK)*.05)+")"; tctx.fillRect(0,0,W,H);   // 收起期衰减加速，沉积光带融掉
     tctx.globalCompositeOperation="lighter"; tctx.globalAlpha=.45*trailK;
@@ -1760,7 +1825,7 @@ function draw(ts){
     ctx.globalCompositeOperation="lighter"; ctx.globalAlpha=trailK;
     ctx.drawImage(trailCv,0,0,W,H);
     ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
-  } else drawGalaxy(ctx,animT*.5,gA,-cam.x*.03,-cam.y*.03,1);
+  } else drawGalaxy(ctx,animT*.5,gA,-cam.x*.03,-cam.y*.03,1,PERF.gs);
   if(phase==="intro"){ drawAurora(animT); drawHorizon(animT); }
   // 夜空校园底图
   if(mapReady&&phase!=="intro"){
@@ -1786,7 +1851,8 @@ function draw(ts){
     ctx.fillRect((((d.x+dDrift+TILT.x*.014)%1)+1)%1*W,(d.y+TILT.y*.014)*H,d.r*1.6,d.r*1.6);
   }
   // 地图空间星尘
-  if(phase!=="intro") for(const d of dustMap){
+  if(phase!=="intro") for(let di=0;di<dustMap.length;di+=PERF.ds){
+    const d=dustMap[di];
     const s=toScreen(d.x,d.y);
     if(s.x<-10||s.x>W+10||s.y<-10||s.y>H+10) continue;
     const a=.22+.2*Math.sin(animT*d.sp+d.ph);
@@ -2991,6 +3057,16 @@ function ppOpen(){
   ppPanel.classList.add("open");
 }
 document.getElementById("btnPassport").onclick=()=>{   const mm=document.getElementById("moreMenu");   if(mm.classList.contains("open")){ mm.classList.remove("open");     document.getElementById("btnMore").setAttribute("aria-expanded","false"); }   ppOpen(); }; document.getElementById("btnGuide").onclick=()=>{   const mm=document.getElementById("moreMenu");   if(mm.classList.contains("open")){ mm.classList.remove("open");     document.getElementById("btnMore").setAttribute("aria-expanded","false"); }   const gp=document.getElementById("guide"), on=gp.classList.toggle("open");   document.getElementById("btnGuide").classList.toggle("on",on); }; document.getElementById("gdClose").onclick=()=>{   document.getElementById("guide").classList.remove("open");   document.getElementById("btnGuide").classList.remove("on"); };
+/* 特效档位循环切换：自动→完整→均衡→省电（点一下换一档，档位实时显示在按钮上） */
+document.getElementById("btnFx").onclick=()=>{
+  const order=["auto","full","balanced","lite"];
+  applyFx(order[(order.indexOf(PERF.mode)+1)%order.length]);
+};
+/* 移动端快捷 dock：直达藏在「⋯」里的高频玩法 */
+const _qk={ qkFortune:"btnFortune", qkSoul:"btnSoul", qkPassport:"btnPassport", qkStats:"btnStats", qkGuide:"btnGuide" };
+for(const [q,b] of Object.entries(_qk)){
+  document.getElementById(q).onclick=()=>{ document.getElementById(b).click(); };
+}
 document.getElementById("ppClose").onclick=ppClose;
 document.getElementById("ppGo").onclick=()=>{
   if(!constGroups) buildConstGroups();
