@@ -635,6 +635,15 @@
   #ppSyncTip{ margin-top:7px; font-size:11.5px; color:#8fa3cf; text-align:center; }
   #ppSyncBtns{ display:flex; gap:8px; justify-content:center; margin-top:8px; }
   #ppSyncBox [hidden]{ display:none; }                            /* .chip 的 display 会压过 hidden 属性，这里补回来 */
+  #tipBar{ position:fixed; z-index:52; bottom:60px; left:50%; transform:translateX(-50%);
+    display:flex; align-items:center; gap:8px; max-width:min(92vw,560px);
+    padding:9px 12px; border-radius:14px; font-size:12px; color:#ffe9b8;
+    background:linear-gradient(170deg, rgba(30,40,70,.94), rgba(10,14,30,.96));
+    border:1px solid rgba(255,215,106,.35); box-shadow:0 10px 30px rgba(0,0,0,.5);
+    backdrop-filter:blur(10px); }
+  #tipBar[hidden]{ display:none; }
+  #tipBar .chip{ padding:5px 11px; font-size:11.5px; flex:none; }
+  @media (max-width:768px){ #tipBar{ bottom:126px; flex-wrap:wrap; justify-content:center; text-align:center; } }
   @media (max-width:760px){
     #constP,#memeP,#passP{ top:auto; bottom:0; right:0; left:0; width:100%; max-height:62vh;
       border-radius:18px 18px 0 0; transform:translateY(20px); }
@@ -713,6 +722,11 @@
   <details class="gdQ"><summary>离线版和在线版有什么区别？</summary><p>功能完全一致，数据全部内嵌、零外部请求。在线版点开就玩，离线版断网、机房照常跑。</p></details>
   <details class="gdQ"><summary>能用在自己学校吗？</summary><p>档案数据不能（那是中北的猫），方法论可以：普查、归并、建星图到打包的完整流程都写在 SKILL.md 里。</p></details>
   <details class="gdQ"><summary>数据准吗？</summary><p>194 张照片逐张比对归并出 76 只，存疑的一律不收；每一条取舍都记在《归并决策摘要.md》，欢迎抽查。</p></details>
+  <div class="gdSec">边缘情况速览</div>
+  <details class="gdQ"><summary>打开黑屏 / 粒子不动？</summary><p>多半是浏览器太老（IE 不行）。换 Chrome / Edge / Safari 16 及以上再开一次。</p></details>
+  <details class="gdQ"><summary>提示「存储受限」？</summary><p>无痕模式或浏览器禁用了本地存储，进度不会落盘。点下方提示条或去「喵星护照」把进度码备份成文字，换设备粘回即可。</p></details>
+  <details class="gdQ"><summary>离线打开时导出失败？</summary><p>个别导出（表情包 / 分享卡）在双击直开时可能受浏览器安全策略限制，页面会给出提示；换在线版或用 Chrome 打开即可导出。</p></details>
+  <details class="gdQ"><summary>纪录片录屏没反应？</summary><p>个别浏览器不支持录屏接口（MediaRecorder），用最新版 Chrome / Edge 就行。</p></details>
 </div>
 
 <aside id="legend" class="ui">
@@ -854,6 +868,11 @@
 </div>
 <div id="toast" role="status"></div>
 <script src="assets/photo-data-01.js"></script><script src="assets/photo-data-02.js"></script><script src="assets/photo-data-03.js"></script><script src="assets/photo-data-04.js"></script><script src="assets/photo-data-05.js"></script><script src="assets/photo-data-06.js"></script><script src="assets/photo-data-07.js"></script><script src="assets/photo-data-08.js"></script><script>function PH(p){var k=String(p||"").split("/").pop();return (window.__PHOTOS&&window.__PHOTOS[k])||p}</script>
+<div id="tipBar" role="status" hidden>
+  <span id="tipTxt"></span>
+  <span class="chip" id="tipGo" tabindex="0" role="button">⇧ 备份进度码</span>
+  <span class="chip" id="tipOk" tabindex="0" role="button">知道了</span>
+</div>
 
 <script>
 /* ============================================================
@@ -1179,7 +1198,8 @@ const CALIB={
 let _lsWarn=0;                                       // 存储写入失败：10分钟最多提醒一次，防刷屏
 const lsWarn=()=>{ const now=Date.now();
   if(now-_lsWarn<6e5) return; _lsWarn=now;
-  toast("⚠ 浏览器存储受限 · 进度可能不被保存，建议在「喵星护照」里备份进度码"); };
+  toast("⚠ 浏览器存储受限 · 进度可能不被保存，建议在「喵星护照」里备份进度码");
+  tipShow("浏览器存储受限 · 进度可能不被保存，点下方即可备份进度码"); };
 const loadOv=()=>OV;
 let OV={}; try{ OV=JSON.parse(localStorage.getItem(LS_KEY)||"{}")||{}; }catch(e){ OV={}; }
 const flushOv=()=>{ try{ localStorage.setItem(LS_KEY,JSON.stringify(OV)); }catch(e){ lsWarn(); } };
@@ -1779,16 +1799,21 @@ function startEntry(){
   setTimeout(()=>{ document.getElementById("hint").classList.add("gone"); },7200);
 }
 /* --- 性能自适应引擎：FPS 中位数驱动三档特效（手机/低配机自动省电，切档明示不悄悄降级） --- */
-const PERF={ mode:"auto",                 // auto=FPS自动驱动；full/balanced/lite=用户手动锁定
+const PERF={ mode:"auto", tier:"full",     // mode=用户选的档位；tier=实际渲染档（auto 下引擎只改 tier 不改 mode）
   fps:60, gs:1, ds:1, _t:0, _n:0, _win:[], _slow:0, _fast:0 };
+const _coarse=matchMedia("(pointer:coarse), (max-width:768px)").matches;   // 触控/小屏 → 移动端
+function setTier(t){                        // 只改渲染负载：不动 mode、不写记忆（引擎自动调节与手机预置专用）
+  PERF.tier=t;
+  PERF.gs = t==="lite"?3 : t==="balanced"?2 : 1;      // 星系点抽稀倍率
+  PERF.ds = t==="lite"?2 : 1;                          // 地图星尘抽稀倍率
+}
 { const saved=(()=>{ try{ return localStorage.getItem("nuc-cat-fx"); }catch(e){ return null; } })();
   if(saved==="full"||saved==="balanced"||saved==="lite"||saved==="auto") PERF.mode=saved;
   applyFx(PERF.mode,true); }
 function applyFx(mode,silent){
   PERF.mode=mode;
   try{ localStorage.setItem("nuc-cat-fx",mode); }catch(e){}    // 档位记忆（存储受限则本次会话内仍生效）
-  PERF.gs = mode==="lite"?3 : mode==="balanced"?2 : 1;      // 星系点抽稀倍率
-  PERF.ds = mode==="lite"?2 : 1;                            // 地图星尘抽稀倍率
+  setTier(mode==="auto" ? (_coarse?"balanced":"full") : mode); // auto+移动端预置均衡起步：开场不卡，帧率够再自动升回完整
   const label={auto:"自动",full:"完整",balanced:"均衡",lite:"省电"}[mode];
   const btn=document.getElementById("btnFx");
   if(btn){ const ic=btn.querySelector(".aIco"); const tx=btn.querySelector(".fxTxt");
@@ -1807,12 +1832,14 @@ function perfTick(ts){
   if(PERF.mode!=="auto") return;                  // 手动锁定：不自动切
   PERF._win.push(PERF.fps); if(PERF._win.length>4) PERF._win.shift();   // 4 秒滑动窗口取中位数，防瞬时抖动
   const med=[...PERF._win].sort((a,b)=>a-b)[Math.floor(PERF._win.length/2)];
-  if(med<32){ if(++PERF._slow>=2&&PERF._win.length>=4){ PERF._slow=0; PERF._fast=0; PERF._win=[];
-    applyFx("lite"); toast("帧率偏低 · 已自动切省电特效（可去「⋯」菜单换档）"); } }
-  else if(med<46){ if(++PERF._slow>=2&&PERF._win.length>=4&&PERF.gs===1){ PERF._slow=0; PERF._win=[];
-    applyFx("balanced"); toast("帧率一般 · 已自动切均衡特效（可去「⋯」菜单换档）"); } }
-  else { PERF._slow=0; if(++PERF._fast>=5){ PERF._fast=0; PERF._win=[];
-    if(PERF.gs!==1){ applyFx("full"); toast("性能充足 · 完整特效已恢复"); } } }
+  if(med<32){ if(++PERF._slow>=2&&PERF._win.length>=4&&PERF.tier!=="lite"){ PERF._slow=0; PERF._fast=0; PERF._win=[];
+    setTier("lite"); toast("帧率偏低 · 已自动切省电特效（可去「⋯」菜单换档）"); } }
+  else if(med<46){ if(++PERF._slow>=2&&PERF._win.length>=4&&PERF.tier==="full"){ PERF._slow=0; PERF._win=[];
+    setTier("balanced"); toast("帧率一般 · 已自动切均衡特效（可去「⋯」菜单换档）"); } }
+  else { PERF._slow=0;
+    if(med>=54){ if(++PERF._fast>=5){ PERF._fast=0; PERF._win=[];
+      if(PERF.tier!=="full"){ setTier("full"); toast("性能充足 · 完整特效已恢复"); } } }
+    else PERF._fast=0; }                          // 46-53 滞回区：稳定但不富余，不升不降防来回切档
 }
 function draw(ts){
   requestAnimationFrame(draw);
@@ -2316,6 +2343,7 @@ addEventListener("keydown",e=>{
     if(findPanel&&findPanel.classList.contains("open")){ closeFind(); return; }
     if(moreMenu.classList.contains("open")){ moreMenu.classList.remove("open");
       btnMore.setAttribute("aria-expanded","false"); btnMore.focus(); return; }
+    if(!tipBar.hidden){ tipHide(false); return; }              // 最后才收提醒条
     return;
   }
   if(e.key!=="Enter"&&e.key!==" ") return;           // role=button 键盘可达（Enter/空格）
@@ -2446,7 +2474,8 @@ function updateSeen(){
   if(m){ seenMile=m;
     for(let i=0;i<14;i++) setTimeout(spawnMeteor,i*150);      // 里程碑流星雨
     [523.25,659.25,783.99,1046.5].forEach((f,i)=>setTimeout(()=>auPluck(f,.045),i*110));  // 里程碑琶音
-    toast(m===76?"🏆 喵图鉴全收集！你就是中北猫王！":"🎉 喵图鉴里程碑 · 已遇见 "+m+" 只！"); }
+    toast(m===76?"🏆 喵图鉴全收集！你就是中北猫王！":"🎉 喵图鉴里程碑 · 已遇见 "+m+" 只！");
+    tipShow("已遇见 "+m+" 只猫 · 进度只存在本浏览器，建议备份进度码"); }
 }
 function refreshSeenBtn(){
   const b=document.getElementById("cardSeen"); if(!selected) return;
@@ -3169,9 +3198,29 @@ ppApply.onclick=()=>{
     if(ok.has(k)&&p&&typeof p.x==="number"&&typeof p.y==="number") OV[k]={x:p.x,y:p.y,manual:true};
   }
   POS.clear(); flushOv(); saveSeen();
+  _justRestored=true;                                    // 刚恢复过进度的人本会话不再被提醒
   ppOpen(); ppBox.hidden=true;
   toast("✔ 进度已恢复 · 图鉴 "+SEEN.size+" / "+CATS.length+" · 欢迎回到喵星");
 };
+
+/* ---------- 主动提醒：进度保护提示条（里程碑/存储异常时主动引导备份，点「知道了」永久记忆） ---------- */
+const tipBar=document.getElementById("tipBar");
+let _tipLive=false, _justRestored=false;
+function tipShow(txt){
+  if(_tipLive||_justRestored) return;
+  try{ if(localStorage.getItem("nuc-cat-tip-dismiss")) return; }catch(e){}
+  _tipLive=true;
+  document.getElementById("tipTxt").textContent=txt;
+  tipBar.hidden=false;
+}
+function tipHide(dismiss){
+  tipBar.hidden=true; _tipLive=false;
+  if(dismiss){ try{ localStorage.setItem("nuc-cat-tip-dismiss","1"); }catch(e){} }
+}
+document.getElementById("tipOk").onclick=()=>tipHide(true);
+document.getElementById("tipGo").onclick=()=>{ tipHide(true);
+  document.getElementById("btnPassport").click();
+  setTimeout(()=>document.getElementById("ppBak").click(),450); };
 
 /* ---------- 猫星主题曲：每只猫的数据谱成一段旋律 ---------- */
 const RADIO={on:false,tm:[],gain:null};
