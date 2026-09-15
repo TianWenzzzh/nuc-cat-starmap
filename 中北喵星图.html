@@ -1,7 +1,18 @@
 <!DOCTYPE html>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  中北喵星图 · NUC CAT GALAXY · v2.7
+  原创作品 © 2026 TianWenzzzh ｜ 76 只猫的普查数据与 194 张照片均为实地采集
+  开源仓库：https://github.com/TianWenzzzh/nuc-cat-starmap
+  转载 / 二创请保留本署名并附仓库链接；删除本声明继续传播即构成侵权故意。
+  ═══════════════════════════════════════════════════════════════════
+-->
 <html lang="zh-CN" data-theme="dark" class=""><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="TianWenzzzh">
+<meta name="copyright" content="© 2026 TianWenzzzh · 数据与照片实地采集 · 转载需署名并附仓库链接">
+<meta name="description" content="中北喵星图：76 只中北大学校园猫的实地普查星图。每只猫是一颗星——星色取毛色、星等看实拍数、星位即真实出没区。原创开源：github.com/TianWenzzzh/nuc-cat-starmap">
 <title>中北喵星图 · 校园猫咪星系</title>
 <style>
   :root{
@@ -41,6 +52,12 @@
   #introBtn:hover{ background:rgba(255,233,168,.14); letter-spacing:.5em; box-shadow:0 0 34px rgba(255,215,106,.5); }
   #intro .enterHint{ margin-top:24px; color:var(--dimmer); font-size:10px; letter-spacing:.4em;
     opacity:0; animation:fadeUp 1.4s ease 3.2s forwards; }
+  #intro .credit{ position:absolute; bottom:20px; left:0; right:0; text-align:center;
+    color:#4a587f; font-size:10.5px; letter-spacing:.14em;
+    opacity:0; animation:fadeUp 1.4s ease 3.6s forwards; }
+  #intro .credit a{ color:#5f6f9e; text-decoration:none; border-bottom:1px solid rgba(95,111,158,.35);
+    padding-bottom:1px; transition:color .25s; }
+  #intro .credit a:hover{ color:#93a8d8; }
   @keyframes fadeUp{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
   @keyframes btnGlow{ 0%,100%{box-shadow:0 0 10px rgba(255,215,106,.15)} 50%{box-shadow:0 0 26px rgba(255,215,106,.45)} }
 
@@ -723,6 +740,7 @@
   <div class="stats">中北校园实地普查 ｜ 76 只在编基米 ｜ 194 张学长学姐实拍</div>
   <button id="introBtn">入 夜 寻 喵</button>
   <div class="enterHint">轻触按钮 · 坠入喵星系</div>
+  <div class="credit">原创普查数据 · 转载请署名 · <a href="https://github.com/TianWenzzzh/nuc-cat-starmap" target="_blank" rel="noopener">github.com/TianWenzzzh/nuc-cat-starmap</a></div>
 </div>
 
 <header id="topbar" class="ui">
@@ -2386,11 +2404,13 @@ function drawShareCard(c,img){
   g.fillStyle="#7f92c0"; g.font='19px "PingFang SC","Microsoft YaHei"';
   g.fillText(c.area,cx,yEnd+14);
   g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
-  g.fillText("中北喵星图 · NUC CAT GALAXY",cx,ph-76);
+  g.fillText("中北喵星图 · NUC CAT GALAXY",cx,ph-96);
   g.fillStyle="#8a97bd"; g.font='17px "PingFang SC","Microsoft YaHei"';
-  g.fillText("喵图鉴 · 已遇见 "+SEEN.size+" / "+CATS.length,cx,ph-50);
+  g.fillText("喵图鉴 · 已遇见 "+SEEN.size+" / "+CATS.length,cx,ph-70);
   g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
-  g.fillText("2026-08 实地普查 · 第 "+(+c.id.slice(4))+" 号星",cx,ph-26);
+  g.fillText("2026-08 实地普查 · 第 "+(+c.id.slice(4))+" 号星",cx,ph-46);
+  g.fillStyle="#42507a"; g.font='14px "PingFang SC","Microsoft YaHei"';
+  g.fillText("原创 · github.com/TianWenzzzh/nuc-cat-starmap",cx,ph-24);
   return p;
 }
 function makePoster(c){
@@ -2712,6 +2732,8 @@ function makeFieldPoster(){
   g.fillText("打开「中北喵星图」点击任意星星，即可查看它的档案与出没星域",pw/2,1298);
   g.font='600 23px '+FT; g.fillStyle="#a9ece2";
   g.fillText("中北大学—校园猫咪档案Skill · 人民兵工第一校的喵星编制",pw/2,1352);
+  g.font='300 17px '+FT; g.fillStyle="#4d5b86";
+  g.fillText("原创普查数据 · github.com/TianWenzzzh/nuc-cat-starmap",pw/2,1392);
   const a=document.createElement("a"); a.href=cv.toDataURL("image/png"); a.download="中北寻猫海报.png"; a.click();
   toast("寻猫海报已导出 · 存好就能带去实地寻访");
 }
@@ -3136,6 +3158,8 @@ function makeSoulCard(c,why){
     g.fillStyle="#54648f"; g.font='16px '+_FT;
     g.fillText("中北喵星图 · NUC CAT GALAXY",cx,ph-74);
     g.fillText("76只在编基米 · 2026-08实地普查 · 图鉴 "+SEEN.size+"/"+CATS.length,cx,ph-48);
+    g.fillStyle="#42507a"; g.font='14px '+_FT;
+    g.fillText("原创 · github.com/TianWenzzzh/nuc-cat-starmap",cx,ph-24);
     const a=document.createElement("a"); a.href=p.toDataURL("image/png");
     a.download="本命猫-"+c.name+".png"; a.click();
     toast("⤓ 本命猫专属卡已生成："+c.name);
@@ -3175,7 +3199,7 @@ function memeRender(){
     _strokeText(g,cap.slice(0,mid),S/2,S-160); _strokeText(g,cap.slice(mid),S/2,S-80);
   }else _strokeText(g,cap,S/2,S-100);
   g.font='600 24px '+_FT; g.lineWidth=5; g.textAlign="left";
-  _strokeText(g,"中北喵星图 · "+(MEME.cat?MEME.cat.name:""),26,44);
+  _strokeText(g,"中北喵星图原创 · "+(MEME.cat?MEME.cat.name:""),26,44);
   g.textAlign="center";
 }
 function memeOpen(){
@@ -3285,6 +3309,8 @@ document.getElementById("ppGo").onclick=()=>{
   g.fillText("打开「中北喵星图」· 按十二星宿寻访 · 遇见即可盖章",pw/2,1408);
   g.fillStyle="#a9ece2"; g.font='600 23px '+_FT;
   g.fillText("中北大学—校园猫咪档案Skill · 人民兵工第一校的喵星编制",pw/2,1424);
+  g.fillStyle="#42507a"; g.font='300 12px '+_FT;
+  g.fillText("原创普查数据 · github.com/TianWenzzzh/nuc-cat-starmap",pw/2,1436);
   const a=document.createElement("a"); a.href=p.toDataURL("image/png");
   a.download="喵星护照-"+title+".png"; a.click();
   toast("⤓ 喵星护照已导出 · 称号「"+title+"」");
@@ -3573,4 +3599,7 @@ addEventListener("keydown",e=>{
   }
 })();
 
+/* 开发者控制台署名：F12 也能看到原作者与仓库 */
+console.log("%c🐱 中北喵星图 · NUC CAT GALAXY v2.7","font:700 18px sans-serif;color:#ffd76a;text-shadow:0 0 8px #ffd76a66");
+console.log("%c原创作品 © 2026 TianWenzzzh · 76 只猫的实地普查档案\n开源仓库：https://github.com/TianWenzzzh/nuc-cat-starmap\n转载请署名并附仓库链接 · 一起给更多学校点亮喵星系 ✦","color:#7f92c0;line-height:1.7");
 </script></body></html>
