@@ -1,0 +1,53 @@
+# 喵星图 · 双层许可声明
+
+本项目包含「代码 / 模板」与「数据 / 照片」两类资产，分别适用不同协议。
+
+## 一、代码与模板（HTML/CSS/JS 结构与渲染逻辑）
+
+适用 **MIT License**
+
+Copyright (c) 2026 TianWenzzzh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+> 也就是说：你可以自由地把星图模板用于自己学校的猫咪档案（包括修改、再发布），
+> 这正是本项目的目的。唯一的义务是保留上面的版权声明与本许可文本。
+
+## 二、数据与照片（猫咪名册、普查记录、归并决策摘要、194 张实拍照片）
+
+适用 **CC BY-NC-SA 4.0（署名-非商业性使用-相同方式共享）**
+
+- BY（署名）：使用时必须注明原作者「TianWenzzzh / 中北喵星图」并附仓库链接
+  https://github.com/TianWenzzzh/nuc-cat-starmap
+- NC（非商业）：不得将本数据与照片用于商业目的（含商业营销号视频变现）。
+  营销号搬运视频若带收益，即属商业使用，构成侵权。
+- SA（相同方式共享）：演绎产出须以相同协议共享。
+
+部分照片由学长学姐实地拍摄并提供给本项目使用，权利归拍摄者所有；
+如需超出本项目范围使用照片，请通过仓库 Issue 联系，我们会协助对接拍摄者。
+
+## 三、给搬运者的明确说明
+
+「素材来源网络，侵权删」不构成免责事由。依据《著作权法》，未经许可使用
+他人作品且无法律豁免（合理使用/法定许可）即构成侵权，标注来源亦需在
+合法授权前提下方可作为抗辩事由。本项目全部普查数据、照片、代码均有
+GitHub 提交历史与可信时间戳固化的创作证据链。
+
+发现侵权使用，可在这里联系我们下架/追责：仓库 Issue 或通过 GitHub 账号
+TianWenzzzh 私信。
