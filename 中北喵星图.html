@@ -468,6 +468,8 @@
   #tourCap{ font-size:15px; line-height:1.65; color:#dfe7f8; min-height:26px;
     text-shadow:0 0 12px rgba(120,160,255,.35); }
   #tourSkip{ font-size:11px; color:var(--dim); margin-top:7px; letter-spacing:.1em; }
+  #btnGallery{ border-color:rgba(255,215,106,.4); color:#ffe9b8; }
+  #btnGallery:hover{ border-color:var(--gold); color:var(--gold-soft); box-shadow:0 0 12px rgba(255,215,106,.3); }
   #btnTour{ border-color:rgba(216,160,255,.42); color:#e2c8ff; }
   #btnTour:hover{ border-color:#c79bff; color:#f2e4ff; box-shadow:0 0 12px rgba(216,160,255,.3); }
   #btnTour.on{ background:rgba(216,160,255,.13); border-color:#c79bff; color:#f2e4ff;
@@ -649,6 +651,65 @@
       border-radius:18px 18px 0 0; transform:translateY(20px); }
     #constP.open,#memeP.open,#passP.open{ transform:none; }
   }
+
+/* ===== 喵星影廊 · Lightbox & 星星悬停预告（V2.7） ===== */
+#lightbox{ position:fixed; inset:0; z-index:200; display:none; flex-direction:column;
+  background:rgba(3,6,15,.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  opacity:0; transition:opacity .32s var(--ease); }
+#lightbox.open{ display:flex; opacity:1; }
+#lightbox::before{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.5), transparent 60%),
+    radial-gradient(1px 1px at 78% 14%, rgba(180,210,255,.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 64% 78%, rgba(255,231,168,.4), transparent 60%),
+    radial-gradient(1px 1px at 30% 68%, rgba(180,210,255,.4), transparent 60%),
+    radial-gradient(1px 1px at 90% 52%, rgba(255,255,255,.35), transparent 60%); }
+#lbStage{ flex:1; display:flex; align-items:center; justify-content:center; position:relative; min-height:0; padding:30px 64px 8px; }
+#lbImg{ max-width:100%; max-height:100%; border-radius:10px; box-shadow:0 18px 70px rgba(0,0,0,.7), 0 0 0 1px var(--line);
+  opacity:0; transform:scale(.965); transition:opacity .38s var(--ease), transform .38s var(--ease);
+  cursor:zoom-in; user-select:none; -webkit-user-drag:none; }
+#lbImg.show{ opacity:1; transform:scale(1); }
+#lbImg.zoomed{ cursor:zoom-out; transform:scale(1.9); transition:transform .28s var(--ease); }
+#lbCap{ position:relative; display:flex; align-items:center; gap:12px; justify-content:center;
+  padding:10px 16px 22px; color:var(--dim); font-size:12.5px; letter-spacing:.05em; flex-wrap:wrap; }
+#lbCap .lbName{ color:var(--gold); font-size:16px; font-weight:600; display:flex; align-items:center; gap:7px; }
+#lbCap .lbIdx{ color:var(--teal); }
+#lbCap .lbBio{ width:100%; text-align:center; color:var(--dimmer); font-size:11.5px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:760px; margin:2px auto 0; }
+.lbBtn{ position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--ink);
+  background:var(--panel); border:1px solid var(--line); cursor:pointer; transition:all .2s var(--ease); }
+.lbBtn:hover{ border-color:var(--gold); color:var(--gold); box-shadow:0 0 18px rgba(255,215,106,.25); }
+#lbPrev{ left:14px; } #lbNext{ right:14px; }
+#lbClose{ position:absolute; top:14px; right:18px; width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:17px; color:var(--ink);
+  background:var(--panel); border:1px solid var(--line); cursor:pointer; z-index:2; transition:all .2s var(--ease); }
+#lbClose:hover{ color:var(--gold); border-color:var(--gold); transform:rotate(90deg); }
+#lbGoCard{ cursor:pointer; color:var(--teal); border:1px solid rgba(125,232,214,.35); border-radius:20px;
+  padding:3px 12px; font-size:11.5px; transition:all .2s var(--ease); }
+#lbGoCard:hover{ background:rgba(125,232,214,.12); box-shadow:0 0 14px rgba(125,232,214,.2); }
+.cardImgWrap{ cursor:zoom-in; }
+.cardImgWrap::after{ content:"⤢ 点开大图"; position:absolute; right:10px; bottom:10px; z-index:3;
+  padding:4px 10px; border-radius:14px; font-size:10.5px; letter-spacing:.06em; color:var(--gold);
+  background:rgba(5,9,20,.72); border:1px solid rgba(255,215,106,.35); opacity:0;
+  transform:translateY(6px); transition:all .25s var(--ease); pointer-events:none; }
+.cardImgWrap:hover::after{ opacity:1; transform:translateY(0); }
+#starPeek{ position:fixed; z-index:90; display:none; pointer-events:none; width:172px;
+  background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:7px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  box-shadow:0 10px 34px rgba(0,0,0,.55); opacity:0; transform:translateY(6px) scale(.96);
+  transition:opacity .18s var(--ease), transform .18s var(--ease); }
+#starPeek.on{ display:block; opacity:1; transform:translateY(0) scale(1); }
+#starPeek img{ width:100%; height:104px; object-fit:cover; border-radius:8px; display:block; }
+#starPeek .spName{ margin-top:6px; display:flex; align-items:center; gap:6px; color:var(--gold); font-size:13px; font-weight:600; }
+#starPeek .spRank{ color:var(--dim); font-size:10.5px; margin-top:1px; display:flex; align-items:center; gap:5px; }
+#starPeek .spHint{ color:var(--dimmer); font-size:10px; margin-top:3px; letter-spacing:.04em; }
+@media (max-width:760px){
+  #lbStage{ padding:18px 10px 4px; }
+  .lbBtn{ width:38px; height:38px; top:auto; bottom:86px; }
+  #lbPrev{ left:10px; } #lbNext{ right:10px; }
+  #lbCap .lbBio{ display:none; }
+}
 </style>
 </head>
 <body>
@@ -680,6 +741,7 @@
     <span class="chip act" id="btnNet" tabindex="0" role="button"><span class="aIco">✧</span>星域网络</span>
     <span class="chip act" id="btnConst" tabindex="0" role="button"><span class="aIco">◈</span>十二星宿</span>
     <span class="chip act" id="btnTrails" tabindex="0" role="button"><span class="aIco">◎</span>星轨</span>
+    <span class="chip act" id="btnGallery" tabindex="0" role="button"><span class="aIco">🎞</span>影廊</span>
     <span class="chip act" id="btnMore" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"><span class="aIco">⋯</span></span>
   </div>
 </header>
@@ -2243,52 +2305,117 @@ document.getElementById("statsClose").onclick=()=>{ statsPanel.classList.remove(
 /* ---------- 喵星分享卡（星海报 · 不含照片避免画布污染） ---------- */
 function wrapText(g,text,x,y,maxW,lh){
   let line="",yy=y;
+  const PUNCT="。，！？；：、）”》」』";                    // 行首禁则：标点悬挂不换行
   for(const ch of [...text]){
-    if(g.measureText(line+ch).width>maxW&&line){ g.fillText(line,x,yy); line=ch; yy+=lh; }
+    const w=g.measureText(line+ch).width;
+    if(w>maxW&&line&&!(PUNCT.includes(ch)&&w<=maxW+34)){ g.fillText(line,x,yy); line=ch; yy+=lh; }
     else line+=ch; }
   if(line){ g.fillText(line,x,yy); yy+=lh; }
   return yy;
 }
-function makePoster(c){
-  const pw=720,ph=1000,p=document.createElement("canvas"); p.width=pw; p.height=ph;
+function drawShareCard(c,img){
+  const pw=720,ph=1120,p=document.createElement("canvas"); p.width=pw; p.height=ph;
   const g=p.getContext("2d");
   g.fillStyle="#03060f"; g.fillRect(0,0,pw,ph);
   g.globalAlpha=.85; g.drawImage(neb,-40,-30,pw+80,ph+60); g.globalAlpha=1;
-  for(let i=0;i<140;i++){                                        // 撒一层星屑
+  for(let i=0;i<150;i++){                                        // 撒一层星屑
     g.globalAlpha=.14+Math.random()*.5;
     g.fillStyle=Math.random()<.25?"#ffe2a0":"#b7c6f2";
     const r=Math.random()*1.7+.3; g.fillRect(Math.random()*pw,Math.random()*ph,r,r); }
   g.globalAlpha=1;
-  const [c1,c2]=starColors(c), cx=pw/2, cy=296, R=24;            // 毛色主星
-  g.globalCompositeOperation="lighter";
-  const gr=g.createRadialGradient(cx,cy,0,cx,cy,R*7);
-  gr.addColorStop(0,c1); gr.addColorStop(.35,c2+"77"); gr.addColorStop(1,"rgba(0,0,0,0)");
-  g.fillStyle=gr; g.beginPath(); g.arc(cx,cy,R*7,0,7); g.fill();
-  g.strokeStyle=c1; g.lineCap="round"; g.lineWidth=2.6;
-  g.beginPath(); g.moveTo(cx-R*3.6,cy); g.lineTo(cx+R*3.6,cy);
-  g.moveTo(cx,cy-R*3.6); g.lineTo(cx,cy+R*3.6); g.stroke();
-  g.fillStyle="#ffffff"; g.beginPath(); g.arc(cx,cy,7,0,7); g.fill();
-  g.globalCompositeOperation="source-over";
+  const [c1,c2]=starColors(c);
+  function spark(x,y,r,a){                                       // 四芒星装饰
+    g.save(); g.globalCompositeOperation="lighter";
+    const gr=g.createRadialGradient(x,y,0,x,y,r*3.2);
+    gr.addColorStop(0,"rgba(255,231,168,"+(a*.9)+")"); gr.addColorStop(1,"rgba(0,0,0,0)");
+    g.fillStyle=gr; g.beginPath(); g.arc(x,y,r*3.2,0,7); g.fill();
+    g.strokeStyle="rgba(255,236,190,"+a+")"; g.lineWidth=1.4; g.lineCap="round";
+    g.beginPath(); g.moveTo(x-r*2.4,y); g.lineTo(x+r*2.4,y); g.moveTo(x,y-r*2.4); g.lineTo(x,y+r*2.4); g.stroke();
+    g.restore(); }
+  spark(pw-64,66,7,.8); spark(58,ph-238,5,.55); spark(pw-52,ph-190,4,.45);
+  const cx=pw/2;
+  const PX=80,PY=88,PWd=pw-160,PHt=540,PR=26;
+  if(img&&img.naturalWidth){                                     // 猫咪照片 · 金框证件照
+    const iw=img.naturalWidth, ih=img.naturalHeight, tgt=PWd/PHt;
+    let sw,sh,sx,sy;
+    if(iw/ih>tgt){ sh=ih; sw=ih*tgt; sx=(iw-sw)/2; sy=0; }
+    else{ sw=iw; sh=iw/tgt; sx=0; sy=(ih-sh)/2; }
+    g.save();
+    g.shadowColor="rgba(0,0,0,.65)"; g.shadowBlur=34; g.shadowOffsetY=14;
+    g.beginPath(); g.roundRect(PX,PY,PWd,PHt,PR); g.clip();
+    g.drawImage(img,sx,sy,sw,sh,PX,PY,PWd,PHt);
+    const vg=g.createLinearGradient(0,PY+PHt-150,0,PY+PHt);      // 底部渐隐压字带
+    vg.addColorStop(0,"rgba(3,6,15,0)"); vg.addColorStop(1,"rgba(3,6,15,.78)");
+    g.fillStyle=vg; g.fillRect(PX,PY+PHt-150,PWd,150);
+    g.fillStyle="rgba(223,232,255,.92)"; g.font='600 20px "PingFang SC","Microsoft YaHei"'; g.textAlign="left";
+    g.fillText(c.id+" · "+c.coat, PX+22, PY+PHt-20);
+    g.textAlign="right"; g.fillStyle="rgba(125,232,216,.95)"; g.font='17px "PingFang SC","Microsoft YaHei"';
+    g.fillText("📷 "+(c.photoCount||1)+" 张", PX+PWd-22, PY+PHt-20);
+    g.restore();
+    g.strokeStyle="rgba(255,215,106,.0)";                        // 金边 + 流光
+    const bd=g.createLinearGradient(PX,PY,PX+PWd,PY+PHt);
+    bd.addColorStop(0,"rgba(255,215,106,.95)"); bd.addColorStop(.5,"rgba(255,233,168,.35)"); bd.addColorStop(1,"rgba(255,215,106,.9)");
+    g.strokeStyle=bd; g.lineWidth=3;
+    g.beginPath(); g.roundRect(PX,PY,PWd,PHt,PR); g.stroke();
+    g.save(); g.strokeStyle="rgba(255,215,106,.4)"; g.lineWidth=1;
+    g.shadowColor="rgba(255,215,106,.55)"; g.shadowBlur=18;
+    g.beginPath(); g.roundRect(PX-7,PY-7,PWd+14,PHt+14,PR+7); g.stroke(); g.restore();
+    spark(PX+6,PY+6,6,.9); spark(PX+PWd-6,PY+6,6,.9);
+    spark(PX+6,PY+PHt-6,6,.9); spark(PX+PWd-6,PY+PHt-6,6,.9);
+  }else{                                                         // 无照片兜底：毛色主星
+    const cy=PY+PHt/2, R=24;
+    g.globalCompositeOperation="lighter";
+    const gr=g.createRadialGradient(cx,cy,0,cx,cy,R*7);
+    gr.addColorStop(0,c1); gr.addColorStop(.35,c2+"77"); gr.addColorStop(1,"rgba(0,0,0,0)");
+    g.fillStyle=gr; g.beginPath(); g.arc(cx,cy,R*7,0,7); g.fill();
+    g.strokeStyle=c1; g.lineCap="round"; g.lineWidth=2.6;
+    g.beginPath(); g.moveTo(cx-R*3.6,cy); g.lineTo(cx+R*3.6,cy);
+    g.moveTo(cx,cy-R*3.6); g.lineTo(cx,cy+R*3.6); g.stroke();
+    g.fillStyle="#ffffff"; g.beginPath(); g.arc(cx,cy,7,0,7); g.fill();
+    g.globalCompositeOperation="source-over";
+  }
   g.textAlign="center";
-  g.fillStyle="#ffe9a8"; g.font='600 58px "PingFang SC","Microsoft YaHei"'; g.fillText(c.name,cx,470);
+  g.fillStyle="#ffe9a8"; g.font='600 58px "PingFang SC","Microsoft YaHei"'; g.fillText(c.name,cx,742);
   g.fillStyle="#ffd76a"; g.font='23px "PingFang SC","Microsoft YaHei"';
   const _rk=c.rank+(c.title?" · "+c.title:""), _rw=g.measureText(_rk).width;
-  g.fillText(_rk,cx,516); drawMedal(g,cx-_rw/2-26,506,13,c.rank);
+  g.fillText(_rk,cx,790); drawMedal(g,cx-_rw/2-26,780,13,c.rank);
   g.strokeStyle="rgba(255,215,106,.35)"; g.lineWidth=1;
-  g.beginPath(); g.moveTo(pw/2-120,548); g.lineTo(pw/2+120,548); g.stroke();
+  g.beginPath(); g.moveTo(pw/2-120,826); g.lineTo(pw/2+120,826); g.stroke();
   g.fillStyle="#c2cfef"; g.font='22px "PingFang SC","Microsoft YaHei"';
-  const yEnd=wrapText(g,c.bio,cx,598,pw-150,40);
+  const yEnd=wrapText(g,c.bio,cx,872,pw-150,40);
   g.fillStyle="#7f92c0"; g.font='19px "PingFang SC","Microsoft YaHei"';
-  g.fillText(c.coat+" ｜ "+c.area,cx,yEnd+16);
+  g.fillText(c.area,cx,yEnd+14);
   g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
   g.fillText("中北喵星图 · NUC CAT GALAXY",cx,ph-76);
   g.fillStyle="#8a97bd"; g.font='17px "PingFang SC","Microsoft YaHei"';
   g.fillText("喵图鉴 · 已遇见 "+SEEN.size+" / "+CATS.length,cx,ph-50);
   g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
   g.fillText("2026-08 实地普查 · 第 "+(+c.id.slice(4))+" 号星",cx,ph-26);
-  const a=document.createElement("a");
-  a.href=p.toDataURL("image/png"); a.download="喵星分享卡-"+c.name+".png"; a.click();
-  toast("⤓ 已生成分享卡："+c.name);
+  return p;
+}
+function makePoster(c){
+  let settled=false;
+  const finish=(img,tainted)=>{
+    if(settled) return; settled=true;
+    let p=drawShareCard(c,img);
+    try{
+      const a=document.createElement("a");
+      a.href=p.toDataURL("image/png"); a.download="喵星分享卡-"+c.name+".png"; a.click();
+      toast("⤓ 已生成分享卡："+c.name+(img?" · 带照片版":""));
+    }catch(e){                                               // 画布被照片污染（file:// 直开）：退回星芒版
+      p=drawShareCard(c,null);
+      const a=document.createElement("a");
+      a.href=p.toDataURL("image/png"); a.download="喵星分享卡-"+c.name+".png"; a.click();
+      toast("浏览器安全策略拦了照片 · 已用星芒版代替（在线版/Chrome 可带照片）");
+    }
+  };
+  if(c.photo){
+    const im=new Image();
+    im.onload=()=>finish(im);
+    im.onerror=()=>finish(null);
+    im.src=photoSrc(c);
+    setTimeout(()=>finish(null),3500);                        // 加载超时兜底
+  }else finish(null);
 }
 document.getElementById("cardShare").onclick=()=>{ if(selected) makePoster(selected); };
 
@@ -3333,4 +3460,117 @@ addEventListener("keydown",e=>{
   if(ppPanel.classList.contains("open")){ ppClose(); return; }
   if(memePanel.classList.contains("open")){ memeClose(); return; }
 });
+</script>
+<script>
+
+/* ================= 喵星影廊 · 全屏灯箱相册 + 星星悬停预告（V2.7） ================= */
+(function(){
+  "use strict";
+  const $=id=>document.getElementById(id);
+  const pSrc=(typeof photoSrc==="function")?photoSrc:(c=>c.photo);
+  const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+
+  /* 影廊曲库：有照片的猫，按收录张数优先排 */
+  const GALLERY=CATS.filter(c=>c.photo).slice()
+    .sort((a,b)=>(b.photoCount||1)-(a.photoCount||1)||((a.id<b.id)?-1:1));
+  let lbIdx=0, lbOpen=false;
+
+  const box=document.createElement("div"); box.id="lightbox";
+  box.innerHTML=
+    '<span id="lbClose" tabindex="0" role="button" aria-label="关闭影廊">✕</span>'+
+    '<div id="lbStage"><span class="lbBtn" id="lbPrev" tabindex="0" role="button" aria-label="上一张">‹</span>'+
+    '<img id="lbImg" alt="猫咪大图"><span class="lbBtn" id="lbNext" tabindex="0" role="button" aria-label="下一张">›</span></div>'+
+    '<div id="lbCap"><span class="lbName" id="lbName"></span><span id="lbRank"></span>'+
+    '<span class="lbIdx" id="lbIdx"></span><span id="lbGoCard" tabindex="0" role="button">⌖ 查看档案</span>'+
+    '<div class="lbBio" id="lbBio"></div></div>';
+  document.body.appendChild(box);
+  const lbImg=$("lbImg");
+  let touchX=null;
+
+  function lbRender(){
+    const c=GALLERY[lbIdx]; if(!c) return;
+    lbImg.classList.remove("show","zoomed");
+    const pre=new Image();
+    pre.onload=()=>{ if(lbOpen&&GALLERY[lbIdx]===c){ lbImg.src=pre.src; requestAnimationFrame(()=>lbImg.classList.add("show")); } };
+    pre.onerror=()=>{ if(lbOpen&&GALLERY[lbIdx]===c){ lbImg.removeAttribute("src"); toast("这张照片没加载出来 · 左右翻页看看别的"); } };
+    pre.src=pSrc(c);
+    $("lbName").textContent=c.name;
+    $("lbRank").innerHTML=medalSVG(c.rank,15)+"<span style='color:"+rankTier(c.rank).m+"'>"+esc(c.rank)+(c.title?" · "+esc(c.title):"")+"</span>";
+    $("lbIdx").textContent=(lbIdx+1)+" / "+GALLERY.length+" ｜ "+c.id+" · 收录 "+(c.photoCount||1)+" 张";
+    $("lbBio").textContent=c.bio||"";
+    try{ auPluck(523.25,.03,"sine",2.5); }catch(err){}
+  }
+  function openLightbox(cat){
+    const i=cat?GALLERY.findIndex(c=>c.id===cat.id):0;
+    lbIdx=i>=0?i:0; lbOpen=true; box.classList.add("open");
+    document.body.style.overflow="hidden"; lbRender();
+  }
+  function closeLightbox(){ lbOpen=false; box.classList.remove("open"); document.body.style.overflow=""; }
+  function lbStep(d){ if(!lbOpen) return; lbIdx=(lbIdx+d+GALLERY.length)%GALLERY.length; lbRender(); }
+
+  $("lbClose").onclick=closeLightbox;
+  $("lbPrev").onclick=e=>{ e.stopPropagation(); lbStep(-1); };
+  $("lbNext").onclick=e=>{ e.stopPropagation(); lbStep(1); };
+  $("lbGoCard").onclick=()=>{ const c=GALLERY[lbIdx]; closeLightbox(); openCard(c); };
+  box.addEventListener("click",e=>{ if(e.target===box||e.target.id==="lbStage") closeLightbox(); });
+  lbImg.addEventListener("click",e=>{                       // 点图缩放：以点击点为中心
+    const r=lbImg.getBoundingClientRect();
+    lbImg.style.transformOrigin=((e.clientX-r.left)/r.width*100).toFixed(1)+"% "+((e.clientY-r.top)/r.height*100).toFixed(1)+"%";
+    lbImg.classList.toggle("zoomed");
+  });
+  box.addEventListener("touchstart",e=>{ touchX=e.touches[0].clientX; },{passive:true});
+  box.addEventListener("touchend",e=>{ if(touchX==null) return;
+    const dx=e.changedTouches[0].clientX-touchX; touchX=null;
+    if(Math.abs(dx)>42) lbStep(dx>0?-1:1); },{passive:true});
+  addEventListener("keydown",e=>{ if(!lbOpen) return;
+    if(e.key==="ArrowLeft"){ lbStep(-1); } else if(e.key==="ArrowRight"){ lbStep(1); }
+    else if(e.key==="Escape"){ closeLightbox(); } });
+
+  /* 档案卡大图点击 → 影廊定位到这只猫 */
+  $("cardImg").addEventListener("click",()=>{ if(selected&&selected.photo) openLightbox(selected); });
+
+  /* 快捷栏「影廊」入口：随机开一张，制造逛相册的惊喜感 */
+  const qk=document.createElement("span"); qk.className="chip qk"; qk.id="qkGallery";
+  qk.setAttribute("tabindex","0"); qk.setAttribute("role","button");
+  qk.innerHTML='<span class="aIco">🎞</span>影廊';
+  const qbar=document.getElementById("quickBar");
+  qbar.insertBefore(qk, document.getElementById("qkGuide"));
+  qk.onclick=()=>{ openLightbox(Math.random()<.3?null:GALLERY[Math.floor(Math.random()*GALLERY.length)]); };
+  qk.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); qk.click(); } };
+
+
+  /* 顶栏影廊入口（静态节点在 #chips 内，这里补绑事件） */
+  const tb=document.getElementById("btnGallery");
+  tb.onclick=()=>{ openLightbox(Math.random()<.3?null:GALLERY[Math.floor(Math.random()*GALLERY.length)]); };
+  tb.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); tb.click(); } };
+
+  /* 星星悬停 → 照片预告卡（桌面端） */
+  if(matchMedia("(hover:hover) and (pointer:fine)").matches){
+    const peek=document.createElement("div"); peek.id="starPeek";
+    peek.innerHTML='<img alt=""><div class="spName"></div><div class="spRank"></div><div class="spHint">点击星星 · 打开完整档案</div>';
+    document.body.appendChild(peek);
+    let peekCat=null, raf=0;
+    const hidePeek=()=>{ peekCat=null; peek.classList.remove("on"); };
+    addEventListener("mousemove",e=>{
+      if(dragInfo||starDrag||editMode||!document.body.classList.contains("live")||card.classList.contains("open")||!hovered){ if(peekCat) hidePeek(); return; }
+      if(hovered!==peekCat){
+        peekCat=hovered;
+        if(peekCat.photo){
+          peek.querySelector("img").src=pSrc(peekCat);
+          peek.querySelector(".spName").textContent=peekCat.name;
+          peek.querySelector(".spRank").innerHTML=medalSVG(peekCat.rank,13)+"<span>"+esc(peekCat.rank)+" · "+esc(peekCat.id)+"</span>";
+          peek.classList.add("on");
+        }else hidePeek();
+      }
+      if(peekCat){ cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{
+        const w=172,h=peek.offsetHeight||180;
+        let x=e.clientX+20,y=e.clientY-h-14;
+        if(x+w>innerWidth-8) x=e.clientX-w-20;
+        if(y<8) y=e.clientY+22;
+        peek.style.left=x+"px"; peek.style.top=y+"px"; }); }
+    },{passive:true});
+    addEventListener("mousedown",hidePeek);
+  }
+})();
+
 </script></body></html>
