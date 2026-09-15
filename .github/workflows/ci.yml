@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    # 纯语法门禁，ubuntu 即可：查 HTML 内联 script 块 + .js 文件的 node --check。
+    # 渲染级验证（headless Chrome 开场屏/主界面）仍在本地做——那需要真实照片
+    # 与底图，不该也没法进 CI，与工厂仓库 acceptance 的取舍同一逻辑。
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 内联脚本与 .js 语法检查
+        run: node scripts/check_inline_scripts.mjs
