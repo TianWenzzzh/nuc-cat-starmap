@@ -947,7 +947,51 @@
   </div>
 </div>
 <div id="toast" role="status"></div>
-<script src="assets/photo-data-01.js"></script><script src="assets/photo-data-02.js"></script><script src="assets/photo-data-03.js"></script><script src="assets/photo-data-04.js"></script><script src="assets/photo-data-05.js"></script><script src="assets/photo-data-06.js"></script><script src="assets/photo-data-07.js"></script><script src="assets/photo-data-08.js"></script><script>function PH(p){var k=String(p||"").split("/").pop();return (window.__PHOTOS&&window.__PHOTOS[k])||p}</script>
+<script src="assets/photo-data-00.js"></script><script>const __PM={"n":9,"m":{"校园地图-夜空版-web.jpg":0,"13951BEAD8371B46AB8351276772BF48.jpg":1,"50E8904B46C698659B377B114F19A118.jpg":1,"5828C42C0CB0C2C7244529762D44D4D9.jpg":1,"5F9B576FCD0F435CEB1DC58553937C7C.jpg":1,"812ECF0BC693511417B88A2F552872A8.jpg":1,"A66981CEBAA620A95058D1FC12A73A2E.jpg":1,"微信图片_20260812143555_100_56.jpg":1,"微信图片_20260812143555_101_56.jpg":1,"微信图片_20260812143555_110_56.jpg":1,"微信图片_20260812143555_112_56.jpg":1,"微信图片_20260812143555_113_56.jpg":2,"微信图片_20260812143555_114_56.jpg":2,"微信图片_20260812143555_115_56.jpg":2,"微信图片_20260812143555_119_56.jpg":2,"微信图片_20260812143555_120_56.jpg":2,"微信图片_20260812143555_121_56.jpg":2,"微信图片_20260812143555_123_56.jpg":2,"微信图片_20260812143555_124_56.jpg":2,"微信图片_20260812143555_132_56.jpg":3,"微信图片_20260812143555_134_56.jpg":3,"微信图片_20260812143555_135_56.jpg":3,"微信图片_20260812143555_136_56.jpg":3,"微信图片_20260812143555_138_56.jpg":3,"微信图片_20260812143555_143_56.jpg":3,"微信图片_20260812143555_147_56.jpg":4,"微信图片_20260812143555_148_56.jpg":4,"微信图片_20260812143555_152_56.jpg":4,"微信图片_20260812143555_154_56.jpg":4,"微信图片_20260812143555_158_56.jpg":4,"微信图片_20260812143555_162_56.jpg":4,"微信图片_20260812143555_164_56.jpg":4,"微信图片_20260812143555_166_56.jpg":4,"微信图片_20260812143555_167_56.jpg":5,"微信图片_20260812143555_168_56.jpg":5,"微信图片_20260812143555_169_56.jpg":5,"微信图片_20260812143555_82_56.jpg":5,"微信图片_20260812143555_83_56.jpg":5,"微信图片_20260812143555_84_56.jpg":5,"微信图片_20260812143555_85_56.jpg":5,"微信图片_20260812143555_88_56.jpg":5,"微信图片_20260812143555_91_56.jpg":5,"微信图片_20260812143555_94_56.jpg":6,"微信图片_20260812143555_95_56.jpg":6,"微信图片_20260812143555_99_56.jpg":6,"微信图片_20260816232105_99_39.jpg":6,"微信图片_20260816232535_101_39.jpg":6,"微信图片_20260816232539_105_39.jpg":6,"微信图片_20260816232543_107_39.jpg":6,"微信图片_20260816232544_108_39.jpg":6,"微信图片_20260816232545_109_39.jpg":6,"微信图片_20260816232548_112_39.jpg":6,"微信图片_20260816233805_11_184.jpg":6,"微信图片_20260816233805_14_184.jpg":6,"微信图片_20260816233805_18_184.jpg":7,"微信图片_20260816233805_26_184.jpg":7,"微信图片_20260816233805_33_184.jpg":7,"微信图片_20260816233805_38_184.jpg":7,"微信图片_20260816233805_40_184.jpg":7,"微信图片_20260816233805_41_184.jpg":7,"微信图片_20260816233805_43_184.jpg":7,"微信图片_20260816233805_44_184.jpg":7,"微信图片_20260816233805_48_184.jpg":7,"微信图片_20260816233805_50_184.jpg":7,"微信图片_20260816233805_51_184.jpg":7,"微信图片_20260816233805_55_184.jpg":8,"微信图片_20260816233805_57_184.jpg":8,"微信图片_20260816233805_61_184.jpg":8,"微信图片_20260816233805_66_184.jpg":8,"微信图片_20260816233805_7_184.jpg":8,"微信图片_20260816233805_9_184.jpg":8,"微信图片_20260816235021_101_184.jpg":8,"微信图片_20260816235021_103_184.jpg":8,"微信图片_20260816235021_78_184.jpg":8,"微信图片_20260816235021_83_184.jpg":8,"微信图片_20260816235021_96_184.jpg":8}};</script><script>function PH(p){var k=String(p||"").split("/").pop();return (window.__PHOTOS&&window.__PHOTOS[k])||p}</script><script>
+const __PHOTO_BOOT=(typeof __PM!=="undefined")?__PM:null;
+const __PHOTO_JOBS={},__PHOTO_PEND={};
+function __ensureChunk(i){
+  if(__PHOTO_JOBS[i]) return __PHOTO_JOBS[i];
+  const job=new Promise((res,rej)=>{
+    const s=document.createElement("script");
+    s.src="assets/photo-data-"+String(i).padStart(2,"0")+".js";
+    s.onload=()=>{__flushPhotoJobs(i);res();};
+    s.onerror=()=>{delete __PHOTO_JOBS[i];rej(new Error("photo chunk "+i));};
+    document.head.appendChild(s);
+  });
+  __PHOTO_JOBS[i]=job; return job;
+}
+function __flushPhotoJobs(i){
+  if(!__PHOTO_BOOT) return;
+  for(const k of Object.keys(__PHOTO_BOOT.m)){
+    if(__PHOTO_BOOT.m[k]!==i||!(window.__PHOTOS&&__PHOTOS[k])) continue;
+    const q=__PHOTO_PEND[k]; if(q){delete __PHOTO_PEND[k];q.forEach(fn=>fn(__PHOTOS[k]));}
+  }
+}
+function __ensurePhoto(p){
+  const k=String(p==null?"":p).split("/").pop();
+  if(window.__PHOTOS&&__PHOTOS[k]) return Promise.resolve(__PHOTOS[k]);
+  if(!__PHOTO_BOOT) return Promise.resolve(PH(p));
+  const i=__PHOTO_BOOT.m[k];
+  if(i==null) return Promise.resolve(PH(p));
+  return __ensureChunk(i).then(()=>(window.__PHOTOS&&__PHOTOS[k])||PH(p));
+}
+function __whenPhoto(p,fn){
+  const k=String(p==null?"":p).split("/").pop();
+  if(window.__PHOTOS&&__PHOTOS[k]){fn(__PHOTOS[k]);return;}
+  if(!__PHOTO_BOOT||__PHOTO_BOOT.m[k]==null){fn(PH(p));return;}
+  (__PHOTO_PEND[k]||(__PHOTO_PEND[k]=[])).push(fn);
+  __ensureChunk(__PHOTO_BOOT.m[k]).catch(()=>{
+    if(typeof toast==="function") toast("一张照片分片没加载出来 · 检查网络或用整包版");
+  });
+}
+function __bindLazy(root){
+  root.querySelectorAll("img[data-pkey]").forEach(img=>{
+    if(img.dataset.lbound)return; img.dataset.lbound="1";
+    __whenPhoto(img.dataset.pkey,url=>{ if(img.isConnected) img.src=url; });
+  });
+}
+</script>
 <div id="tipBar" role="status" hidden>
   <span id="tipTxt"></span>
   <span class="chip" id="tipGo" tabindex="0" role="button">⇧ 备份进度码</span>
@@ -960,236 +1004,236 @@
  * 底图: 校园地图-夜空版-web.jpg | 数据: CATS（76只真猫名册 · 2026-08普查）
  * ============================================================ */
 
-// ---- 真实名册数据（源自 猫咪档案/猫咪名册.csv · 76只=52原有+24补充归并 · 2026-08普查）----
+// ---- 真实名册数据（build.py 自名册 CSV 注入 · 76 只在编 · 2026-08 普查）----
 const CATS = [
   { id:"CAT-001", name:"墩墩", rank:"喵校长", title:"总揽全校猫务", coat:"全橘虎斑", coatGroup:"橘",
     features:"体型胖粉鼻、侧躺露肚、人摸不醒、气场十足", area:"宿舍楼玻璃门前石台", bio:"全校编制的唯一掌门人。石台一躺，肚皮一翻，谁来都得先打招呼。摸可以，醒是不可能的——校长日理万机，此刻正在办公。",
-    photo:"assets/photos/微信图片_20260812143555_100_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_100_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-002", name:"格子", rank:"中士", title:"宿舍内务员", coat:"橘白", coatGroup:"橘",
     features:"橘头橘背白胸腹、体型中等偏瘦、常钻红白格桌布下", area:"宿舍红白格桌布区域", bio:"内务检查从不迟到，本人就藏在红白格桌布底下。桌布和毛色谁抄谁，尚无定论。找它别喊名字，掀桌布最快。",
-    photo:"assets/photos/50E8904B46C698659B377B114F19A118.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/50E8904B46C698659B377B114F19A118.jpg", photoCount:3, brightness:.72},
   { id:"CAT-003", name:"围脖", rank:"少校", title:"窗台哨长", coat:"橘白", coatGroup:"橘",
     features:"头顶橘斑中分、白围脖白手套、偏胖、爱趴窗台晒太阳", area:"宿舍窗台", bio:"白围脖白手套，军容严整，常年把守宿舍窗台第一线。中分的橘斑是天生的，晒太阳的姿势也是——站岗和补钙，人家全都要。",
-    photo:"assets/photos/5828C42C0CB0C2C7244529762D44D4D9.jpg", photoCount:5, brightness:.94 },
+    photo:"assets/photos/5828C42C0CB0C2C7244529762D44D4D9.jpg", photoCount:5, brightness:.94},
   { id:"CAT-004", name:"环尾", rank:"中尉", title:"高台瞭望员", coat:"全橘虎斑", coatGroup:"橘",
     features:"粗尾橘色环纹明显、体型胖、前爪尖偏白、爱趴高处", area:"室外白色高台沿", bio:"尾巴上一圈圈橘环，是自带的路障警示纹。高台一趴，全校动静尽收眼底。体格虽胖，居高临下的气势从不打折。",
-    photo:"assets/photos/微信图片_20260812143555_121_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_121_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-005", name:"松果", rank:"下士", title:"绿化带潜伏员", coat:"全橘虎斑", coatGroup:"橘",
     features:"常在松柏树下碎石区闭眼趴卧", area:"松柏树下绿化带", bio:"松柏树下常驻兵力，闭眼趴卧不是睡觉，是潜伏。碎石堆是它选的单人哨所，一次执勤能从早课坚持到晚自习。",
-    photo:"assets/photos/微信图片_20260812143555_148_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_148_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-006", name:"天线", rank:"上尉", title:"窗台通讯员", coat:"全橘/浅橘", coatGroup:"橘",
     features:"胸前挂一截白色线状物、辨识度极高、趴台沿探头", area:"建筑物窗台/柜台沿", bio:"胸前常年挂着一截白线，像随时待发的通信天线，全编制独一份的工装。趴在窗台探头探脑，消息比广播站还灵。",
-    photo:"assets/photos/微信图片_20260812143555_154_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_154_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-007", name:"奶油", rank:"中士", title:"挑檐巡逻兵", coat:"浅橘(奶油色)虎斑", coatGroup:"橘",
     features:"浅橘细条纹、黄眼粉鼻、爱趴高处台沿", area:"楼道横梁/高处台沿", bio:"毛色浅得像加了三倍奶，细条纹是出厂限定。挑檐横梁是它的巡逻专线，黄眼睛粉鼻子，高处风大也吹不乱队形。",
-    photo:"assets/photos/微信图片_20260816233805_66_184.jpg", photoCount:8, brightness:1.05 },
+    photo:"assets/photos/微信图片_20260816233805_66_184.jpg", photoCount:8, brightness:1.05},
   { id:"CAT-008", name:"喇叭", rank:"列兵", title:"宣传干事", coat:"橘白", coatGroup:"橘",
     features:"偏瘦青年猫、耳大、仰卧露肚爱叫", area:"白墙黑砖地面区域", bio:"全编制嗓门担当，耳朵大得像自带扩音。仰面朝天露出肚皮就开始演讲，至于内容——宣传干事说了，重在气势。",
-    photo:"assets/photos/微信图片_20260812143555_110_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_110_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-009", name:"粉鼻", rank:"列兵", title:"水泥地巡查", coat:"橘白虎斑", coatGroup:"橘",
     features:"粉鼻白嘴、白胸腹白手套、侧躺", area:"白天水泥砖地面", bio:"鼻头是粉的，嘴角是白的，爪子还戴白手套，巡查水泥地也要体面。侧躺值班是它的独门姿势，路过的都得绕着走。",
-    photo:"assets/photos/微信图片_20260812143555_95_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_95_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-010", name:"项圈", rank:"中士", title:"人行道纠察", coat:"橘白短毛", coatGroup:"橘",
     features:"白颈圈白腿白尾尖、爱蜷睡草地", area:"草地/盲道人行道", bio:"脖子上一圈白毛像自带项圈，省了编制配发。纠察草地和盲道，查完就势一蜷，把自己盘成行李箱等下班。",
-    photo:"assets/photos/微信图片_20260812143555_152_56.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260812143555_152_56.jpg", photoCount:4, brightness:.83},
   { id:"CAT-011", name:"螺栓", rank:"下士", title:"车库技师", coat:"橘白短毛", coatGroup:"橘",
     features:"橘虎斑背、白手套白靴鼻周白、出现在灰色油漆地面", area:"室内/车库灰色油漆地面", bio:"深夜出没在灰色油漆地面，疑似车库编外技师。橘虎斑配白手套，干活不脏手。工具没见它用，螺栓倒是都紧过。",
-    photo:"assets/photos/微信图片_20260816232105_99_39.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260816232105_99_39.jpg", photoCount:2, brightness:.61},
   { id:"CAT-012", name:"雪顶", rank:"中尉", title:"夜间车管", coat:"长毛橘白", coatGroup:"橘",
     features:"主体白色蓬松、头顶耳部及尾巴橘色、夜间出现在车顶", area:"车顶/路边广告牌", bio:"一头橘色像刚出炉的雪顶咖啡。夜里上岗管车顶，专挑最暖的那台趴。车主请注意：挪车前，先敲敲引擎盖。",
-    photo:"assets/photos/微信图片_20260812143555_162_56.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/微信图片_20260812143555_162_56.jpg", photoCount:3, brightness:.72},
   { id:"CAT-013", name:"课代表", rank:"少校", title:"教学督导", coat:"长毛橘白", coatGroup:"橘",
     features:"橘背橘头白胸、大尾巴极蓬松、体型壮、上过教室课桌", area:"石花坛边/教室课桌", bio:"唯一有教室工位记录的干部，课桌都上过，督导证件比学生证还全。尾巴蓬松得能当教鞭，听课不听课，全看它心情。",
-    photo:"assets/photos/微信图片_20260812143555_138_56.jpg", photoCount:5, brightness:.94 },
+    photo:"assets/photos/微信图片_20260812143555_138_56.jpg", photoCount:5, brightness:.94},
   { id:"CAT-014", name:"拖把", rank:"中士", title:"夜间游荡", coat:"全橘长毛", coatGroup:"橘",
     features:"长毛蓬松尾粗大、体型较大", area:"夜间砖石路面井盖旁", bio:"长毛拖地，尾巴粗得像老式拖把，工位名字就是这么实在。夜里沿砖石路巡逻，走到哪拖到哪，路面干净全靠它。",
-    photo:"assets/photos/微信图片_20260812143555_84_56.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260812143555_84_56.jpg", photoCount:4, brightness:.83},
   { id:"CAT-015", name:"大厅", rank:"列兵", title:"大厅巡逻", coat:"狸花", coatGroup:"狸花",
     features:"体型偏小青年猫、爱趴室内白色抛光瓷砖", area:"教学楼/食堂大厅白瓷砖", bio:"教学楼大厅白瓷砖的专属巡逻员，个头不大，气场不小。瓷砖越亮，它趴得越正——巡逻岗也能趴出仪仗队的效果。",
-    photo:"assets/photos/13951BEAD8371B46AB8351276772BF48.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/13951BEAD8371B46AB8351276772BF48.jpg", photoCount:2, brightness:.61},
   { id:"CAT-016", name:"锦鲤", rank:"上士", title:"外墙粉刷班长", coat:"彩狸(狸花腹泛橘)", coatGroup:"狸花",
     features:"腹部四肢泛橘罕见、黑尾、尾尖黑、后爪白", area:"白色矮墙/水泥路", bio:"腹部四肢泛着橘，像干活时蹭了半桶油漆，再配一条黑尾巴，配色全编制独一份。粉刷外墙是本职，蹭色属于工伤证明。",
-    photo:"assets/photos/812ECF0BC693511417B88A2F552872A8.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/812ECF0BC693511417B88A2F552872A8.jpg", photoCount:2, brightness:.61},
   { id:"CAT-017", name:"略略", rank:"中士", title:"门口接待员", coat:"狸花白", coatGroup:"狸花",
     features:"深狸花背白围脖白手套、吐舌舔鼻、体型胖", area:"建筑物入口地垫/花岗岩", bio:"门口接待岗的老熟人，见面先吐舌舔个鼻，算打过招呼。深狸花背配白围脖白手套，胖归胖，礼数一样不缺。",
-    photo:"assets/photos/A66981CEBAA620A95058D1FC12A73A2E.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/A66981CEBAA620A95058D1FC12A73A2E.jpg", photoCount:3, brightness:.72},
   { id:"CAT-018", name:"旗杆", rank:"下士", title:"石阶仪仗兵", coat:"狸花", coatGroup:"狸花",
     features:"偏瘦、尾巴高竖如旗杆尾尖深黑、前爪白手套嘴白", area:"教学楼前大片石阶", bio:"尾巴竖得笔直，尾尖一抹深黑，活像升好的旗。教学楼前的石阶就是检阅台，前爪白手套一抬，谁过都得目送。",
-    photo:"assets/photos/微信图片_20260812143555_83_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_83_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-019", name:"罐头", rank:"列兵", title:"后勤炊事员", coat:"黄棕狸花", coatGroup:"狸花",
     features:"体态圆胖、夜间出没、被拍到吃罐头", area:"夜间路边土坡/砖石路", bio:"夜间土坡蹲点，被拍到的唯一画面是埋头吃罐头——炊事员的敬业方式很直接。体态说明伙食，毛色说明岗位。",
-    photo:"assets/photos/微信图片_20260812143555_85_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_85_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-020", name:"体操", rank:"列兵", title:"体能教官", coat:"狸花加白", coatGroup:"狸花",
     features:"白爪白口鼻、白从下巴延伸到腹、爱伸懒腰", area:"水泥地/红砖人行道", bio:"全编制柔韧担当，一个懒腰能从前爪拉到后胯，教学示范从不偷懒。白爪白口鼻，动作干净利落，体操教名不虚传。",
-    photo:"assets/photos/微信图片_20260812143555_91_56.jpg", photoCount:7, brightness:1.05 },
+    photo:"assets/photos/微信图片_20260812143555_91_56.jpg", photoCount:7, brightness:1.05},
   { id:"CAT-021", name:"门神", rank:"下士", title:"门厅守卫", coat:"狸花", coatGroup:"狸花",
     features:"棕黑虎斑无白、爱团成球睡在黑色瓷砖门厅", area:"建筑物入口黑色瓷砖", bio:"守门的方式是把自己团成一颗球，堵在黑色瓷砖门厅正中央。棕黑虎斑和地砖融为一体——这是战术，不是偷懒。",
-    photo:"assets/photos/微信图片_20260812143555_99_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_99_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-022", name:"摸头", rank:"上尉", title:"亲和力教官", coat:"狸花", coatGroup:"狸花",
     features:"绿黄大眼粉棕鼻白长胡须、任人摸头、亲人", area:"绿色铁栅栏高处台沿", bio:"编制内亲和力天花板，头递过来就是让你摸的。绿黄大眼配上长白胡须，军衔不高不低，全靠好脾气一步一步升上来。",
-    photo:"assets/photos/微信图片_20260812143555_101_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_101_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-023", name:"白梁", rank:"中士", title:"外交联络官", coat:"狸花加白", coatGroup:"狸花",
     features:"白鼻梁竖条通鼻口、绿眼、曾与全橘猫头挨头睡觉", area:"灰地砖/室内台沿", bio:"一道白鼻梁从额头通到嘴边，像戴着通信面罩。外交水平有照片为证：和全橘猫头挨头开会，会谈气氛相当融洽。",
-    photo:"assets/photos/微信图片_20260812143555_134_56.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260812143555_134_56.jpg", photoCount:4, brightness:.83},
   { id:"CAT-024", name:"监工", rank:"上士", title:"施工监理", coat:"狸花", coatGroup:"狸花",
     features:"粉鼻带黑斑大眼长胡须、出现在施工告示金属台面", area:"施工区域金属台面", bio:"常驻施工区金属台面，监工姿势标准：趴着盯。施工告示旁边一趴，谁干活谁偷懒，粉鼻子黑斑的脸上写得明明白白。",
-    photo:"assets/photos/微信图片_20260812143555_115_56.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/微信图片_20260812143555_115_56.jpg", photoCount:3, brightness:.72},
   { id:"CAT-025", name:"悟空", rank:"中士", title:"二龙山侦察兵", coat:"狸花带橘调", coatGroup:"狸花",
     features:"圆脸大眼粗尾环纹、会爬树", area:"室外树上", bio:"全编制唯一被拍到爬树的，二龙山侦察兵的岗位是凭本事挣的。圆脸大眼，粗尾环纹，树上视野好，情报来得早。",
-    photo:"assets/photos/微信图片_20260812143555_132_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_132_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-026", name:"围挡", rank:"列兵", title:"施工区巡查", coat:"狸花白", coatGroup:"狸花",
     features:"白身为主、头顶及尾灰狸花环纹、偏瘦绿眼", area:"施工围挡/电动车广告牌", bio:"白身上顶着狸花帽，尾巴也是花的，远看像施工围挡倒了半幅。围挡广告牌一线巡查，瘦归瘦，警惕性拉满。",
-    photo:"assets/photos/微信图片_20260812143555_164_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_164_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-027", name:"栏杆", rank:"列兵", title:"护栏哨兵", coat:"狸花", coatGroup:"狸花",
     features:"灰底黑条纹、瘦小亚成年、四肢深条纹", area:"大理石墙面不锈钢栏杆", bio:"亚成年的小个子，守着大理石墙边的不锈钢栏杆，站姿笔挺。灰底黑条纹，四肢自带深色护腿，制服是娘胎里配发的。",
-    photo:"assets/photos/微信图片_20260812143555_166_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_166_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-028", name:"懒腰", rank:"列兵", title:"门厅接待", coat:"狸花", coatGroup:"狸花",
     features:"灰褐底黑条纹、前爪伸直趴卧伸懒腰", area:"建筑入口阴凉处", bio:"建筑入口阴凉处的接待担当，业务动作只有一个：前爪伸直，标准懒腰。来客一律先看它拉伸，看完自己都想躺下。",
-    photo:"assets/photos/微信图片_20260812143555_169_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_169_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-029", name:"大胆", rank:"上尉", title:"对犬作战处长", coat:"狸花白", coatGroup:"狸花",
     features:"深灰褐背白口罩脸白手套白靴绿眼、与黄狗对峙不落下风", area:"柏油路面", bio:"编制里战功最硬的一位：与黄狗当街对峙，寸步不让，全程占上风。白口罩白手套配绿眼，气场两米八，犬类请绕行。",
-    photo:"assets/photos/微信图片_20260816232535_101_39.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/微信图片_20260816232535_101_39.jpg", photoCount:3, brightness:.72},
   { id:"CAT-030", name:"花木兰", rank:"少校", title:"电动车区统领", coat:"三花", coatGroup:"三花",
     features:"橘黑白三色、仰头直视镜头、气场足", area:"电动车停放区", bio:"全校唯一三花，替父从军的事迹待考，统领电动车区是真管。仰头直视镜头的那张照片，现在是编制的宣传照。",
-    photo:"assets/photos/微信图片_20260812143555_158_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_158_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-031", name:"枯叶", rank:"中士", title:"土路潜伏员", coat:"玳瑁", coatGroup:"三花",
     features:"黑为主杂橘斑、尾黑、常卧土路枯草边", area:"土路枯草区", bio:"毛色是枯叶同款迷彩，往土路枯草边一卧，侦察兵来了都得走空。黑底杂橘斑，尾巴一收，潜伏从早到晚不成问题。",
-    photo:"assets/photos/微信图片_20260812143555_147_56.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/微信图片_20260812143555_147_56.jpg", photoCount:3, brightness:.72},
   { id:"CAT-032", name:"白靴", rank:"下士", title:"灌木侦察", coat:"玳瑁", coatGroup:"三花",
     features:"黑橘斑驳、一只白色后爪、深色蓬松尾", area:"路边枯叶灌木丛", bio:"四爪黑得均匀，唯独一只后爪是白的，像下楼时踩进了面粉。灌木丛侦察岗，那只白靴就是它的到岗打卡记录。",
-    photo:"assets/photos/微信图片_20260816232544_108_39.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816232544_108_39.jpg", photoCount:1, brightness:.5},
   { id:"CAT-033", name:"电瓶", rank:"列兵", title:"车棚充电员", coat:"玳瑁", coatGroup:"三花",
     features:"黑褐橘杂色、出没电动车停放处", area:"电动车停放处/广场", bio:"车棚充电岗列兵，黑褐橘三色混编毛，和车棚里的电线一个色系。电动车堆里一蹲，充电桩都不好意思跳闸。",
-    photo:"assets/photos/微信图片_20260812143555_168_56.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260812143555_168_56.jpg", photoCount:4, brightness:.83},
   { id:"CAT-034", name:"手套", rank:"中士", title:"夜间巡逻", coat:"奶牛", coatGroup:"黑白",
     features:"黑背白腹、四爪白手套醒目、体型圆润", area:"夜间树下草地/石板台阶", bio:"四爪雪白，像夜间巡逻专用手套，黑背白腹出厂标配。夜里草地石板来回走，圆润的体型不耽误查岗，只耽误跑步。",
-    photo:"assets/photos/微信图片_20260812143555_82_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_82_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-035", name:"斑马线", rank:"下士", title:"马路协警", coat:"奶牛", coatGroup:"黑白",
     features:"脸白底黑斑(眼周耳侧)、粉鼻、夜间柏油路白线旁", area:"夜间柏油路面", bio:"脸部白底黑斑分布均匀，站在夜路白线旁边，和斑马线互相认证。协警不指挥交通，负责监督大家别压线。",
-    photo:"assets/photos/微信图片_20260812143555_88_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_88_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-036", name:"潜伏", rank:"列兵", title:"草丛哨兵", coat:"奶牛", coatGroup:"黑白",
     features:"黑多白少、四肢白袜、头埋草丛", area:"石墙根草丛", bio:"石墙根草丛的专业户，黑多白少，一头扎进草丛只剩个背影。哨兵当到这个份上，路过的人连它在哪都说不清。",
-    photo:"assets/photos/微信图片_20260812143555_94_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_94_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-037", name:"红毯", rank:"列兵", title:"门厅礼仪", coat:"奶牛", coatGroup:"黑白",
     features:"黑背白腹白手套、卧红色地垫旁", area:"花岗岩地面红地垫角落", bio:"门厅红地垫旁的礼仪岗，黑背白腹白手套，趴姿端正。红毯它不走，就守在边上——礼宾司的排面，从来不靠站。",
-    photo:"assets/photos/微信图片_20260812143555_113_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_113_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-038", name:"月牙", rank:"列兵", title:"新兵", coat:"奶牛(幼猫)", coatGroup:"黑白",
     features:"颈后白色项圈状月牙环纹、体型小", area:"花岗岩地面红地垫旁", bio:"新兵蛋子，颈后一圈白纹弯成月牙，是编制里最年轻的记号。体格还没长开，站姿已经学得有模有样，重点培养对象。",
-    photo:"assets/photos/微信图片_20260812143555_114_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_114_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-039", name:"面罩", rank:"中士", title:"蒙面教官", coat:"奶牛", coatGroup:"黑白",
     features:"白身黑头、黑面罩配白鼻梁、鼻粉带黑点黄绿眼", area:"室外沥青路面", bio:"白身子顶个黑脑袋，面罩正中留一道白梁，蒙面教官的行头是娘胎里配发的。鼻头粉里带黑点，仰头看你，教官有话说。",
-    photo:"assets/photos/微信图片_20260812143555_119_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_119_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-040", name:"白须", rank:"上士", title:"老参谋", coat:"奶牛", coatGroup:"黑白",
     features:"黑背白胸白下巴、鼻黑带粉、白须长显老成", area:"墙角黑地砖", bio:"下巴一把白须，参谋气质从胡须开始。鼻头黑里透粉，眼神老成，办公地点选在墙角黑地砖——参谋嘛，就得坐后排。",
-    photo:"assets/photos/微信图片_20260812143555_120_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_120_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-041", name:"披肩", rank:"上士", title:"仪仗队员", coat:"奶牛", coatGroup:"黑白",
     features:"黑背、肩部白色弧形披肩纹", area:"墙角金属门槛", bio:"黑背上一道白色弧纹横过肩头，仪仗队的披风是长在身上的。金属门槛边一站半天不动，队形意识刻进了毛色里。",
-    photo:"assets/photos/微信图片_20260812143555_123_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_123_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-042", name:"墨尾", rank:"中尉", title:"楼内巡逻长", coat:"奶牛", coatGroup:"黑白",
     features:"白底大块黑斑、纯黑尾巴极具辨识度", area:"花岗岩地面/建筑物门口", bio:"白底黑斑配一条纯黑尾巴，全编制照片最多的明星，档案照六张起步。楼内巡逻长负责花岗岩一线，黑尾一甩就是巡更记录。",
-    photo:"assets/photos/微信图片_20260812143555_136_56.jpg", photoCount:6, brightness:1.05 },
+    photo:"assets/photos/微信图片_20260812143555_136_56.jpg", photoCount:6, brightness:1.05},
   { id:"CAT-043", name:"坦荡", rank:"列兵", title:"土路晾晒员", coat:"奶牛", coatGroup:"黑白",
     features:"白身背腰大块黑斑、仰卧露肚毫不设防", area:"土路枯草边", bio:"土路枯草边的晾晒专员，业务姿势：仰面朝天，肚皮全开，毫不设防。坦荡两个字，它是用整只猫在解释的。",
-    photo:"assets/photos/微信图片_20260812143555_143_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_143_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-044", name:"圆眼", rank:"下士", title:"草丛哨兵", coat:"奶牛", coatGroup:"黑白",
     features:"黑面罩白嘴鼻白胸白爪、圆眼直视", area:"草丛井盖旁", bio:"黑面罩白嘴鼻，一双圆眼直勾勾盯着镜头，哨兵的警觉全写在眼睛里。草丛井盖旁站岗，谁路过都得被这双眼睛过一遍。",
-    photo:"assets/photos/微信图片_20260812143555_167_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_167_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-045", name:"黑豆", rank:"列兵", title:"新兵", coat:"奶牛(幼猫)", coatGroup:"黑白",
     features:"黑背白胸四肢白、背上有白块、体型小", area:"草地土路交界", bio:"新兵连里最小的一颗豆，黑背白胸，背上还洒了点白芝麻。跟黑猫前辈同框出镜，站姿已见章法，未来可期。",
-    photo:"assets/photos/微信图片_20260816232539_105_39.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816232539_105_39.jpg", photoCount:1, brightness:.5},
   { id:"CAT-046", name:"黑帽", rank:"上士", title:"车棚管理员", coat:"奶牛", coatGroup:"黑白",
     features:"头顶一块显著黑斑如戴帽、背两大块黑斑黑尾、圆胖", area:"石材铺地自行车旁", bio:"头顶一块黑斑端端正正，像上岗必戴的大檐帽，背上的黑斑就是肩章。圆胖身材管车棚，车辆的进出它都点过头。",
-    photo:"assets/photos/微信图片_20260816232543_107_39.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816232543_107_39.jpg", photoCount:1, brightness:.5},
   { id:"CAT-047", name:"马鞍", rank:"中士", title:"运输兵", coat:"奶牛", coatGroup:"黑白",
     features:"背部大片黑色鞍状斑、头带黑斑白腿、体型胖", area:"路边枯叶灌木丛", bio:"背上驮着一片黑色鞍状斑，运输兵的马鞍是自带的。头带黑斑四腿雪白，体型敦实，枯叶灌木丛一带的货运全靠它。",
-    photo:"assets/photos/微信图片_20260816232545_109_39.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260816232545_109_39.jpg", photoCount:2, brightness:.61},
   { id:"CAT-048", name:"独眼", rank:"中士", title:"夜巡队长", coat:"奶牛", coatGroup:"黑白",
     features:"左眼及耳周大片黑斑如眼罩、黄绿眼粉鼻圆胖脸", area:"夜晚路面", bio:"左眼一圈黑斑像戴了眼罩，夜巡队长的造型自带威慑。黄绿眼粉鼻圆脸盘，夜里路面上一走，路灯都得让三分。",
-    photo:"assets/photos/微信图片_20260816232548_112_39.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/微信图片_20260816232548_112_39.jpg", photoCount:3, brightness:.72},
   { id:"CAT-049", name:"披风", rank:"上士", title:"灰地砖巡长", coat:"奶牛", coatGroup:"黑白",
     features:"背部黑色如披风、头顶黑斑、头颈腹白", area:"灰色地砖路面", bio:"整个背部一片黑，像披了件夜行披风，头顶黑斑是帽檐。灰地砖路段的巡长，头颈腹全白，走路带风，披风先行。",
-    photo:"assets/photos/微信图片_20260812143555_135_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_135_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-050", name:"白玉", rank:"中尉", title:"仪仗队礼服", coat:"纯白", coatGroup:"黑白",
     features:"纯白无杂毛、蓝眼睛粉鼻、体态圆润、颜值担当", area:"户外石砖路边柏树旁", bio:"全校独一份的纯白蓝眼，仪仗队礼服白得发光。体态圆润，往柏树边一站就是风景——颜值即战力，编制的门面担当。",
-    photo:"assets/photos/5F9B576FCD0F435CEB1DC58553937C7C.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/5F9B576FCD0F435CEB1DC58553937C7C.jpg", photoCount:1, brightness:.5},
   { id:"CAT-051", name:"暹罗", rank:"上校", title:"外籍技术顾问", coat:"长毛重点色", coatGroup:"其他",
     features:"灰重点色长毛(布偶/暹罗串)、耳尖面部灰色、尾蓬松、稀有品种", area:"花岗岩地面(疑似楼内)", bio:"编制里唯一的重点色长毛，灰面灰耳灰尾巴，上校军衔走的外籍专家路线。全校师生围观过的稀罕物，顾问费按小鱼干结算。",
-    photo:"assets/photos/微信图片_20260812143555_124_56.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260812143555_124_56.jpg", photoCount:2, brightness:.61},
   { id:"CAT-052", name:"奶糖", rank:"列兵", title:"新兵蛋子", coat:"浅橘(奶油色)幼猫", coatGroup:"橘",
     features:"全身浅橘细虎斑、粉鼻绿眼、仰躺露肚", area:"室内墙角黑白瓷砖", bio:"编制末位的新兵蛋子，浅橘虎斑像化开的奶糖。仰面躺在墙角瓷砖上露着肚皮——新兵训练第一课：先睡出气势。",
-    photo:"assets/photos/微信图片_20260812143555_112_56.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260812143555_112_56.jpg", photoCount:1, brightness:.5},
   { id:"CAT-053", name:"仰面", rank:"列兵", title:"新兵连学员", coat:"狸花白(幼猫)", coatGroup:"狸花",
     features:"头部虎斑面具+白身白肢、仰躺前肢伸展直视镜头", area:"居民楼红砖地", bio:"红砖地是新兵连的床，仰面一躺前爪一伸，眼神却直勾勾盯着你——睡姿满分，警惕性也满分，前途无量。",
-    photo:"assets/photos/微信图片_20260816233805_7_184.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260816233805_7_184.jpg", photoCount:2, brightness:.61},
   { id:"CAT-054", name:"墨点", rank:"列兵", title:"新兵连学员", coat:"奶牛(幼猫)", coatGroup:"黑白",
     features:"白底头部黑面具+鼻部黑点、仰卧直视", area:"居民楼红砖地", bio:"白脸上扣了半张黑面具，鼻尖再点一粒墨，伪装就这点预算。和仰面疑似同窝，一个躺一个卧，兄弟分工明确。",
-    photo:"assets/photos/微信图片_20260816233805_9_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_9_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-055", name:"自来熟", rank:"中士", title:"民心工作员", coat:"狸花白", coatGroup:"狸花",
     features:"白脸白胸白爪+深灰虎斑面具、黑鼻斑、仰卧露腹亲人", area:"老旧水泥地砖房区", bio:"老楼区的民心工作全靠肚皮完成：仰面朝天，谁来都能摸两把。黑鼻斑是它的工牌，照片拍倒了都不耽误认人。",
-    photo:"assets/photos/微信图片_20260816233805_11_184.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/微信图片_20260816233805_11_184.jpg", photoCount:3, brightness:.72},
   { id:"CAT-056", name:"鸳鸯", rank:"中士", title:"被服厂配色师", coat:"三花虎斑", coatGroup:"三花",
     features:"左脸米黄右脸深灰黑、白鼻梁白胸、侧卧直视", area:"红褐瓷砖地面", bio:"左脸米黄右脸黑，天生自带渐变配色方案，被服厂校色全靠它，一猫两面样品都省了。侧卧直视镜头，气场严格对称。",
-    photo:"assets/photos/微信图片_20260816233805_14_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_14_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-057", name:"探地", rank:"列兵", title:"地形勘察员", coat:"三花(幼猫)", coatGroup:"三花",
     features:"头部棕褐深灰+白脸白爪、站立低头嗅地", area:"老旧楼道口", bio:"楼道口新兵，头埋得比谁都低——不是害羞，是勘察地形。鼻子就是测量仪，走过的每寸路面都要归档备案。",
-    photo:"assets/photos/微信图片_20260816233805_18_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_18_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-058", name:"摔跤", rank:"下士", title:"体能训练员", coat:"狸花", coatGroup:"狸花",
     features:"灰黑条纹+白腹白围脖白手套、打闹担当", area:"水泥地排水格栅区", bio:"排水格栅就是擂台，白围脖一系像戴了护颈。和陪练日日过招，翻滚扑咬样样在行，训练员的编制是实打实战出来的。",
-    photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83},
   { id:"CAT-059", name:"陪练", rank:"列兵", title:"体能训练员", coat:"白底黑斑", coatGroup:"黑白",
     features:"背单块圆黑斑+黑白尾、仰卧四脚朝天", area:"水泥地排水格栅区", bio:"背上一块圆斑像披了护具，专职陪摔跤练招。仰面四脚朝天是常态——被摔的永远是它，第二天照样准时出勤。",
-    photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83},
   { id:"CAT-060", name:"玄铁", rank:"上士", title:"装备保密员", coat:"纯黑", coatGroup:"其他",
     features:"通黑无杂色、中长毛圆润肥硕", area:"石台灌木小径", bio:"全校唯一纯黑编制，黑得夜景照都难拍清。上士军衔管装备保密——通体自带隐身涂层，不保密实在说不过去。",
-    photo:"assets/photos/微信图片_20260816233805_44_184.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260816233805_44_184.jpg", photoCount:2, brightness:.61},
   { id:"CAT-061", name:"脸谱", rank:"中士", title:"文工团台柱子", coat:"黑白奶牛", coatGroup:"黑白",
     features:"黑面具+白口罩、黑背白胸腹白肢、蹲坐仰头直视", area:"浅灰花岗岩石台", bio:"黑面具白口罩，一抬头就是文工团台柱子的扮相。石台是它的舞台，蹲坐亮相有板有眼，场场都是满座。",
-    photo:"assets/photos/微信图片_20260816233805_48_184.jpg", photoCount:3, brightness:.72 },
+    photo:"assets/photos/微信图片_20260816233805_48_184.jpg", photoCount:3, brightness:.72},
   { id:"CAT-062", name:"跟班", rank:"列兵", title:"石台警卫员", coat:"棕狸花", coatGroup:"狸花",
     features:"浅黄褐底深棕条纹+M纹、石台群幼年渐长", area:"浅灰花岗岩石台", bio:"石台警卫班里资历最浅，从幼猫一路跟到大。棕条纹朴素低调，前辈蹲哪它蹲哪，从不抢镜——档案照倒是一张没缺。",
-    photo:"assets/photos/微信图片_20260816233805_43_184.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260816233805_43_184.jpg", photoCount:4, brightness:.83},
   { id:"CAT-063", name:"小黑帽", rank:"列兵", title:"给养接收员", coat:"白底黑斑(幼猫)", coatGroup:"黑白",
     features:"头顶黑帽+尾根黑鞍+全黑尾、竖尾站立", area:"红砖地投喂点", bio:"头顶黑帽歪着戴，尾巴黑得像配了根指挥棒。投喂点出勤率第一，给养一到，竖着尾巴头一个到场清点数量。",
-    photo:"assets/photos/微信图片_20260816233805_41_184.jpg", photoCount:4, brightness:.83 },
+    photo:"assets/photos/微信图片_20260816233805_41_184.jpg", photoCount:4, brightness:.83},
   { id:"CAT-064", name:"小虎", rank:"列兵", title:"新兵连学员", coat:"棕褐虎斑(幼猫)", coatGroup:"狸花",
     features:"背部条纹清晰、前爪搭同伴肩嗅闻", area:"绿门水泥地投喂点", bio:"名字带虎，其实是全编制最小的兵之一。前爪搭在同伴肩上探头探脑，新兵连的社交担当，走哪儿都得勾肩搭背。",
-    photo:"assets/photos/微信图片_20260816233805_33_184.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260816233805_33_184.jpg", photoCount:2, brightness:.61},
   { id:"CAT-065", name:"高架", rank:"下士", title:"高空作业员", coat:"狸白长毛(幼猫)", coatGroup:"狸花",
     features:"深灰黑虎斑头+白身+黑蓬松长尾、攀爬金属框架探头", area:"金属护栏扶手", bio:"金属框架说爬就爬，长毛幼猫身手一点不含糊。黑蓬松大尾巴在高处一甩，高空作业员到场——安全帽没戴，毛够厚。",
-    photo:"assets/photos/微信图片_20260816233805_38_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_38_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-066", name:"干饭", rank:"列兵", title:"炊事班学徒", coat:"灰白虎斑加白", coatGroup:"狸花",
     features:"灰黑面具八字脸+白口鼻白爪、进食抬头直视", area:"红褐水泥地投喂点", bio:"全编制饭点最准的兵，猫粮袋一响就已就位。八字面具脸抬头直视镜头：干饭不影响警惕，警惕不影响干饭。",
-    photo:"assets/photos/微信图片_20260816233805_40_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_40_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-067", name:"挡风", rank:"中士", title:"车辆保养员", coat:"橘白", coatGroup:"橘",
     features:"橘背橘头淡虎斑+白胸腹白肢、偏胖、站车座伸爪探挡风被", area:"电动车停放区", bio:"体型偏胖身手却矫健，专攻电动车挡风被。伸爪一探，被子里外摸得门儿清——冬季被装，先到先得，过期不候。",
-    photo:"assets/photos/微信图片_20260816233805_50_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_50_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-068", name:"坐垫", rank:"列兵", title:"车库值班员", coat:"橘白", coatGroup:"橘",
     features:"橘头橘背+白脸白颈白胸腹、偏瘦青年、车座熟睡", area:"电动车停放区", bio:"把电动车座当值班床，一睡一下午。偏瘦的身板往皮座上一铺，比原装坐垫还服帖——睡岗也算岗，这在条令里有。",
-    photo:"assets/photos/微信图片_20260816233805_51_184.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260816233805_51_184.jpg", photoCount:2, brightness:.61},
   { id:"CAT-069", name:"立正", rank:"列兵", title:"仪仗队苗子", coat:"狸花白(幼猫)", coatGroup:"狸花",
     features:"棕灰虎斑背头尾+白胸腹白爪白围脖、站立翘尾直视", area:"水泥路缘石", bio:"站姿是全编制的教科书：四爪扎根、尾巴竖直、目视前方。白围脖白手套一样不少，仪仗队的好苗子，就差发顶帽子。",
-    photo:"assets/photos/微信图片_20260816233805_55_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_55_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-070", name:"查鞋", rank:"列兵", title:"内务检查员", coat:"狸花(幼猫)", coatGroup:"狸花",
     features:"深浅灰褐条纹背深腹浅、低头嗅白运动鞋", area:"沥青路面", bio:"内务检查有独门绝活——用鼻子。路过同学的运动鞋逐双嗅过，红字的白底的统统登记在案，不合格的记大过。",
-    photo:"assets/photos/微信图片_20260816233805_57_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_57_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-073", name:"大字", rank:"列兵", title:"午休标兵", coat:"狸花", coatGroup:"狸花",
     features:"棕褐底深条纹+浅米腹白口鼻白围脖、仰卧四脚朝天", area:"水泥台阶路缘", bio:"水泥地上一躺，四肢朝天摆成个「大」字，深纹背浅米腹，午休标兵的睡姿比正步还标准。叫它不应——午休时间，天塌不管。",
-    photo:"assets/photos/微信图片_20260816233805_61_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816233805_61_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-074", name:"晨雾", rank:"中士", title:"气象观测员", coat:"灰白长毛", coatGroup:"其他",
     features:"银灰与白相间无明显深纹、体型偏大、草地侧卧打盹", area:"草地落叶", bio:"银灰长毛像蒙了层薄雾，往草地一卧就和晨色融成一片。气象观测员的基本素养：起雾时它在，雾散了它还在。",
-    photo:"assets/photos/微信图片_20260816235021_78_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816235021_78_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-075", name:"初雪", rank:"列兵", title:"新兵连学员", coat:"纯白(幼猫)", coatGroup:"黑白",
     features:"纯白短毛、蹲姿看镜头", area:"铁栅栏边", bio:"纯白小猫蹲在栅栏边，像入冬第一场雪落错了地方。眼睛盯着镜头毫不怯场——新兵连最白净的兵，白得名副其实。",
-    photo:"assets/photos/微信图片_20260816235021_101_184.jpg", photoCount:1, brightness:.5 },
+    photo:"assets/photos/微信图片_20260816235021_101_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-078", name:"方砖", rank:"下士", title:"瓷砖区巡查员", coat:"橘白长毛", coatGroup:"橘",
     features:"橘白分布均匀、蓬松长毛、灰瓷砖区常驻", area:"灰瓷砖地面", bio:"灰瓷砖区的常驻巡查员，橘白长毛贴地走，路过之处自带打光。五张档案照全在同一条砖路上——巡查路线，从不带改的。",
-    photo:"assets/photos/微信图片_20260816235021_96_184.jpg", photoCount:5, brightness:.94 },
+    photo:"assets/photos/微信图片_20260816235021_96_184.jpg", photoCount:5, brightness:.94},
   { id:"CAT-079", name:"远望", rank:"下士", title:"哨所观察员", coat:"奶牛(长毛)", coatGroup:"黑白",
     features:"黑白斑明显、端坐目光望远方", area:"植被地面", bio:"端坐在植被前，目光望向远方，哨所观察员的标准证件照。黑斑白毛分得清清楚楚——看得远，是因为坐得住。",
-    photo:"assets/photos/微信图片_20260816235021_83_184.jpg", photoCount:2, brightness:.61 },
+    photo:"assets/photos/微信图片_20260816235021_83_184.jpg", photoCount:2, brightness:.61},
   { id:"CAT-080", name:"两仪", rank:"中士", title:"地图绘制员", coat:"三花(长毛)", coatGroup:"三花",
     features:"左半脸黑右半脸橘、白胸腹白肢、黄眼", area:"粉色砖地绿门框", bio:"左脸黑右脸橘，一猫分两仪，地图绘制员的职业操守就是黑白分明。全校花色稀有榜再添一员，判读从不出错。",
-    photo:"assets/photos/微信图片_20260816235021_103_184.jpg", photoCount:1, brightness:.5 }
+    photo:"assets/photos/微信图片_20260816235021_103_184.jpg", photoCount:1, brightness:.5} 
 ];
 
 const MAP_SRC = "校园地图-夜空版-web.jpg";
@@ -1245,35 +1289,20 @@ function basePos(cat){ const r=mulberry32(hashStr(cat.id));
   return { x:.07+r()*.86, y:.09+r()*.82 }; }
 /* 固化校准坐标（2026-08-17 v6 · 全员限定红框核心建成区 x.332-.848/y.164-.827 · 语义聚簇落位 · 手动校准 localStorage 仍优先覆盖） */
 const CALIB={
-  /* 居民楼宿舍区 */
   "CAT-001":{x:.626,y:.509},"CAT-003":{x:.569,y:.596},"CAT-053":{x:.615,y:.592},"CAT-054":{x:.642,y:.573},
-  /* 排水格栅区 */
-  "CAT-014":{x:.359,y:.419},"CAT-058":{x:.387,y:.432},"CAT-059":{x:.333,y:.405},
-  /* 石台灌木猫群 */
-  "CAT-009":{x:.480,y:.531},"CAT-060":{x:.438,y:.562},"CAT-061":{x:.462,y:.586},"CAT-062":{x:.418,y:.594},
-  /* 电动车停放区 */
-  "CAT-011":{x:.712,y:.448},"CAT-026":{x:.650,y:.437},"CAT-067":{x:.678,y:.478},"CAT-068":{x:.704,y:.497},
-  /* 道路沿线 */
-  "CAT-029":{x:.533,y:.430},"CAT-035":{x:.590,y:.349},"CAT-039":{x:.517,y:.290},"CAT-048":{x:.573,y:.426},
-  "CAT-069":{x:.505,y:.375},"CAT-070":{x:.478,y:.352},"CAT-073":{x:.478,y:.398},
-  /* 教学楼食堂区 */
-  "CAT-015":{x:.345,y:.468},"CAT-021":{x:.433,y:.395},"CAT-028":{x:.390,y:.390},"CAT-037":{x:.471,y:.463},
-  "CAT-040":{x:.499,y:.438},"CAT-041":{x:.467,y:.498},"CAT-051":{x:.461,y:.430},"CAT-052":{x:.356,y:.384},
-  "CAT-078":{x:.415,y:.440},
-  /* 金属护栏 */
-  "CAT-027":{x:.644,y:.374},"CAT-065":{x:.635,y:.325},
-  /* 铁栅栏施工区 */
-  "CAT-016":{x:.800,y:.498},"CAT-022":{x:.793,y:.453},"CAT-024":{x:.844,y:.496},"CAT-075":{x:.835,y:.445},
-  /* 草地植被区 */
-  "CAT-010":{x:.381,y:.564},"CAT-019":{x:.412,y:.506},"CAT-031":{x:.372,y:.612},"CAT-032":{x:.384,y:.469},
-  "CAT-034":{x:.410,y:.541},"CAT-036":{x:.378,y:.504},"CAT-043":{x:.439,y:.534},"CAT-050":{x:.411,y:.477},
-  "CAT-074":{x:.339,y:.620},"CAT-079":{x:.352,y:.528},
-  /* 老旧房区 */
-  "CAT-055":{x:.378,y:.676},"CAT-056":{x:.352,y:.700},"CAT-057":{x:.395,y:.716},
-  /* 投喂点 */
-  "CAT-063":{x:.578,y:.538},"CAT-064":{x:.554,y:.556},"CAT-066":{x:.596,y:.560},
-  /* 绿门粉砖地 */
-  "CAT-080":{x:.482,y:.626}
+  "CAT-014":{x:.359,y:.419},"CAT-058":{x:.387,y:.432},"CAT-059":{x:.333,y:.405},"CAT-009":{x:.48,y:.531},
+  "CAT-060":{x:.438,y:.562},"CAT-061":{x:.462,y:.586},"CAT-062":{x:.418,y:.594},"CAT-011":{x:.712,y:.448},
+  "CAT-026":{x:.65,y:.437},"CAT-067":{x:.678,y:.478},"CAT-068":{x:.704,y:.497},"CAT-029":{x:.533,y:.43},
+  "CAT-035":{x:.59,y:.349},"CAT-039":{x:.517,y:.29},"CAT-048":{x:.573,y:.426},"CAT-069":{x:.505,y:.375},
+  "CAT-070":{x:.478,y:.352},"CAT-073":{x:.478,y:.398},"CAT-015":{x:.345,y:.468},"CAT-021":{x:.433,y:.395},
+  "CAT-028":{x:.39,y:.39},"CAT-037":{x:.471,y:.463},"CAT-040":{x:.499,y:.438},"CAT-041":{x:.467,y:.498},
+  "CAT-051":{x:.461,y:.43},"CAT-052":{x:.356,y:.384},"CAT-078":{x:.415,y:.44},"CAT-027":{x:.644,y:.374},
+  "CAT-065":{x:.635,y:.325},"CAT-016":{x:.8,y:.498},"CAT-022":{x:.793,y:.453},"CAT-024":{x:.844,y:.496},
+  "CAT-075":{x:.835,y:.445},"CAT-010":{x:.381,y:.564},"CAT-019":{x:.412,y:.506},"CAT-031":{x:.372,y:.612},
+  "CAT-032":{x:.384,y:.469},"CAT-034":{x:.41,y:.541},"CAT-036":{x:.378,y:.504},"CAT-043":{x:.439,y:.534},
+  "CAT-050":{x:.411,y:.477},"CAT-074":{x:.339,y:.62},"CAT-079":{x:.352,y:.528},"CAT-055":{x:.378,y:.676},
+  "CAT-056":{x:.352,y:.7},"CAT-057":{x:.395,y:.716},"CAT-063":{x:.578,y:.538},"CAT-064":{x:.554,y:.556},
+  "CAT-066":{x:.596,y:.56},"CAT-080":{x:.482,y:.626}
 };
 let _lsWarn=0;                                       // 存储写入失败：10分钟最多提醒一次，防刷屏
 const lsWarn=()=>{ const now=Date.now();
@@ -1735,13 +1764,13 @@ function drawFx(dt){
 /* --- 星域关系网（实证搭档）+ 区域名册标注 --- */
 const REL=[
   { a:"CAT-058", b:"CAT-059", label:"摔跤 × 陪练 · 排水格栅日日过招" },
-  { a:"CAT-063", b:"CAT-064", label:"小黑帽 × 小虎 · 投喂点勾肩搭背" },
+  { a:"CAT-063", b:"CAT-064", label:"小黑帽 × 小虎 · 投喂点勾肩搭背" }
 ];
 const AREAS=[
   {x:.628,y:.582,t:"居民楼红砖地"},{x:.375,y:.697,t:"老旧房区"},{x:.294,y:.403,t:"排水格栅打闹区"},
   {x:.439,y:.581,t:"石台灌木猫群"},{x:.576,y:.551,t:"红砖地投喂点"},{x:.691,y:.487,t:"电动车停放区"},
   {x:.487,y:.375,t:"道路沿线"},{x:.333,y:.516,t:"山脚草地"},{x:.635,y:.325,t:"金属护栏"},
-  {x:.835,y:.445,t:"铁栅栏围墙"},{x:.415,y:.440,t:"教学楼瓷砖区"},{x:.482,y:.626,t:"绿门粉砖地"},
+  {x:.835,y:.445,t:"铁栅栏围墙"},{x:.415,y:.44,t:"教学楼瓷砖区"},{x:.482,y:.626,t:"绿门粉砖地"}
 ];
 let showNet=false, trailsOn=false, trailBurst=0, dustDrift=0;   // trailBurst：入场星轨秀计时；dustDrift：星尘漂移累积
 const catById=id=>CATS.find(c=>c.id===id);
@@ -2260,8 +2289,9 @@ function openCard(c){
   img.style.display=c.photo?"block":"none";
   if(c.photo){ img.classList.add("loading");                 // 星座徽记占位：加载完淡入
     if(imgWrap) imgWrap.classList.add("loading");
-    img.src=photoSrc(c);
-    if(img.complete&&img.naturalWidth>0) imgDone(); }        // 缓存直出的不闪占位
+    __ensurePhoto(c.photo).then(u=>{ if(selected!==c) return;   // 身份防护：连开猫不串图
+      img.src=u; if(img.complete&&img.naturalWidth>0) imgDone(); })
+      .catch(()=>{ if(selected===c) img.dispatchEvent(new Event("error")); }); }        // 缓存直出的不闪占位
   document.getElementById("cardName").textContent=c.name;
   document.getElementById("cardRank").innerHTML=medalSVG(c.rank,30)+"<span>"+c.rank+(c.title?" · "+c.title:"")+"</span>";
   document.getElementById("cardTitle").textContent=c.id+" ｜ 中北大学猫咪编制委员会 · 登记在册";
@@ -2433,7 +2463,7 @@ function makePoster(c){
     const im=new Image();
     im.onload=()=>finish(im);
     im.onerror=()=>finish(null);
-    im.src=photoSrc(c);
+    __ensurePhoto(c.photo).then(u=>{im.src=u;}).catch(()=>finish(null));
     setTimeout(()=>finish(null),3500);                        // 加载超时兜底
   }else finish(null);
 }
@@ -2665,11 +2695,13 @@ document.getElementById("fortune").addEventListener("click",e=>{
 /* ---------- 实地寻猫目录（按星域分组的行动指南） ---------- */
 const findPanel=document.getElementById("find"), btnFind=document.getElementById("btnFind");
 function closeFind(){ findPanel.classList.remove("open"); btnFind.classList.remove("on"); }
-const AREA_KEYS=[["排水格栅",2],["电动车",5],["铁栅栏",9],["栅栏",9],["护栏",8],["栏杆",8],
+const AREA_KEYS=[
+  ["排水格栅",2],["电动车",5],["铁栅栏",9],["栅栏",9],["护栏",8],["栏杆",8],
   ["绿门",11],["粉色砖",11],["投喂",4],["石台灌木",3],["灌木小径",3],["灌木丛",3],
   ["老旧",1],["红砖",0],["瓷砖",10],["大厅",10],["教室",10],["课桌",10],
-  ["草地",7],["草丛",7],["植被",7],["枯草",7],["落叶",7],
-  ["柏油",6],["沥青",6],["路面",6],["道路",6],["路边",6],["路缘",6]];
+  ["草地",7],["草丛",7],["植被",7],["枯草",7],["落叶",7],["柏油",6],
+  ["沥青",6],["路面",6],["道路",6],["路边",6],["路缘",6]
+];
 function areaIndexOf(c){
   for(const [k,i] of AREA_KEYS) if(c.area&&c.area.includes(k)) return i;   // 语义优先
   const p=catPos(c); let bi=0,bd=1e9;                                      // 几何回退
@@ -2685,10 +2717,11 @@ function openFind(){
     g.sort((a,b)=>(b.photoCount||1)-(a.photoCount||1));
     return '<div class="fdGroup"><b>'+AREAS[i].t+'</b><span>'+g.length+' 只常驻</span></div>'+
       g.map(c=>'<div class="fRow" data-id="'+c.id+'">'+
-        (c.photo?'<img loading="lazy" src="'+photoSrc(c)+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
+        (c.photo?'<img loading="lazy" data-pkey="'+c.photo.split("/").pop()+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
         '<span class="fi"><span class="fn">'+c.name+'<i style="color:'+rankTier(c.rank).m+'">'+medalSVG(c.rank,12)+c.rank+'</i></span>'+
         '<span class="ff">'+(c.features||"").split("、")[0]+'</span></span></div>').join("");
   }).join("");
+  __bindLazy(document.getElementById("fdBody"));
   findPanel.querySelectorAll(".fRow").forEach(r=>r.onclick=()=>{ closeFind(); openCard(catById(r.dataset.id)); });
   findPanel.classList.add("open"); btnFind.classList.add("on");
   auPluck(587.33,.04);
@@ -2721,8 +2754,7 @@ function makeFieldPoster(){
     g.fillStyle="rgba(4,8,18,.74)"; g.beginPath(); g.roundRect(x+8,y-15,w+16,23,8); g.fill();
     g.strokeStyle="rgba(125,232,214,.38)"; g.lineWidth=.8; g.stroke();
     g.fillStyle="#a9ece2"; g.fillText(t,x+16,y+1); }
-  const stars=[["CAT-001","喵校长 · 宿舍楼玻璃门前石台"],["CAT-060","纯黑玄铁 · 石台灌木小径"],
-    ["CAT-058","摔跤×陪练 · 排水格栅擂台"],["CAT-075","纯白初雪 · 铁栅栏边"]];
+  const stars=[["CAT-001","喵校长 · 宿舍楼玻璃门前石台"],["CAT-060","纯黑玄铁 · 石台灌木小径"],["CAT-058","摔跤×陪练 · 排水格栅擂台"],["CAT-075","纯白初雪 · 铁栅栏边"]];
   g.font='600 27px '+FT; g.fillStyle="#ffd76a"; g.fillText("⌖ 明星指路 · 实地优先找它们",90,1030);
   stars.forEach((s,i)=>{ const c=catById(s[0]), y=1074+i*47;
     g.fillStyle=starColors(c)[0]; g.beginPath(); g.arc(104,y-9,7,0,7); g.fill();
@@ -2830,7 +2862,7 @@ const CONST=[
  {n:"哨位座",en:"THE SENTRY",s:"金属护栏是不换岗的哨位。栏杆上的星站姿永远笔挺，白手套一抬，谁过都得目送。"},
  {n:"边关座",en:"THE FRONTIER",s:"铁栅栏围墙是校园的边关。新兵初雪在这里站第一班岗，纯白的一身，盯着镜头毫不怯场。"},
  {n:"书声座",en:"THE SCHOLARS",s:"教学楼瓷砖区的星沾着书卷气。上过课桌的课代表是这里的长官：听课不听课，全看心情。"},
- {n:"花影座",en:"THE BLOSSOM",s:"绿门粉砖地是全校最温柔的星域。花影摇曳处，连打盹都带着三分春意。"},
+ {n:"花影座",en:"THE BLOSSOM",s:"绿门粉砖地是全校最温柔的星域。花影摇曳处，连打盹都带着三分春意。"}
 ];
 let showConst=false, constHover=-1, constGroups=null;
 const constHits=[], constP=document.getElementById("constP");
@@ -2901,9 +2933,10 @@ function openConst(i){
   document.getElementById("cpBody").innerHTML=grp.slice()
     .sort((a,b)=>(b.photoCount||1)-(a.photoCount||1))
     .map(c=>'<div class="fRow" data-id="'+c.id+'">'+
-      (c.photo?'<img loading="lazy" src="'+photoSrc(c)+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
+      (c.photo?'<img loading="lazy" data-pkey="'+c.photo.split("/").pop()+'" alt="'+c.name+'">':'<span class="fdot"></span>')+
       '<span class="fi"><span class="fn">'+c.name+'<i style="color:'+rankTier(c.rank).m+'">'+medalSVG(c.rank,12)+c.rank+'</i></span>'+
       '<span class="ff">'+(c.features||"").split("、")[0]+'</span></span></div>').join("");
+  __bindLazy(document.getElementById("cpBody"));
   constP.querySelectorAll(".fRow").forEach(r=>r.onclick=()=>{ closeConst(); openCard(catById(r.dataset.id)); });
   constP.classList.add("open");
 }
@@ -2919,11 +2952,12 @@ const MORPH={pts:[],t:0,dur:1.05,hold:.62,gone:.55,x:0,y:0,wide:300};
 function startMorph(c,sx,sy){
   MORPH.pts=[]; MORPH.t=0; MORPH.x=sx; MORPH.y=sy;
   if(!c.photo) return;
+  MORPH.cat=c.id;                                  // 身份防护：连开猫时旧图作废
   const small=Math.min(W,H)<700;
   const gw=small?60:96, gh=Math.round(gw*2/3);
   MORPH.wide=small?Math.min(230,W*.72):Math.min(400,W*.34);
   const img=new Image();
-  img.onload=()=>{
+  img.onload=()=>{ if(MORPH.cat!==c.id) return;
     try{
       const cv=document.createElement("canvas"); cv.width=gw; cv.height=gh;
       const g=cv.getContext("2d",{willReadFrequently:true});
@@ -2949,7 +2983,7 @@ function startMorph(c,sx,sy){
     }catch(e){ MORPH.pts=[]; }
   };
   img.onerror=()=>{};
-  img.src=photoSrc(c);
+  __ensurePhoto(c.photo).then(u=>{ if(MORPH.cat===c.id) img.src=u; }).catch(()=>{});
 }
 function drawMorph(dt){
   const M=MORPH; if(!M.pts.length) return;
@@ -3103,11 +3137,12 @@ function sqResult(){
   SOUL.result={cat:best,why};
   document.getElementById("sqDots").innerHTML="";
   document.getElementById("sqBody").innerHTML=
-    (best.photo?"<img class='sqRImg' src='"+photoSrc(best)+"' alt='"+best.name+"'>":"")+
+    (best.photo?"<img class='sqRImg' data-pkey='"+best.photo.split("/").pop()+"' alt='"+best.name+"'>":"")+
     "<div class='sqRName'>"+best.name+"</div>"+
     "<div class='sqRRank'>"+medalSVG(best.rank,18)+" "+best.rank+(best.title?" · "+best.title:"")+"</div>"+
     "<div class='sqRWhy'>"+why+"<br>"+best.bio+"</div>"+
     "<div class='sqRBtns'><div id='sqGo'>→ 去看它的那颗星</div><div id='sqCard'>⤓ 专属卡</div><div id='sqRe'>↺ 再测一次</div></div>";
+  __bindLazy(document.getElementById("sqBody"));
   document.getElementById("sqGo").onclick=()=>{ sqClose(); openCard(best); };
   document.getElementById("sqCard").onclick=()=>makeSoulCard(best,why);
   document.getElementById("sqRe").onclick=sqOpen;
@@ -3165,7 +3200,8 @@ function makeSoulCard(c,why){
     toast("⤓ 本命猫专属卡已生成："+c.name);
   };
   if(c.photo){ const im=new Image();
-    im.onload=()=>finish(im); im.onerror=()=>finish(null); im.src=photoSrc(c); }
+    im.onload=()=>finish(im); im.onerror=()=>finish(null);
+    __ensurePhoto(c.photo).then(u=>im.src=u).catch(()=>finish(null)); }
   else finish(null);
 }
 
@@ -3220,7 +3256,8 @@ function memeOpen(){
     if(selected.photo){ const im=new Image(); im.dataset.id=selected.id;
       im.onload=()=>{ if(MEME.cat===selected){ MEME.img=im; memeRender(); } };
       im.onerror=()=>{ if(MEME.cat===selected){ MEME.img=null; memeRender(); } };
-      im.src=photoSrc(selected); }
+      __ensurePhoto(selected.photo).then(u=>{ if(MEME.cat===selected) im.src=u; })
+        .catch(()=>{ if(MEME.cat===selected){ MEME.img=null; memeRender(); } }); }
   }
   memeRender();
   memePanel.classList.add("open");
@@ -3493,7 +3530,6 @@ addEventListener("keydown",e=>{
 (function(){
   "use strict";
   const $=id=>document.getElementById(id);
-  const pSrc=(typeof photoSrc==="function")?photoSrc:(c=>c.photo);
   const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 
   /* 影廊曲库：有照片的猫，按收录张数优先排 */
@@ -3519,7 +3555,8 @@ addEventListener("keydown",e=>{
     const pre=new Image();
     pre.onload=()=>{ if(lbOpen&&GALLERY[lbIdx]===c){ lbImg.src=pre.src; requestAnimationFrame(()=>lbImg.classList.add("show")); } };
     pre.onerror=()=>{ if(lbOpen&&GALLERY[lbIdx]===c){ lbImg.removeAttribute("src"); toast("这张照片没加载出来 · 左右翻页看看别的"); } };
-    pre.src=pSrc(c);
+    __ensurePhoto(c.photo).then(u=>{ if(lbOpen&&GALLERY[lbIdx]===c) pre.src=u; })
+      .catch(()=>{ if(lbOpen&&GALLERY[lbIdx]===c) pre.onerror(); });
     $("lbName").textContent=c.name;
     $("lbRank").innerHTML=medalSVG(c.rank,15)+"<span style='color:"+rankTier(c.rank).m+"'>"+esc(c.rank)+(c.title?" · "+esc(c.title):"")+"</span>";
     $("lbIdx").textContent=(lbIdx+1)+" / "+GALLERY.length+" ｜ "+c.id+" · 收录 "+(c.photoCount||1)+" 张";
@@ -3530,6 +3567,11 @@ addEventListener("keydown",e=>{
     const i=cat?GALLERY.findIndex(c=>c.id===cat.id):0;
     lbIdx=i>=0?i:0; lbOpen=true; box.classList.add("open");
     document.body.style.overflow="hidden"; lbRender();
+    if(!(navigator.connection&&navigator.connection.saveData)){   // 邻近片预取（尊重省流模式）
+      const ric=self.requestIdleCallback?self.requestIdleCallback.bind(self):setTimeout;
+      [lbIdx-1,lbIdx+1].forEach(j=>{ const pc=GALLERY[(j+GALLERY.length)%GALLERY.length];
+        if(pc) ric(()=>__ensurePhoto(pc.photo).catch(()=>{})); });
+    }
   }
   function closeLightbox(){ lbOpen=false; box.classList.remove("open"); document.body.style.overflow=""; }
   function lbStep(d){ if(!lbOpen) return; lbIdx=(lbIdx+d+GALLERY.length)%GALLERY.length; lbRender(); }
@@ -3582,7 +3624,7 @@ addEventListener("keydown",e=>{
       if(hovered!==peekCat){
         peekCat=hovered;
         if(peekCat.photo){
-          peek.querySelector("img").src=pSrc(peekCat);
+          __ensurePhoto(peekCat.photo).then(u=>{ if(hovered===peekCat&&peek.classList.contains("on")) peek.querySelector("img").src=u; }).catch(()=>{});
           peek.querySelector(".spName").textContent=peekCat.name;
           peek.querySelector(".spRank").innerHTML=medalSVG(peekCat.rank,13)+"<span>"+esc(peekCat.rank)+" · "+esc(peekCat.id)+"</span>";
           peek.classList.add("on");
