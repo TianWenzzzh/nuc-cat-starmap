@@ -1649,11 +1649,11 @@ function buildIntro(){
   const off=document.createElement("canvas");
   const fs=Math.min(W*.165,185);
   let g=off.getContext("2d");
-  g.font='900 '+fs+'px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.font='900 '+fs+'px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC",sans-serif';
   const tw=Math.ceil(g.measureText(TITLE).width);
   off.width=tw+40; off.height=Math.ceil(fs*1.5);
   g=off.getContext("2d");
-  g.font='900 '+fs+'px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.font='900 '+fs+'px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC",sans-serif';
   g.textBaseline="middle"; g.fillStyle="#fff"; g.fillText(TITLE,20,off.height/2);
   const px=g.getImageData(0,0,off.width,off.height).data;
   const ox=W/2-off.width/2, oy=H*.40-off.height/2;
@@ -1787,7 +1787,7 @@ function drawRelations(){
     ctx.beginPath(); ctx.moveTo(sa.x,sa.y); ctx.lineTo(sb.x,sb.y); ctx.stroke();
     ctx.setLineDash([]);
     if(cam.z>1.12||hot){
-      ctx.font='11px "PingFang SC","Microsoft YaHei"'; ctx.textAlign="center";
+      ctx.font='11px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"'; ctx.textAlign="center";
       const mx=(sa.x+sb.x)/2, my=(sa.y+sb.y)/2-11;
       const tw=ctx.measureText(r.label).width;
       ctx.fillStyle="rgba(4,8,18,.74)";
@@ -1798,7 +1798,7 @@ function drawRelations(){
   }
 }
 function drawAreas(){
-  ctx.font='10px "PingFang SC","Microsoft YaHei"'; ctx.textAlign="left";
+  ctx.font='10px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"'; ctx.textAlign="left";
   for(const a of AREAS){
     const s=toScreen(a.x,a.y);
     if(s.x<-60||s.x>W+60||s.y<-40||s.y>H+40) continue;
@@ -1873,7 +1873,7 @@ function drawStar(c,s,bk){
   }
   // 名称标签
   if((cam.z>1.05||hot)&&bk>.85){
-    ctx.font="12px 'PingFang SC','Microsoft YaHei'"; ctx.textAlign="center";
+    ctx.font="12px 'PingFang SC','Microsoft YaHei','HarmonyOS Sans SC','MiSans','Source Han Sans SC','Noto Sans CJK SC'"; ctx.textAlign="center";
     const label=c.name, tw=ctx.measureText(label).width;
     ctx.globalAlpha=Math.min(1,(bk-.85)/.15);
     ctx.fillStyle="rgba(4,8,18,.72)";
@@ -2395,9 +2395,9 @@ function drawShareCard(c,img){
     const vg=g.createLinearGradient(0,PY+PHt-150,0,PY+PHt);      // 底部渐隐压字带
     vg.addColorStop(0,"rgba(3,6,15,0)"); vg.addColorStop(1,"rgba(3,6,15,.78)");
     g.fillStyle=vg; g.fillRect(PX,PY+PHt-150,PWd,150);
-    g.fillStyle="rgba(223,232,255,.92)"; g.font='600 20px "PingFang SC","Microsoft YaHei"'; g.textAlign="left";
+    g.fillStyle="rgba(223,232,255,.92)"; g.font='600 20px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"'; g.textAlign="left";
     g.fillText(c.id+" · "+c.coat, PX+22, PY+PHt-20);
-    g.textAlign="right"; g.fillStyle="rgba(125,232,216,.95)"; g.font='17px "PingFang SC","Microsoft YaHei"';
+    g.textAlign="right"; g.fillStyle="rgba(125,232,216,.95)"; g.font='17px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
     g.fillText("📷 "+(c.photoCount||1)+" 张", PX+PWd-22, PY+PHt-20);
     g.restore();
     g.strokeStyle="rgba(255,215,106,.0)";                        // 金边 + 流光
@@ -2423,23 +2423,23 @@ function drawShareCard(c,img){
     g.globalCompositeOperation="source-over";
   }
   g.textAlign="center";
-  g.fillStyle="#ffe9a8"; g.font='600 58px "PingFang SC","Microsoft YaHei"'; g.fillText(c.name,cx,742);
-  g.fillStyle="#ffd76a"; g.font='23px "PingFang SC","Microsoft YaHei"';
+  g.fillStyle="#ffe9a8"; g.font='600 58px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"'; g.fillText(c.name,cx,742);
+  g.fillStyle="#ffd76a"; g.font='23px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   const _rk=c.rank+(c.title?" · "+c.title:""), _rw=g.measureText(_rk).width;
   g.fillText(_rk,cx,790); drawMedal(g,cx-_rw/2-26,780,13,c.rank);
   g.strokeStyle="rgba(255,215,106,.35)"; g.lineWidth=1;
   g.beginPath(); g.moveTo(pw/2-120,826); g.lineTo(pw/2+120,826); g.stroke();
-  g.fillStyle="#c2cfef"; g.font='22px "PingFang SC","Microsoft YaHei"';
+  g.fillStyle="#c2cfef"; g.font='22px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   const yEnd=wrapText(g,c.bio,cx,872,pw-150,40);
-  g.fillStyle="#7f92c0"; g.font='19px "PingFang SC","Microsoft YaHei"';
+  g.fillStyle="#7f92c0"; g.font='19px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   g.fillText(c.area,cx,yEnd+14);
-  g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
+  g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   g.fillText("中北喵星图 · NUC CAT GALAXY",cx,ph-96);
-  g.fillStyle="#8a97bd"; g.font='17px "PingFang SC","Microsoft YaHei"';
+  g.fillStyle="#8a97bd"; g.font='17px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   g.fillText("喵图鉴 · 已遇见 "+SEEN.size+" / "+CATS.length,cx,ph-70);
-  g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei"';
+  g.fillStyle="#54648f"; g.font='16px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   g.fillText("2026-08 实地普查 · 第 "+(+c.id.slice(4))+" 号星",cx,ph-46);
-  g.fillStyle="#42507a"; g.font='14px "PingFang SC","Microsoft YaHei"';
+  g.fillStyle="#42507a"; g.font='14px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   g.fillText("原创 · github.com/TianWenzzzh/nuc-cat-starmap",cx,ph-24);
   return p;
 }
@@ -2733,7 +2733,7 @@ document.getElementById("cardPhotos").onclick=e=>{ if(e.target.classList.contain
 /* ---------- 寻猫海报（纯矢量星图 · 避免画布污染） ---------- */
 function makeFieldPoster(){
   const pw=1080, ph=1440, cv=document.createElement("canvas"); cv.width=pw; cv.height=ph;
-  const g=cv.getContext("2d"), FT='"PingFang SC","Microsoft YaHei",sans-serif';
+  const g=cv.getContext("2d"), FT='"PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC",sans-serif';
   const bg=g.createLinearGradient(0,0,0,ph); bg.addColorStop(0,"#0d1a38"); bg.addColorStop(.55,"#0a1228"); bg.addColorStop(1,"#050914");
   g.fillStyle=bg; g.fillRect(0,0,pw,ph);
   for(let i=0;i<170;i++){ g.fillStyle="rgba("+(180+Math.random()*70|0)+","+(200+Math.random()*40|0)+",255,"+(Math.random()*.5+.1).toFixed(2)+")";
@@ -2837,7 +2837,7 @@ document.getElementById("introBtn").onclick=startEntry;
 /* ============================================================
  * 星宿 / 星尘变身 / 纪录片 / 本命猫 / 表情包 / 护照 / 主题曲
  * ============================================================ */
-const _FT='"PingFang SC","Microsoft YaHei",sans-serif';
+const _FT='"PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC",sans-serif';
 const _eoc=k=>1-Math.pow(1-k,3);
 const photoSrc=c=>{ try{ return (typeof PH==="function")?PH(c.photo):c.photo; }catch(e){ return c.photo; } };
 
@@ -2888,7 +2888,7 @@ function drawConstellations(){
   if(!constGroups) buildConstGroups();
   constHits.length=0;
   ctx.save();
-  ctx.font='600 12px "PingFang SC","Microsoft YaHei"';
+  ctx.font='600 12px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"';
   for(let i=0;i<CONST.length;i++){
     const grp=constGroups[i]; if(grp.length<2) continue;
     const pts=grp.map(c=>catPos(c));
@@ -3065,7 +3065,7 @@ function drawRecBadge(){
   if(!REC.on) return;
   const t=(performance.now()-REC.t0)/1000;
   ctx.save();
-  ctx.font='600 12px "PingFang SC","Microsoft YaHei"'; ctx.textAlign="right";
+  ctx.font='600 12px "PingFang SC","Microsoft YaHei","HarmonyOS Sans SC","MiSans","Source Han Sans SC","Noto Sans CJK SC"'; ctx.textAlign="right";
   const txt=_fmtT(t)+" ｜ 图鉴 "+SEEN.size+"/"+CATS.length+" ｜ 中北喵星图";
   const tw=ctx.measureText(txt).width;
   ctx.fillStyle="rgba(4,8,18,.6)";
