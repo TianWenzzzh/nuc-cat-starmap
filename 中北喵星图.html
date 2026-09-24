@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   ═══════════════════════════════════════════════════════════════════
-  中北喵星图 · NUC CAT GALAXY · v2.8.6
+  中北喵星图 · NUC CAT GALAXY · v2.8.7
   原创作品 © 2026 TianWenzzzh ｜ 76 只猫的普查数据与 194 张照片均为实地采集
   开源仓库：https://github.com/TianWenzzzh/nuc-cat-starmap
   转载 / 二创请保留本署名并附仓库链接；删除本声明继续传播即构成侵权故意。
@@ -75,7 +75,7 @@
   #topbar{ position:fixed; top:0; left:0; right:0; z-index:50; height:58px;
     display:flex; align-items:center; gap:12px; padding:0 18px; overflow:hidden;
     background:linear-gradient(180deg, rgba(6,11,26,.92), rgba(6,11,26,.55) 72%, transparent);
-    border-bottom:1px solid rgba(150,175,255,.12); backdrop-filter:blur(14px) saturate(1.2); }
+    border-bottom:1px solid rgba(150,175,255,.12); backdrop-filter:blur(14px) saturate(1.2); -webkit-backdrop-filter:blur(14px) saturate(1.2); }
   #topbar::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; pointer-events:none;
     background:linear-gradient(90deg, transparent, rgba(255,215,106,.6) 26%, rgba(150,210,255,.55) 52%, rgba(255,170,220,.5) 76%, transparent);
     background-size:230% 100%; animation:auroraDrift 9s linear infinite alternate; }
@@ -109,7 +109,7 @@
   #search::placeholder{ color:var(--dimmer); }
   #searchHint{ position:fixed; z-index:60; display:none; align-items:center; flex-wrap:wrap; gap:7px;
     max-width:min(340px,86vw); padding:10px 12px; border-radius:14px;
-    border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(12px);
+    border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     box-shadow:0 14px 44px rgba(0,0,14,.55);
     animation:sHintIn .18s var(--ease); }                    /* 出场：淡入下滑，不生硬弹出 */
   @keyframes sHintIn{ from{ opacity:0; transform:translateY(-7px); } to{ opacity:1; transform:none; } }
@@ -162,7 +162,7 @@
   #moreMenu{ position:fixed; top:64px; right:16px; z-index:55; display:flex; flex-direction:column; gap:4px;
     padding:7px; border-radius:16px; min-width:138px;
     background:linear-gradient(165deg, rgba(16,26,54,.9), rgba(8,14,32,.88));
-    border:1px solid rgba(150,175,255,.18); backdrop-filter:blur(14px);
+    border:1px solid rgba(150,175,255,.18); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
     box-shadow:0 14px 40px rgba(0,0,10,.55), inset 0 1px 0 rgba(190,210,255,.1);
     opacity:0; transform:translateY(-7px) scale(.97); pointer-events:none; visibility:hidden;
     transition:opacity .22s var(--ease), transform .22s var(--ease), visibility 0s .22s; }
@@ -180,7 +180,7 @@
       radial-gradient(1.4px 1.4px at 71% 15%, rgba(192,204,255,.38), transparent 70%),
       radial-gradient(52px 34px at 90% 0%, rgba(150,122,255,.15), transparent 72%),
       linear-gradient(160deg, rgba(16,26,54,.62), rgba(8,14,32,.58));
-    border:1px solid rgba(150,175,255,.16); backdrop-filter:blur(12px);
+    border:1px solid rgba(150,175,255,.16); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     box-shadow:0 8px 28px rgba(0,0,10,.45), inset 0 1px 0 rgba(190,210,255,.09); }
   #legend::before,#moreMenu::before{ content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
     background:
@@ -236,14 +236,14 @@
     background:rgba(255,215,106,.14); box-shadow:0 0 16px rgba(255,215,106,.25); outline:none; }
   #zoomctl{ position:fixed; right:16px; bottom:16px; z-index:50; display:flex; flex-direction:column; gap:6px; }
   #zoomctl button{ width:38px; height:38px; border-radius:12px; border:1px solid var(--line);
-    background:var(--panel); color:#b9c8ee; font-size:16px; cursor:pointer; transition:.2s; backdrop-filter:blur(8px); }
+    background:var(--panel); color:#b9c8ee; font-size:16px; cursor:pointer; transition:.2s; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
   #zoomctl button:hover{ border-color:var(--gold); color:var(--gold-soft); }
 
   /* ---------- 档案卡 ---------- */
   #card{ position:fixed; top:0; right:-440px; width:408px; max-width:94vw; height:100%; z-index:60;
     background:linear-gradient(165deg, rgba(14,23,50,.96), rgba(6,10,24,.97));
     border-left:1px solid rgba(255,215,106,.18); transition:right .55s var(--ease);
-    overflow-y:auto; backdrop-filter:blur(12px); box-shadow:-20px 0 60px rgba(0,0,0,.5); }
+    overflow-y:auto; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:-20px 0 60px rgba(0,0,0,.5); }
   #card.open{ right:0; }
   #card::-webkit-scrollbar{ width:4px; } #card::-webkit-scrollbar-thumb{ background:rgba(140,170,255,.25); border-radius:2px; }
   #cardClose{ position:absolute; top:14px; right:16px; z-index:3; width:34px; height:34px; border-radius:50%;
@@ -344,7 +344,7 @@
   #btnAudio.on{ background:rgba(158,190,255,.13); border-color:#9ebeff; color:#e8f0ff;
     box-shadow:0 0 16px rgba(158,190,255,.35); }
   #fortune{ position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center;
-    background:rgba(2,4,12,.55); backdrop-filter:blur(6px);
+    background:rgba(2,4,12,.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
     opacity:0; pointer-events:none; transition:opacity .45s var(--ease); }
   #fortune.open{ opacity:1; pointer-events:auto; }
   .fCard{ position:relative; width:min(420px,86vw); padding:34px 30px 26px; text-align:center; border-radius:20px;
@@ -375,7 +375,7 @@
   #stats{ position:fixed; top:66px; right:16px; z-index:55; width:302px; max-height:calc(100vh - 84px);
     overflow-y:auto; padding:15px 18px; border-radius:16px;
     background:linear-gradient(170deg, rgba(14,23,50,.92), rgba(6,10,24,.94));
-    border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(12px);
+    border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     box-shadow:0 18px 60px rgba(0,0,0,.5);
     opacity:0; transform:translateX(24px); pointer-events:none;
     transition:opacity .5s var(--ease), transform .5s var(--ease); }
@@ -392,7 +392,7 @@
       bottom:calc(10px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%);
       gap:4px; padding:7px 10px; border-radius:20px;
       background:linear-gradient(170deg, rgba(14,23,50,.88), rgba(6,10,24,.92));
-      border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(10px);
+      border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
       box-shadow:0 10px 36px rgba(0,0,0,.5); }
     body.live #quickBar{ transform:translateX(-50%); }     /* 覆盖 .ui 的 transform:none，保持居中 */
     #quickBar .qk{ flex-direction:column; gap:3px; padding:6px 13px; font-size:10.5px;
@@ -406,7 +406,7 @@
   #guide{ position:fixed; top:66px; right:16px; z-index:55; width:min(320px,calc(100vw - 32px));
     max-height:calc(100vh - 84px); overflow-y:auto; padding:15px 18px 17px; border-radius:16px;
     background:linear-gradient(170deg, rgba(14,23,50,.92), rgba(6,10,24,.94));
-    border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(12px);
+    border:1px solid rgba(255,215,106,.2); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     box-shadow:0 18px 60px rgba(0,0,0,.5);
     opacity:0; transform:translateX(24px); pointer-events:none;
     transition:opacity .5s var(--ease), transform .5s var(--ease); }
@@ -438,7 +438,7 @@
   #find{ position:fixed; top:66px; right:16px; z-index:55; width:330px; max-height:calc(100vh - 84px);
     overflow-y:auto; padding:15px 16px; border-radius:16px;
     background:linear-gradient(170deg, rgba(12,24,44,.93), rgba(6,10,24,.95));
-    border:1px solid rgba(125,232,214,.22); backdrop-filter:blur(12px);
+    border:1px solid rgba(125,232,214,.22); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     box-shadow:0 18px 60px rgba(0,0,0,.5);
     opacity:0; transform:translateX(24px); pointer-events:none;
     transition:opacity .5s var(--ease), transform .5s var(--ease); }
@@ -477,7 +477,7 @@
   #tourBar{ position:fixed; left:50%; bottom:86px; transform:translateX(-50%) translateY(18px); z-index:60;
     max-width:min(620px,88vw); padding:13px 22px 15px; border-radius:16px; text-align:center;
     background:linear-gradient(170deg, rgba(10,18,40,.9), rgba(5,9,22,.92));
-    border:1px solid rgba(255,215,106,.32); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,215,106,.32); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     box-shadow:0 14px 50px rgba(0,0,0,.55);
     opacity:0; pointer-events:none; transition:opacity .45s var(--ease), transform .45s var(--ease); }
   #tourBar.on{ opacity:1; transform:translateX(-50%); pointer-events:auto; cursor:pointer; }
@@ -566,7 +566,7 @@
   /* ===== 十二星宿 · 星尘变身 · 纪录片 · 本命猫 · 表情包 · 护照 ===== */
   #constP,#memeP,#passP{ position:fixed; top:66px; right:16px; z-index:55; width:342px;
     max-height:calc(100vh - 84px); overflow-y:auto; padding:16px 14px 14px; border-radius:16px;
-    background:rgba(7,12,26,.93); border:1px solid rgba(125,232,214,.16); backdrop-filter:blur(14px);
+    background:rgba(7,12,26,.93); border:1px solid rgba(125,232,214,.16); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
     opacity:0; pointer-events:none; transform:translateX(14px); transition:.28s var(--ease); }
   #constP.open,#memeP.open,#passP.open{ opacity:1; pointer-events:auto; transform:none; }
   #constP>span,#memeP>span,#passP>span{ position:absolute; top:10px; right:12px; cursor:pointer;
@@ -595,7 +595,7 @@
     color:#9fb3dd; border:1px solid rgba(140,170,255,.22); transition:.2s; }
   #fSpeak:hover{ color:#d9fff6; border-color:rgba(125,232,214,.4); }
   #soulP{ position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center;
-    background:rgba(2,4,10,.66); backdrop-filter:blur(7px); opacity:0; pointer-events:none; transition:.3s; }
+    background:rgba(2,4,10,.66); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); opacity:0; pointer-events:none; transition:.3s; }
   #soulP.open{ opacity:1; pointer-events:auto; }
   .sqCard{ position:relative; width:min(432px,88vw); max-height:86vh; overflow-y:auto;
     padding:26px 24px 22px; border-radius:20px; text-align:center;
@@ -659,7 +659,7 @@
     padding:9px 12px; border-radius:14px; font-size:12px; color:#ffe9b8;
     background:linear-gradient(170deg, rgba(30,40,70,.94), rgba(10,14,30,.96));
     border:1px solid rgba(255,215,106,.35); box-shadow:0 10px 30px rgba(0,0,0,.5);
-    backdrop-filter:blur(10px); }
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   #tipBar[hidden]{ display:none; }
   #tipBar .chip{ padding:5px 11px; font-size:11.5px; flex:none; }
   @media (max-width:768px){ #tipBar{ bottom:126px; flex-wrap:wrap; justify-content:center; text-align:center; } }
@@ -3642,6 +3642,6 @@ addEventListener("keydown",e=>{
 })();
 
 /* 开发者控制台署名：F12 也能看到原作者与仓库 */
-console.log("%c🐱 中北喵星图 · NUC CAT GALAXY v2.8.6","font:700 18px sans-serif;color:#ffd76a;text-shadow:0 0 8px #ffd76a66");
+console.log("%c🐱 中北喵星图 · NUC CAT GALAXY v2.8.7","font:700 18px sans-serif;color:#ffd76a;text-shadow:0 0 8px #ffd76a66");
 console.log("%c原创作品 © 2026 TianWenzzzh · 76 只猫的实地普查档案\n开源仓库：https://github.com/TianWenzzzh/nuc-cat-starmap\n转载请署名并附仓库链接 · 一起给更多学校点亮喵星系 ✦","color:#7f92c0;line-height:1.7");
 </script></body></html>
