@@ -236,6 +236,7 @@ HTML CATS 数：76
 ├── README.md              本文件
 ├── 归并决策摘要.md         照片归并的取舍记录
 ├── 中北喵星图.html         交付物，双击即开
+├── share-card.jpg         社交分享封面（og:image / twitter:image）
 ├── data/猫咪名册.csv       76只猫名册
 └── assets/photo-data-*.js  底图与75张照片的按需分片（00 号=底图关键片）
 ```

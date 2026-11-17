@@ -118,6 +118,7 @@ description: "把校园流浪猫实地普查数据做成可交互的猫咪星系
 ├── README.md               使用说明
 ├── 归并决策摘要.md          归并取舍记录
 ├── 中北喵星图.html          交付物，纯前端离线可用
+├── share-card.jpg          社交分享封面（og:image / twitter:image）
 ├── data/猫咪名册.csv        数据源
 └── assets/photo-data-*.js  底图与压缩照片的按需分片（00 号=底图关键片，手绘版原比例内嵌于此）
 ```
