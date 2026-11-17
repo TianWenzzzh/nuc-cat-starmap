@@ -1,19 +1,36 @@
 <!DOCTYPE html>
 <!--
   ═══════════════════════════════════════════════════════════════════
-  中北喵星图 · NUC CAT GALAXY · v2.9.1
-  原创作品 © 2026 TianWenzzzh ｜ 76 只猫的普查数据与 194 张照片均为实地采集
+  中北喵星图 · NUC CAT GALAXY · v2.9.2
+  原创作品 © 2026 TianWenzzzh ｜ 194 张原始照片实地采集，逐张归并为 76 只在册档案
   开源仓库：https://github.com/TianWenzzzh/nuc-cat-starmap
   转载 / 二创请保留本署名并附仓库链接；删除本声明继续传播即构成侵权故意。
   ═══════════════════════════════════════════════════════════════════
 -->
 <html lang="zh-CN" data-theme="dark" class=""><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="author" content="TianWenzzzh">
 <meta name="copyright" content="© 2026 TianWenzzzh · 数据与照片实地采集 · 转载需署名并附仓库链接">
 <meta name="description" content="中北喵星图：76 只中北大学校园猫的实地普查星图。每只猫是一颗星——星色取毛色、星等看实拍数、星位即真实出没区。原创开源：github.com/TianWenzzzh/nuc-cat-starmap">
 <title>中北喵星图 · 校园猫咪星系</title>
+<!-- 社交分享卡片：微信 / 飞书 / QQ 打开链接时的预览标题、描述与封面 -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cat.47.114.38.125.sslip.io/">
+<meta property="og:site_name" content="中北喵星图 · NUC CAT GALAXY">
+<meta property="og:title" content="中北喵星图 · 76 只校园猫的实地普查星图">
+<meta property="og:description" content="中北大学 76 只校园猫的实地普查星图。194 张原始照片逐张比对、归并成 76 份档案。每只猫是一颗星：星色取毛色，星等看被拍次数，星位就是它真实出没的地方。">
+<meta property="og:image" content="https://cat.47.114.38.125.sslip.io/share-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="中北喵星图 · 76 只校园猫的实地普查星图">
+<meta name="twitter:description" content="194 张原始照片归并出 76 只中北校园猫。每只猫是一颗星。">
+<meta name="twitter:image" content="https://cat.47.114.38.125.sslip.io/share-card.jpg">
+<meta name="theme-color" content="#060a18">
+<link rel="canonical" href="https://cat.47.114.38.125.sslip.io/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"中北喵星图 · 校园猫咪星系","url":"https://cat.47.114.38.125.sslip.io/","applicationCategory":"EducationalApplication","operatingSystem":"Any (web browser)","inLanguage":"zh-CN","isAccessibleForFree":true,"author":{"@type":"Person","name":"TianWenzzzh","url":"https://github.com/TianWenzzzh"},"description":"中北大学 76 只校园流浪猫的实地普查互动星图：194 张原始照片逐张归并，每只猫是一颗星，星色取毛色、星等看被拍次数、星位即真实出没区。","license":"https://opensource.org/licenses/MIT","hasPart":{"@type":"Dataset","name":"中北大学校园猫咪普查名册（2026-08）","description":"76 只在册校园猫结构化档案：编号/昵称/军衔/毛色/辨认特征/出没区域/置信度。原始采集 194 张照片，归并收录 167 张，每猫 1 张代表照。","license":"https://creativecommons.org/licenses/by-nc-sa/4.0/","creator":{"@type":"Person","name":"TianWenzzzh"},"spatialCoverage":{"@type":"Place","name":"中北大学（山西太原）"},"temporalCoverage":"2026-08"}}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23060a18'/%3E%3Ccircle cx='32' cy='32' r='13' fill='%23ffd76a'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%23ffd76a' stroke-opacity='.45' stroke-width='2'/%3E%3Ccircle cx='54' cy='14' r='2.6' fill='%23a8e6ff'/%3E%3Ccircle cx='11' cy='48' r='2' fill='%23ffb3d1'/%3E%3C/svg%3E">
 <style>
   :root{
     --gold:#ffd76a; --gold-soft:#ffe9a8; --ink:#dfe8ff; --dim:#7f92c0; --dimmer:#54648f;
@@ -45,6 +62,14 @@
     opacity:0; animation:fadeUp 1.2s var(--ease) 1.5s forwards; }
   #intro .stats{ margin-top:16px; color:var(--dim); font-size:11px; letter-spacing:.24em; white-space:nowrap; font-variant-numeric:tabular-nums;
     opacity:0; animation:fadeUp 1.2s var(--ease) 2s forwards; }
+  /* 窄屏：收紧字距并允许换行，避免「中北校园实地普查｜76 只…」在 375px 下溢出到屏幕外 */
+  @media (max-width:520px){
+    #intro .sub{ letter-spacing:.14em; font-size:13px; padding:0 18px; box-sizing:border-box; text-align:center; line-height:1.75; }
+    #intro .stats{ letter-spacing:.1em; font-size:10.5px; white-space:normal; padding:0 16px; box-sizing:border-box; text-align:center; line-height:1.85; max-width:100%; }
+    #intro .credit{ font-size:9.5px; letter-spacing:.06em; padding:0 14px; box-sizing:border-box; line-height:1.7; }
+    #intro .credit a{ white-space:nowrap; font-size:9px; letter-spacing:0; }
+    .titleFallback{ letter-spacing:.2em; text-indent:.2em; }
+  }
   #introBtn{ margin-top:64px; padding:14px 54px; background:transparent; color:var(--gold-soft);
     border:1px solid rgba(255,233,168,.5); border-radius:32px; font-size:15px; letter-spacing:.42em;
     text-indent:.42em; cursor:pointer; transition:.35s; text-shadow:0 0 12px rgba(255,225,150,.4);
@@ -74,6 +99,7 @@
   /* ---------- 顶栏 ---------- */
   #topbar{ position:fixed; top:0; left:0; right:0; z-index:50; height:58px;
     display:flex; align-items:center; gap:12px; padding:0 18px; overflow:hidden;
+    padding-top:env(safe-area-inset-top,0px); height:calc(58px + env(safe-area-inset-top,0px));
     background:linear-gradient(180deg, rgba(6,11,26,.92), rgba(6,11,26,.55) 72%, transparent);
     border-bottom:1px solid rgba(150,175,255,.12); backdrop-filter:blur(14px) saturate(1.2); -webkit-backdrop-filter:blur(14px) saturate(1.2); }
   #topbar::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; pointer-events:none;
@@ -252,7 +278,9 @@
   #cardClose:hover{ color:var(--gold-soft); border-color:var(--gold); transform:rotate(90deg); }
   .cardImgWrap{ position:relative; height:264px; overflow:hidden; background:
     radial-gradient(circle at 50% 45%, #16224a 0%, #0a1228 70%); }
-  #cardImg{ width:100%; height:100%; object-fit:cover; display:block;
+  #cardBg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:blur(22px) saturate(1.15) brightness(.62); transform:scale(1.12); z-index:0; display:none; }
+  #cardImg{ position:relative; z-index:1; width:100%; height:100%; object-fit:cover; display:block;
     opacity:1; transform:scale(1.012);
     transition:opacity .55s var(--ease), transform .55s var(--ease); }
   #cardImg.loading{ opacity:0; transform:scale(1.05); transition:none;
@@ -401,6 +429,15 @@
     #quickBar .aIco{ font-size:16px; }
     #hint{ bottom:86px; }                                    #quickBar 在底部，提示条上移避让
   }
+  /* 超窄屏（≤374px，iPhone SE 一代/折叠外屏）：dock 收紧防两端裁切（v2.9.2） */
+  @media (max-width:374px){
+    #quickBar{ gap:1px; padding:6px 5px; max-width:calc(100vw - 8px); }
+    #quickBar .qk{ padding:5px 7px; font-size:9.5px; }
+    #quickBar .aIco{ font-size:14px; }
+    #topbar{ padding-left:10px; padding-right:10px; gap:8px; }
+    #search{ width:110px; }
+    #search:focus{ width:130px; }
+  }
 
   /* ---------- 喵星指南面板 ---------- */
   #guide{ position:fixed; top:66px; right:16px; z-index:55; width:min(320px,calc(100vw - 32px));
@@ -513,6 +550,7 @@
   .stBig b{ display:block; font-size:22px; color:var(--gold); font-weight:700; }
   .stBig i{ font-style:normal; font-size:10px; color:var(--dim); letter-spacing:.12em; }
   .stSec{ margin:13px 0 7px; color:var(--teal); font-size:11px; letter-spacing:.2em; }
+  .stNote{ margin:6px 0 2px; color:var(--dimmer); font-size:9.5px; letter-spacing:.03em; line-height:1.6; }
   .stSec::after{ content:""; display:block; height:1px; margin-top:5px;
     background:linear-gradient(90deg, rgba(125,232,216,.4), transparent); }
   .stRow{ display:flex; align-items:center; gap:8px; margin-top:5px; font-size:12px; color:#c4d2f2; }
@@ -731,16 +769,104 @@
 </head>
 <body>
 
-<canvas id="sky"></canvas>
+<noscript>
+<section style="position:fixed;inset:0;z-index:999;overflow:auto;background:#060a18;color:#dfe8ff;padding:28px 20px;font-family:'PingFang SC','Microsoft YaHei',sans-serif">
+<h1 style="color:#ffd76a;font-size:22px;letter-spacing:.2em">中北喵星图 · 校园猫咪档案（静态名录）</h1>
+<p style="color:#7f92c0;font-size:13px;line-height:1.8">当前浏览器未启用 JavaScript，互动星图无法运行，但 76 只在册校园猫的档案一条不少。启用 JS 后可漫游星系、点开档案卡、导出寻猫海报。<br>数据：2026-08 中北大学实地普查 · 194 张原始照片归并 · 开源：github.com/TianWenzzzh/nuc-cat-starmap</p>
+<table style="border-collapse:collapse;width:100%;max-width:900px;font-size:12px">
+<thead><tr style="color:#ffd76a;text-align:left"><th style="padding:6px 8px;border-bottom:1px solid #2a3a66">编号</th><th style="padding:6px 8px;border-bottom:1px solid #2a3a66">昵称</th><th style="padding:6px 8px;border-bottom:1px solid #2a3a66">军衔</th><th style="padding:6px 8px;border-bottom:1px solid #2a3a66">毛色</th><th style="padding:6px 8px;border-bottom:1px solid #2a3a66">出没区域</th><th style="padding:6px 8px;border-bottom:1px solid #2a3a66">辨认特征</th></tr></thead>
+<tbody>
+<tr><td>CAT-001</td><td>墩墩</td><td>喵校长</td><td>全橘虎斑</td><td>宿舍楼玻璃门前石台</td><td>体型胖粉鼻 侧躺露肚 人摸不醒 气场十足</td></tr>
+<tr><td>CAT-002</td><td>格子</td><td>中士</td><td>橘白</td><td>宿舍红白格桌布区域</td><td>橘头橘背白胸腹 体型中等偏瘦 常钻红白格桌布下</td></tr>
+<tr><td>CAT-003</td><td>围脖</td><td>少校</td><td>橘白</td><td>宿舍窗台</td><td>头顶橘斑中分 白围脖白手套 偏胖 爱趴窗台晒太阳</td></tr>
+<tr><td>CAT-004</td><td>环尾</td><td>中尉</td><td>全橘虎斑</td><td>室外白色高台沿</td><td>粗尾橘色环纹明显 体型胖 前爪尖偏白 爱趴高处</td></tr>
+<tr><td>CAT-005</td><td>松果</td><td>下士</td><td>全橘虎斑</td><td>松柏树下绿化带</td><td>常在松柏树下碎石区闭眼趴卧</td></tr>
+<tr><td>CAT-006</td><td>天线</td><td>上尉</td><td>全橘/浅橘</td><td>建筑物窗台/柜台沿</td><td>胸前挂一截白色线状物 辨识度极高 趴台沿探头</td></tr>
+<tr><td>CAT-007</td><td>奶油</td><td>中士</td><td>浅橘(奶油色)虎斑</td><td>楼道横梁/红墙建筑区石台</td><td>浅橘细条纹 黄眼粉鼻 爱趴高处台沿</td></tr>
+<tr><td>CAT-008</td><td>喇叭</td><td>列兵</td><td>橘白</td><td>白墙黑砖地面区域</td><td>偏瘦青年猫 耳大 仰卧露肚爱叫</td></tr>
+<tr><td>CAT-009</td><td>粉鼻</td><td>列兵</td><td>橘白虎斑</td><td>白天水泥砖地面</td><td>粉鼻白嘴 白胸腹白手套 侧躺</td></tr>
+<tr><td>CAT-010</td><td>项圈</td><td>中士</td><td>橘白短毛</td><td>草地/盲道人行道</td><td>白颈圈白腿白尾尖 爱蜷睡草地</td></tr>
+<tr><td>CAT-011</td><td>螺栓</td><td>下士</td><td>橘白短毛</td><td>室内车库/圆形井盖</td><td>橘虎斑背 白手套白靴鼻周白 出现在灰色油漆地面(似车库)</td></tr>
+<tr><td>CAT-012</td><td>雪顶</td><td>中尉</td><td>长毛橘白</td><td>车顶/路边广告牌</td><td>主体白色蓬松 头顶耳部及尾巴橘色 夜间出现在车顶/路边广告牌</td></tr>
+<tr><td>CAT-013</td><td>课代表</td><td>少校</td><td>长毛橘白</td><td>石花坛边/教室课桌</td><td>橘背橘头白胸 大尾巴极蓬松 体型壮 上过教室课桌</td></tr>
+<tr><td>CAT-014</td><td>拖把</td><td>中士</td><td>全橘长毛</td><td>夜间砖石路面/白毯休息区</td><td>长毛蓬松尾粗大 体型较大</td></tr>
+<tr><td>CAT-015</td><td>大厅</td><td>列兵</td><td>狸花</td><td>教学楼/食堂大厅白瓷砖</td><td>体型偏小青年猫 爱趴室内白色抛光瓷砖</td></tr>
+<tr><td>CAT-016</td><td>锦鲤</td><td>上士</td><td>彩狸(狸花腹泛橘)</td><td>白色矮墙/水泥路</td><td>腹部四肢泛橘罕见 黑尾 尾尖黑 后爪白</td></tr>
+<tr><td>CAT-017</td><td>略略</td><td>中士</td><td>狸花白</td><td>建筑物入口地垫/花岗岩</td><td>深狸花背白围脖白手套 吐舌舔鼻 体型胖</td></tr>
+<tr><td>CAT-018</td><td>旗杆</td><td>下士</td><td>狸花</td><td>教学楼前大片石阶</td><td>偏瘦 尾巴高竖如旗杆尾尖深黑 前爪白手套嘴白</td></tr>
+<tr><td>CAT-019</td><td>罐头</td><td>列兵</td><td>黄棕狸花</td><td>夜间路边土坡/砖石路</td><td>体态圆胖 夜间出没 被拍到吃罐头</td></tr>
+<tr><td>CAT-020</td><td>体操</td><td>列兵</td><td>狸花加白</td><td>水泥地/红砖人行道</td><td>白爪白口鼻 白从下巴延伸到腹 爱伸懒腰</td></tr>
+<tr><td>CAT-021</td><td>门神</td><td>下士</td><td>狸花</td><td>建筑物入口黑色瓷砖</td><td>棕黑虎斑无白 爱团成球睡在黑色瓷砖门厅</td></tr>
+<tr><td>CAT-022</td><td>摸头</td><td>上尉</td><td>狸花</td><td>绿色铁栅栏高处台沿</td><td>绿黄大眼粉棕鼻白长胡须 任人摸头 亲人</td></tr>
+<tr><td>CAT-023</td><td>白梁</td><td>中士</td><td>狸花加白</td><td>灰地砖/室内台沿</td><td>白鼻梁竖条通鼻口 绿眼 曾与全橘猫头挨头睡觉</td></tr>
+<tr><td>CAT-024</td><td>监工</td><td>上士</td><td>狸花</td><td>施工区域金属台面</td><td>粉鼻带黑斑大眼长胡须 出现在施工告示金属台面</td></tr>
+<tr><td>CAT-025</td><td>悟空</td><td>中士</td><td>狸花带橘调</td><td>室外树上</td><td>圆脸大眼粗尾环纹 会爬树</td></tr>
+<tr><td>CAT-026</td><td>围挡</td><td>列兵</td><td>狸花白</td><td>施工围挡/电动车广告牌</td><td>白身为主 头顶及尾灰狸花环纹 偏瘦绿眼</td></tr>
+<tr><td>CAT-027</td><td>栏杆</td><td>列兵</td><td>狸花</td><td>大理石墙面不锈钢栏杆</td><td>灰底黑条纹 瘦小亚成年 四肢深条纹</td></tr>
+<tr><td>CAT-028</td><td>懒腰</td><td>列兵</td><td>狸花</td><td>建筑入口阴凉处</td><td>灰褐底黑条纹 前爪伸直趴卧伸懒腰</td></tr>
+<tr><td>CAT-029</td><td>大胆</td><td>上尉</td><td>狸花白</td><td>柏油路面</td><td>深灰褐背白口罩脸白手套白靴绿眼 与黄狗对峙不落下风</td></tr>
+<tr><td>CAT-030</td><td>花木兰</td><td>少校</td><td>三花</td><td>电动车停放区</td><td>橘黑白三色 仰头直视镜头 气场足</td></tr>
+<tr><td>CAT-031</td><td>枯叶</td><td>中士</td><td>玳瑁</td><td>土路枯草区</td><td>黑为主杂橘斑 尾黑 常卧土路枯草边</td></tr>
+<tr><td>CAT-032</td><td>白靴</td><td>下士</td><td>玳瑁</td><td>路边枯叶灌木丛</td><td>黑橘斑驳 一只白色后爪 深色蓬松尾</td></tr>
+<tr><td>CAT-033</td><td>电瓶</td><td>列兵</td><td>玳瑁</td><td>电动车停放处/广场</td><td>黑褐橘杂色 出没电动车停放处</td></tr>
+<tr><td>CAT-034</td><td>手套</td><td>中士</td><td>奶牛</td><td>夜间树下草地/石板台阶</td><td>黑背白腹 四爪白手套醒目 体型圆润</td></tr>
+<tr><td>CAT-035</td><td>斑马线</td><td>下士</td><td>奶牛</td><td>夜间柏油路面</td><td>脸白底黑斑(眼周耳侧) 粉鼻 夜间柏油路白线旁</td></tr>
+<tr><td>CAT-036</td><td>潜伏</td><td>列兵</td><td>奶牛</td><td>石墙根草丛</td><td>黑多白少 四肢白袜 头埋草丛</td></tr>
+<tr><td>CAT-037</td><td>红毯</td><td>列兵</td><td>奶牛</td><td>花岗岩地面红地垫角落</td><td>黑背白腹白手套 卧红色地垫旁</td></tr>
+<tr><td>CAT-038</td><td>月牙</td><td>列兵</td><td>奶牛(幼猫)</td><td>花岗岩地面红地垫旁</td><td>颈后白色项圈状月牙环纹 体型小</td></tr>
+<tr><td>CAT-039</td><td>面罩</td><td>中士</td><td>奶牛</td><td>室外沥青路面</td><td>白身黑头 黑面罩配白鼻梁 鼻粉带黑点黄绿眼</td></tr>
+<tr><td>CAT-040</td><td>白须</td><td>上士</td><td>奶牛</td><td>墙角黑地砖/植被浅睡区</td><td>黑背白胸白下巴 鼻黑带粉 白须长显老成</td></tr>
+<tr><td>CAT-041</td><td>披肩</td><td>上士</td><td>奶牛</td><td>墙角金属门槛</td><td>黑背 肩部白色弧形披肩纹</td></tr>
+<tr><td>CAT-042</td><td>墨尾</td><td>中尉</td><td>奶牛</td><td>花岗岩地面/建筑物门口</td><td>白底大块黑斑 纯黑尾巴极具辨识度</td></tr>
+<tr><td>CAT-043</td><td>坦荡</td><td>列兵</td><td>奶牛</td><td>土路枯草边</td><td>白身背腰大块黑斑 仰卧露肚毫不设防</td></tr>
+<tr><td>CAT-044</td><td>圆眼</td><td>下士</td><td>奶牛</td><td>草丛井盖旁</td><td>黑面罩白嘴鼻白胸白爪 圆眼直视</td></tr>
+<tr><td>CAT-045</td><td>黑豆</td><td>列兵</td><td>奶牛(幼猫)</td><td>草地土路交界</td><td>黑背白胸四肢白 背上有白块 体型小</td></tr>
+<tr><td>CAT-046</td><td>黑帽</td><td>上士</td><td>奶牛</td><td>石材铺地自行车旁</td><td>头顶一块显著黑斑如戴帽 背两大块黑斑黑尾 圆胖</td></tr>
+<tr><td>CAT-047</td><td>马鞍</td><td>中士</td><td>奶牛</td><td>路边枯叶灌木丛</td><td>背部大片黑色鞍状斑 头带黑斑白腿 体型胖</td></tr>
+<tr><td>CAT-048</td><td>独眼</td><td>中士</td><td>奶牛</td><td>夜晚路面/石台灌木区</td><td>左眼及耳周大片黑斑如眼罩 黄绿眼粉鼻圆胖脸</td></tr>
+<tr><td>CAT-049</td><td>披风</td><td>上士</td><td>奶牛</td><td>灰色地砖路面</td><td>背部黑色如披风 头顶黑斑 头颈腹白</td></tr>
+<tr><td>CAT-050</td><td>白玉</td><td>中尉</td><td>纯白</td><td>户外石砖路边柏树旁</td><td>纯白无杂毛 蓝眼睛粉鼻 体态圆润 颜值担当</td></tr>
+<tr><td>CAT-051</td><td>暹罗</td><td>上校</td><td>长毛重点色</td><td>花岗岩地面(疑似楼内)</td><td>灰重点色长毛(布偶/暹罗串) 耳尖面部灰色 尾蓬松 稀有品种</td></tr>
+<tr><td>CAT-052</td><td>奶糖</td><td>列兵</td><td>浅橘(奶油色)幼猫</td><td>室内墙角黑白瓷砖</td><td>全身浅橘细虎斑 粉鼻绿眼 仰躺露肚</td></tr>
+<tr><td>CAT-053</td><td>仰面</td><td>列兵</td><td>狸花白(幼猫)</td><td>居民楼红砖地</td><td>头部虎斑面具+白身白肢 仰躺前肢伸展直视镜头</td></tr>
+<tr><td>CAT-054</td><td>墨点</td><td>列兵</td><td>奶牛(幼猫)</td><td>居民楼红砖地</td><td>白底头部黑面具+鼻部黑点 仰卧直视</td></tr>
+<tr><td>CAT-055</td><td>自来熟</td><td>中士</td><td>狸花白</td><td>老旧水泥地砖房区</td><td>白脸白胸白爪+头部深灰虎斑面具 黑鼻斑 仰卧露腹亲人</td></tr>
+<tr><td>CAT-056</td><td>鸳鸯</td><td>中士</td><td>三花虎斑</td><td>红褐瓷砖地面</td><td>左脸米黄右脸深灰黑 白鼻梁白胸 侧卧直视</td></tr>
+<tr><td>CAT-057</td><td>探地</td><td>列兵</td><td>三花(幼猫)</td><td>老旧楼道口</td><td>头部棕褐深灰+白脸白爪 站立低头嗅地</td></tr>
+<tr><td>CAT-058</td><td>摔跤</td><td>下士</td><td>狸花</td><td>水泥地排水格栅区</td><td>灰黑条纹+白腹白围脖白手套 打闹担当</td></tr>
+<tr><td>CAT-059</td><td>陪练</td><td>列兵</td><td>白底黑斑</td><td>水泥地排水格栅区</td><td>背单块圆黑斑+黑白尾 仰卧四脚朝天</td></tr>
+<tr><td>CAT-060</td><td>玄铁</td><td>上士</td><td>纯黑</td><td>石台灌木小径</td><td>通黑无杂色 中长毛圆润肥硕</td></tr>
+<tr><td>CAT-061</td><td>脸谱</td><td>中士</td><td>黑白奶牛</td><td>浅灰花岗岩石台</td><td>黑面具+白口罩 黑背白胸腹白肢 蹲坐仰头直视</td></tr>
+<tr><td>CAT-062</td><td>跟班</td><td>列兵</td><td>棕狸花</td><td>浅灰花岗岩石台</td><td>浅黄褐底深棕条纹+M纹 幼年渐长</td></tr>
+<tr><td>CAT-063</td><td>小黑帽</td><td>列兵</td><td>白底黑斑(幼猫)</td><td>红砖地投喂点</td><td>头顶黑帽+尾根黑鞍+全黑尾 竖尾站立</td></tr>
+<tr><td>CAT-064</td><td>小虎</td><td>列兵</td><td>棕褐虎斑(幼猫)</td><td>绿门水泥地投喂点</td><td>背部条纹清晰 前爪搭同伴肩嗅闻</td></tr>
+<tr><td>CAT-065</td><td>高架</td><td>下士</td><td>狸白长毛(幼猫)</td><td>金属护栏扶手</td><td>深灰黑虎斑头+白身+黑蓬松长尾 攀爬金属框架探头</td></tr>
+<tr><td>CAT-066</td><td>干饭</td><td>列兵</td><td>灰白虎斑加白</td><td>红褐水泥地投喂点</td><td>灰黑面具八字脸+白口鼻白爪 进食抬头直视</td></tr>
+<tr><td>CAT-067</td><td>挡风</td><td>中士</td><td>橘白</td><td>电动车停放区</td><td>橘背橘头淡虎斑+白胸腹白肢 偏胖 站车座伸爪探挡风被</td></tr>
+<tr><td>CAT-068</td><td>坐垫</td><td>列兵</td><td>橘白</td><td>电动车停放区</td><td>橘头橘背+白脸白颈白胸腹 偏瘦青年 车座熟睡</td></tr>
+<tr><td>CAT-069</td><td>立正</td><td>列兵</td><td>狸花白(幼猫)</td><td>水泥路缘石</td><td>棕灰虎斑背头尾+白胸腹白爪白围脖 站立翘尾直视</td></tr>
+<tr><td>CAT-070</td><td>查鞋</td><td>列兵</td><td>狸花(幼猫)</td><td>沥青路面</td><td>深浅灰褐条纹背深腹浅 低头嗅白运动鞋</td></tr>
+<tr><td>CAT-073</td><td>大字</td><td>列兵</td><td>狸花</td><td>水泥台阶路缘</td><td>棕褐底深条纹+浅米腹白口鼻白围脖 仰卧四脚朝天</td></tr>
+<tr><td>CAT-074</td><td>晨雾</td><td>中士</td><td>灰白长毛</td><td>草地落叶</td><td>银灰与白相间无明显深纹 体型偏大 草地侧卧打盹</td></tr>
+<tr><td>CAT-075</td><td>初雪</td><td>列兵</td><td>纯白(幼猫)</td><td>铁栅栏边</td><td>纯白短毛 蹲姿看镜头</td></tr>
+<tr><td>CAT-078</td><td>方砖</td><td>下士</td><td>橘白长毛</td><td>灰瓷砖地面</td><td>橘白分布均匀 蓬松长毛 灰瓷砖区常驻</td></tr>
+<tr><td>CAT-079</td><td>远望</td><td>下士</td><td>奶牛(长毛)</td><td>植被地面</td><td>黑白斑明显 端坐目光望远方</td></tr>
+<tr><td>CAT-080</td><td>两仪</td><td>中士</td><td>三花(长毛)</td><td>粉色砖地绿门框</td><td>左半脸黑右半脸橘 白胸腹白肢 黄眼</td></tr>
+</tbody></table>
+<p style="color:#54648f;font-size:11px;margin-top:14px">© 2026 TianWenzzzh · 代码 MIT · 数据与照片 CC BY-NC-SA 4.0</p>
+</section>
+</noscript>
+
+<canvas id="sky" role="application" aria-label="中北喵星图：76 只校园猫的互动星图。拖动漫游，点击星星查看档案；也可用顶部搜索与实地寻猫目录浏览。"></canvas>
 
 <div id="intro">
   <h1 class="titleFallback">中北喵星图</h1>
   <div class="titleSpace"></div>
   <div class="sub">人民兵工第一校的喵星编制 · 每颗星都是一只真实生活的中北猫</div>
-  <div class="stats">中北校园实地普查 ｜ 76 只在编基米 ｜ 194 张学长学姐实拍</div>
+  <div class="stats">中北校园实地普查 ｜ 194 张原始照片 ｜ 归并出 76 只在编基米</div>
   <button id="introBtn">入 夜 寻 喵</button>
   <div class="enterHint">轻触按钮 · 坠入喵星系</div>
-  <div class="credit">原创普查数据 · 转载请署名 · <a href="https://github.com/TianWenzzzh/nuc-cat-starmap" target="_blank" rel="noopener">github.com/TianWenzzzh/nuc-cat-starmap</a></div>
+  <div class="credit">原创普查数据 · 转载请署名<br><a href="https://github.com/TianWenzzzh/nuc-cat-starmap" target="_blank" rel="noopener">github.com/TianWenzzzh/nuc-cat-starmap</a></div>
 </div>
 
 <header id="topbar" class="ui">
@@ -748,10 +874,11 @@
   <input id="search" placeholder="搜索喵名 / 军衔…" aria-label="搜索猫咪">
   <div id="chips">
     <span class="chip filter on" data-f="all" tabindex="0" role="button">全部<b class="n">76</b></span>
-    <span class="chip filter" data-f="橘" tabindex="0" role="button"><i class="dot" style="color:#ffbe6a"></i>橘系<b class="n">20</b></span>
+    <span class="chip filter" data-f="橘" tabindex="0" role="button"><i class="dot" style="color:#ffbe6a"></i>橘系<b class="n">18</b></span>
     <span class="chip filter" data-f="狸花" tabindex="0" role="button"><i class="dot" style="color:#e8c98a"></i>狸花<b class="n">25</b></span>
     <span class="chip filter" data-f="三花" tabindex="0" role="button"><i class="dot" style="color:#ff9ec2"></i>三花/玳瑁<b class="n">7</b></span>
     <span class="chip filter" data-f="黑白" tabindex="0" role="button"><i class="dot" style="color:#cfe0ff"></i>黑白系<b class="n">24</b></span>
+    <span class="chip filter" data-f="其他" tabindex="0" role="button"><i class="dot" style="color:#cdf0ff"></i>其他<b class="n">2</b></span>
     <i class="chipGap" aria-hidden="true"></i>
     <span class="chip act" id="btnMeet" tabindex="0" role="button"><span class="aIco">✦</span>今日偶遇</span>
     <span class="chip act" id="btnTour" tabindex="0" role="button"><span class="aIco">▶</span>喵星导览</span>
@@ -801,7 +928,7 @@
   <details class="gdQ"><summary>手机和电脑体验一样吗？</summary><p>功能完全一致。手机多了底部快捷栏（喵签/本命猫/护照/星图志/指南一键直达），支持陀螺仪倾斜视差和双指缩放；电脑端是鼠标彗星与全量特效。档位自动适配各自性能，互不影响。</p></details>
   <details class="gdQ"><summary>离线版和在线版有什么区别？</summary><p>功能完全一致，数据全部内嵌、零外部请求。在线版点开就玩，离线版断网、机房照常跑。</p></details>
   <details class="gdQ"><summary>能用在自己学校吗？</summary><p>档案数据不能（那是中北的猫），方法论可以：普查、归并、建星图到打包的完整流程都写在 SKILL.md 里。</p></details>
-  <details class="gdQ"><summary>数据准吗？</summary><p>194 张照片逐张比对归并出 76 只，存疑的一律不收；每一条取舍都记在《归并决策摘要.md》，欢迎抽查。</p></details>
+  <details class="gdQ"><summary>数据准吗？</summary><p>194 张原始照片逐张比对、归并出 76 只；存疑的一律不收。每一条取舍都记在《归并决策摘要.md》，欢迎抽查。</p></details>
   <div class="gdSec">边缘情况速览</div>
   <details class="gdQ"><summary>打开黑屏 / 粒子不动？</summary><p>多半是浏览器太老（IE 不行）。换 Chrome / Edge / Safari 16 及以上再开一次。</p></details>
   <details class="gdQ"><summary>提示「存储受限」？</summary><p>无痕模式或浏览器禁用了本地存储，进度不会落盘。点下方提示条或去「喵星护照」把进度码备份成文字，换设备粘回即可。</p></details>
@@ -822,10 +949,11 @@
     </div>
     <div id="lgSeen"><b id="seenCount">已遇见 0 / 76</b><span id="ringHint">开卡即可打卡 · 遇见点亮图鉴</span></div>
   </div>
-  <div class="row" data-f="橘" tabindex="0" role="button"><i class="dot" style="color:#ffbe6a"></i>橘系<b class="n">20</b></div>
+  <div class="row" data-f="橘" tabindex="0" role="button"><i class="dot" style="color:#ffbe6a"></i>橘系<b class="n">18</b></div>
   <div class="row" data-f="狸花" tabindex="0" role="button"><i class="dot" style="color:#e8c98a"></i>狸花<b class="n">25</b></div>
   <div class="row" data-f="三花" tabindex="0" role="button"><i class="dot" style="color:#ff9ec2"></i>三花/玳瑁<b class="n">7</b></div>
   <div class="row" data-f="黑白" tabindex="0" role="button"><i class="dot" style="color:#cfe0ff"></i>黑白系<b class="n">24</b></div>
+  <div class="row" data-f="其他" tabindex="0" role="button"><i class="dot" style="color:#cdf0ff"></i>其他<b class="n">2</b></div>
   <div class="note">星周环绕光点 = 收录照片数 · 点行可筛选</div>
   <div id="lgFocus" tabindex="0" role="button"><span class="fIco">✦</span><span>今夜幸运星 · <b>体操</b></span></div>
 </aside>
@@ -836,7 +964,7 @@
 
 <div id="card" role="dialog" aria-modal="true" aria-label="猫咪档案">
   <span id="cardClose" tabindex="0" role="button" aria-label="关闭档案">✕</span>
-  <div class="cardImgWrap"><img id="cardImg" alt="猫咪照片"></div>
+  <div class="cardImgWrap"><img id="cardBg" class="cardBg" alt="" aria-hidden="true"><img id="cardImg" alt="猫咪照片"></div>
   <div class="cardHead anim">
     <h2 id="cardName"></h2>
     <div id="cardRank"></div>
@@ -870,11 +998,12 @@
   </div>
   <div class="stSec">毛色星族分布</div>
   <div id="stCoat"></div>
+  <div class="stNote">筛选与统计同一口径：按登记毛色互斥归组，五组合计 76 只；「橘调狸花」等混色按登记主色归组。</div>
   <div class="stSec">编制军衔构成 · 前六类</div>
   <div id="stRank"></div>
   <div class="stSec">档案最厚的星 · 点击直达</div>
   <div id="stTop"></div>
-  <div class="stFoot">数据源：猫咪名册.csv · 2026-08 实地普查 · 仅中北校园<br>星色 = 毛色 ｜ 环绕光点 = 收录照片数<br>代码 MIT · 数据与照片 CC BY-NC-SA 4.0 · 转载请署名并附仓库链接</div>
+  <div class="stFoot">数据源：猫咪名册.csv · 2026-08 实地普查 · 仅中北校园<br>原始采集 194 张 ｜ 逐张归并后档案收录 167 张 ｜ 内嵌代表照 76 张（每猫 1 张）<br>编号为普查登记号，非连续（存疑弃用留空）· 星色 = 毛色 ｜ 环绕光点 = 收录照片数<br>代码 MIT · 数据与照片 CC BY-NC-SA 4.0 · 转载请署名并附仓库链接</div>
 </div>
 <div id="find" aria-label="实地寻猫目录">
   <span id="findClose" tabindex="0" role="button" aria-label="关闭寻猫目录">✕</span>
@@ -947,6 +1076,7 @@
   </div>
 </div>
 <div id="toast" role="status"></div>
+<link rel="preload" href="assets/photo-data-00.js" as="script">
 <script src="assets/photo-data-00.js"></script><script>const __PM={"n":9,"m":{"手绘版-夜空-web.jpg":0,"13951BEAD8371B46AB8351276772BF48.jpg":1,"50E8904B46C698659B377B114F19A118.jpg":1,"5828C42C0CB0C2C7244529762D44D4D9.jpg":1,"5F9B576FCD0F435CEB1DC58553937C7C.jpg":1,"812ECF0BC693511417B88A2F552872A8.jpg":1,"A66981CEBAA620A95058D1FC12A73A2E.jpg":1,"微信图片_20260812143555_100_56.jpg":1,"微信图片_20260812143555_101_56.jpg":1,"微信图片_20260812143555_110_56.jpg":1,"微信图片_20260812143555_112_56.jpg":1,"微信图片_20260812143555_113_56.jpg":2,"微信图片_20260812143555_114_56.jpg":2,"微信图片_20260812143555_115_56.jpg":2,"微信图片_20260812143555_119_56.jpg":2,"微信图片_20260812143555_120_56.jpg":2,"微信图片_20260812143555_121_56.jpg":2,"微信图片_20260812143555_123_56.jpg":2,"微信图片_20260812143555_124_56.jpg":2,"微信图片_20260812143555_132_56.jpg":3,"微信图片_20260812143555_134_56.jpg":3,"微信图片_20260812143555_135_56.jpg":3,"微信图片_20260812143555_136_56.jpg":3,"微信图片_20260812143555_138_56.jpg":3,"微信图片_20260812143555_143_56.jpg":3,"微信图片_20260812143555_147_56.jpg":4,"微信图片_20260812143555_148_56.jpg":4,"微信图片_20260812143555_152_56.jpg":4,"微信图片_20260812143555_154_56.jpg":4,"微信图片_20260812143555_158_56.jpg":4,"微信图片_20260812143555_162_56.jpg":4,"微信图片_20260812143555_164_56.jpg":4,"微信图片_20260812143555_166_56.jpg":4,"微信图片_20260812143555_167_56.jpg":5,"微信图片_20260812143555_168_56.jpg":5,"微信图片_20260812143555_169_56.jpg":5,"微信图片_20260812143555_82_56.jpg":5,"微信图片_20260812143555_83_56.jpg":5,"微信图片_20260812143555_84_56.jpg":5,"微信图片_20260812143555_85_56.jpg":5,"微信图片_20260812143555_88_56.jpg":5,"微信图片_20260812143555_91_56.jpg":5,"微信图片_20260812143555_94_56.jpg":6,"微信图片_20260812143555_95_56.jpg":6,"微信图片_20260812143555_99_56.jpg":6,"微信图片_20260816232105_99_39.jpg":6,"微信图片_20260816232535_101_39.jpg":6,"微信图片_20260816232539_105_39.jpg":6,"微信图片_20260816232543_107_39.jpg":6,"微信图片_20260816232544_108_39.jpg":6,"微信图片_20260816232545_109_39.jpg":6,"微信图片_20260816232548_112_39.jpg":6,"微信图片_20260816233805_11_184.jpg":6,"微信图片_20260816233805_14_184.jpg":6,"微信图片_20260816233805_18_184.jpg":7,"微信图片_20260816233805_26_184.jpg":7,"微信图片_20260816233805_33_184.jpg":7,"微信图片_20260816233805_38_184.jpg":7,"微信图片_20260816233805_40_184.jpg":7,"微信图片_20260816233805_41_184.jpg":7,"微信图片_20260816233805_43_184.jpg":7,"微信图片_20260816233805_44_184.jpg":7,"微信图片_20260816233805_48_184.jpg":7,"微信图片_20260816233805_50_184.jpg":7,"微信图片_20260816233805_51_184.jpg":7,"微信图片_20260816233805_55_184.jpg":8,"微信图片_20260816233805_57_184.jpg":8,"微信图片_20260816233805_61_184.jpg":8,"微信图片_20260816233805_66_184.jpg":8,"微信图片_20260816233805_7_184.jpg":8,"微信图片_20260816233805_9_184.jpg":8,"微信图片_20260816235021_101_184.jpg":8,"微信图片_20260816235021_103_184.jpg":8,"微信图片_20260816235021_78_184.jpg":8,"微信图片_20260816235021_83_184.jpg":8,"微信图片_20260816235021_96_184.jpg":8}};</script><script>function PH(p){var k=String(p||"").split("/").pop();return (window.__PHOTOS&&window.__PHOTOS[k])||p}</script><script>
 const __PHOTO_BOOT=(typeof __PM!=="undefined")?__PM:null;
 const __PHOTO_JOBS={},__PHOTO_PEND={};
@@ -954,7 +1084,7 @@ function __ensureChunk(i){
   if(__PHOTO_JOBS[i]) return __PHOTO_JOBS[i];
   const job=new Promise((res,rej)=>{
     const s=document.createElement("script");
-    s.src="assets/photo-data-"+String(i).padStart(2,"0")+".js";
+    s.src="assets/photo-data-"+String(i).padStart(2,"0")+".js?v=20261115r";  // 版本号：照片修正后强制换新，避免旧缓存一直显示歪图
     s.onload=()=>{__flushPhotoJobs(i);res();};
     s.onerror=()=>{delete __PHOTO_JOBS[i];rej(new Error("photo chunk "+i));};
     document.head.appendChild(s);
@@ -1178,10 +1308,10 @@ const CATS = [
     features:"头部棕褐深灰+白脸白爪、站立低头嗅地", area:"老旧楼道口", bio:"楼道口新兵，头埋得比谁都低——不是害羞，是勘察地形。鼻子就是测量仪，走过的每寸路面都要归档备案。",
     photo:"assets/photos/微信图片_20260816233805_18_184.jpg", photoCount:1, brightness:.5},
   { id:"CAT-058", name:"摔跤", rank:"下士", title:"体能训练员", coat:"狸花", coatGroup:"狸花",
-    features:"灰黑条纹+白腹白围脖白手套、打闹担当", area:"水泥地排水格栅区", bio:"排水格栅就是擂台，白围脖一系像戴了护颈。和陪练日日过招，翻滚扑咬样样在行，训练员的编制是实打实战出来的。",
+    features:"灰黑条纹+白腹白围脖白手套、打闹担当", area:"水泥地排水格栅区", bio:"排水格栅就是擂台，白围脖一系像戴了护颈。和陪练日日过招，翻滚扑咬样样在行，训练员的编制是实打实战出来的。代表照为它与陪练的同框合影，按灰黑条纹+白围脖辨认。",
     photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83},
   { id:"CAT-059", name:"陪练", rank:"列兵", title:"体能训练员", coat:"白底黑斑", coatGroup:"黑白",
-    features:"背单块圆黑斑+黑白尾、仰卧四脚朝天", area:"水泥地排水格栅区", bio:"背上一块圆斑像披了护具，专职陪摔跤练招。仰面四脚朝天是常态——被摔的永远是它，第二天照样准时出勤。",
+    features:"背单块圆黑斑+黑白尾、仰卧四脚朝天", area:"水泥地排水格栅区", bio:"背上一块圆斑像披了护具，专职陪摔跤练招。仰面四脚朝天是常态——被摔的永远是它，第二天照样准时出勤。代表照为它与摔跤的同框合影，按背部单块圆黑斑辨认。",
     photo:"assets/photos/微信图片_20260816233805_26_184.jpg", photoCount:4, brightness:.83},
   { id:"CAT-060", name:"玄铁", rank:"上士", title:"装备保密员", coat:"纯黑", coatGroup:"其他",
     features:"通黑无杂色、中长毛圆润肥硕", area:"石台灌木小径", bio:"全校唯一纯黑编制，黑得夜景照都难拍清。上士军衔管装备保密——通体自带隐身涂层，不保密实在说不过去。",
@@ -1235,6 +1365,7 @@ const CATS = [
     features:"左半脸黑右半脸橘、白胸腹白肢、黄眼", area:"粉色砖地绿门框", bio:"左脸黑右脸橘，一猫分两仪，地图绘制员的职业操守就是黑白分明。全校花色稀有榜再添一员，判读从不出错。",
     photo:"assets/photos/微信图片_20260816235021_103_184.jpg", photoCount:1, brightness:.5} 
 ];
+for(const c of CATS) c._hash=hashStr(c.id);   // 闪烁相位预计算，免每帧字符串哈希（v2.9.2）
 
 const MAP_SRC = "手绘版-夜空-web.jpg";
 const LS_KEY  = "nuc-cat-galaxy-positions";
@@ -1261,14 +1392,19 @@ function resize(){
   ctx.setTransform(DPR,0,0,DPR,0,0);
   trailCv.width=W*DPR; trailCv.height=H*DPR;
   tctx.setTransform(DPR,0,0,DPR,0,0);
-  galCv.width=W; galCv.height=H;
+  galCv.width=W*DPR; galCv.height=H*DPR; gctx.setTransform(DPR,0,0,DPR,0,0);   // 星轨层同 DPR，Retina 不发糊（v2.9.2）
 }
 const trailCv=document.createElement("canvas"), tctx=trailCv.getContext("2d");
 const galCv=document.createElement("canvas"), gctx=galCv.getContext("2d");   // 星系独立层：星轨长曝光只累积这一层
 addEventListener("resize", ()=>{           // 手机地址栏收起等小幅变化不打断视角
-  const dw=Math.abs(W-innerWidth), dh=Math.abs(H-innerHeight);
-  resize(); if(mapReady&&phase==="live"&&(dw>90||dh>90)) fitMap();
+  const ow=W, oh=H, dw=Math.abs(W-innerWidth), dh=Math.abs(H-innerHeight);
+  resize();
+  const arChange=Math.abs(ow/Math.max(1,oh)-W/Math.max(1,H));
+  if(dw>90||dh>90||arChange>.15){          // 转屏/大幅变化：重建星系粒子并按需重适配（v2.9.2）
+    buildGalaxy(); if(mapReady&&phase==="live") fitMap(); }
 });
+addEventListener("orientationchange",()=>setTimeout(()=>{ resize(); buildGalaxy();
+  if(mapReady&&phase==="live") fitMap(); },150));
 resize();
 
 function fitMap(){ cam.z=Math.max(W/MW,H/MH); cam.x=(W-MW*cam.z)/2; cam.y=(H-MH*cam.z)/2; }
@@ -1303,11 +1439,14 @@ const lsWarn=()=>{ const now=Date.now();
   tipShow("浏览器存储受限 · 进度可能不被保存，点下方即可备份进度码"); };
 const loadOv=()=>OV;
 let OV={}; try{ OV=JSON.parse(localStorage.getItem(LS_KEY)||"{}")||{}; }catch(e){ OV={}; }
+for(const k in OV){ const v=OV[k];                       // 防手改 localStorage 注入非法坐标（v2.9.2）
+  if(!v||!Number.isFinite(v.x)||!Number.isFinite(v.y)) delete OV[k]; }
 const flushOv=()=>{ try{ localStorage.setItem(LS_KEY,JSON.stringify(OV)); }catch(e){ lsWarn(); } };
 const POS=new Map();
 const catPos=c=>{ let p=POS.get(c.id);
   if(!p){ p=OV[c.id]||CALIB[c.id]||basePos(c); POS.set(c.id,p); } return p; };
-const setPos=(c,n)=>{ OV[c.id]={x:n.x,y:n.y,manual:true}; POS.set(c.id,OV[c.id]); };
+const setPos=(c,n)=>{ OV[c.id]={x:n.x,y:n.y,manual:true}; POS.set(c.id,OV[c.id]);
+  for(const k of CATS) k._partners=null; };   // 校准拖星后失效最近搭档缓存（v2.9.2）
 
 /* ---------- 氛围层：星云 + 星尘 ---------- */
 // 预渲染星云（离屏）
@@ -1357,9 +1496,11 @@ function raySprite(color){
 function drawGlow(x,y,r,color,inner){ ctx.drawImage(glowSprite(color,inner),x-r,y-r,r*2,r*2); }
 
 /* --- 螺旋星系（屏幕空间 · 三旋臂 · 差速旋转 · 金核/青臂/紫晕） --- */
-const GAL_N=(W<760?950:2100);
+let GAL_N=(W<760?950:2100);
 const galBuckets=[[],[],[]];               // 0 金核 1 青绿 2 紫红
-{
+function buildGalaxy(){                    // 转屏/大幅 resize 后按新尺寸重建粒子（v2.9.2）
+  GAL_N=(W<760?950:2100);
+  galBuckets[0].length=galBuckets[1].length=galBuckets[2].length=0;
   const arms=3;
   for(let i=0;i<GAL_N;i++){
     const t=Math.pow(Math.random(),.6);
@@ -1370,6 +1511,7 @@ const galBuckets=[[],[],[]];               // 0 金核 1 青绿 2 紫红
     galBuckets[t<.15?0:t<.55?1:2].push(p);
   }
 }
+buildGalaxy();
 const GAL_C=["255,216,150","70,220,198","188,124,255"];
 function drawGalaxy(g,t,alpha,px,py,szMul,stride){
   const cx=W/2+px, cy=H*.47+py;
@@ -1391,6 +1533,7 @@ function drawGalaxy(g,t,alpha,px,py,szMul,stride){
 /* --- 流星雨（对角拖尾 + 尾迹碎星） --- */
 const meteors=[]; let meteorTimer=2.4;
 function spawnMeteor(){
+  if(REDUCE) return;                                       // 减弱动态：不出流星
   const ang=(26+Math.random()*24)/180*Math.PI;
   const v=740+Math.random()*560;
   meteors.push({ x:Math.random()*W*.96-40, y:-30-Math.random()*90,
@@ -1434,7 +1577,7 @@ function buildClNeb(){
     const p=catPos(c);
     let b=blobs.find(b=>Math.hypot(b.x-p.x,b.y-p.y)<.075);
     if(!b){ b={x:p.x,y:p.y,n:0,votes:{},ph:Math.random()*TAU}; blobs.push(b); }
-    b.n++; b.votes[c.coatGroup]=(b.votes[c.coatGroup]||0)+1;
+    b.n++; const gk=coatOf(c); b.votes[gk]=(b.votes[gk]||0)+1;
   }
   clNeb=blobs.filter(b=>b.n>=2).sort((a,b)=>b.n-a.n).slice(0,14)
     .map(b=>{ const g=Object.entries(b.votes).sort((x,y)=>y[1]-x[1])[0][0];
@@ -1624,13 +1767,17 @@ function titleMix(m){ m=clamp(m,0,1); const s=m<.5?0:1, k=(m-s*.5)*2, A=TSTOPS[s
   r=Math.round(A[0]+(B[0]-A[0])*k), g=Math.round(A[1]+(B[1]-A[1])*k), b=Math.round(A[2]+(B[2]-A[2])*k);
   return ["rgb("+r+","+g+","+b+")","rgba("+r+","+g+","+b+",.5)"]; }
 const haloCv=document.createElement("canvas");      // 标题背后极光色柔光（金·青·紫三团）
-{ haloCv.width=520; haloCv.height=300;
-  const hg=haloCv.getContext("2d");
+{ /* 光团半径 170，三团横跨 x∈[-40,570]、y∈[-20,320]。画布必须留出完整光晕，
+     否则最外圈被裁成直线硬边，放大到标题宽度后会变成一块可见的矩形色块。 */
+  const PAD=180;
+  haloCv.width=520+PAD*2; haloCv.height=300+PAD*2;
+  const hg=haloCv.getContext("2d"); hg.translate(PAD,PAD);
   [[130,"255,215,120"],[265,"120,235,220"],[400,"205,160,255"]].forEach(([hx,base])=>{
     const g=hg.createRadialGradient(hx,150,0,hx,150,170);
     g.addColorStop(0,"rgba("+base+",.20)"); g.addColorStop(1,"rgba("+base+",0)");
     hg.fillStyle=g; hg.beginPath(); hg.arc(hx,150,170,0,TAU); hg.fill();
   });
+  haloCv._pad=PAD; haloCv._w=520; haloCv._h=300;
 }
 let introMotes=[];                                   // 上浮星尘萤火
 function initMotes(){ introMotes=[]; const n=W<760?22:34;
@@ -1681,9 +1828,10 @@ function drawIntro(dt,t){
   const el=t-introT0;
   ctx.globalCompositeOperation="lighter";
   // 标题背后的极光色柔光 → 字从极光中凝结
-  const hw=W*.68, hh=hw*(300/520);
+  const hw=W*.68, hh=hw*(300/520), hpad=(haloCv._pad||0)*(hw/(haloCv._w||520));
   ctx.globalAlpha=.5+.18*Math.sin(t*.45);
-  ctx.drawImage(haloCv,W/2-hw/2,H*.40-hh*.5,hw,hh);
+  // 画布含 PAD 留白：按内层 520x300 的逻辑尺寸换算，向外扩出去绘制
+  ctx.drawImage(haloCv, W/2-hw/2-hpad, H*.40-hh*.5-hpad, hw+hpad*2, hh+hpad*2);
   ctx.globalAlpha=1;
   // 上浮星尘萤火
   for(const m of introMotes){ m.y-=m.v*dt; if(m.y<-8){ m.y=H+8; m.x=Math.random()*W; }
@@ -1714,7 +1862,7 @@ function drawIntro(dt,t){
     ctx.fillRect(x-psz*.7,y-psz*.7,psz*2,psz*2);
     ctx.globalAlpha=Math.max(.14,a);                          // 高透明核心
     ctx.fillRect(x,y,psz,psz);
-    if((pi&3)===0) drawGlow(x+psz/2,y+psz/2,psz*3.4,p.glow);
+    if((pi&5)===0) drawGlow(x+psz/2,y+psz/2,psz*3.4,p.glow);
     if(p.star){ const gl=Math.sin(t*.9+p.ph*2.7);             // 亮星周期性闪白
       if(gl>.9){ const gk=(gl-.9)*10;
         ctx.globalAlpha=gk*.85; ctx.fillStyle="#fff";
@@ -1808,19 +1956,28 @@ function drawAreas(){
 const COAT_COLORS={ "橘":["#ffd28a","#ff9d3c"], "狸花":["#eed9a4","#c09655"],
   "三花":["#ffc0d4","#f075a8"], "玳瑁":["#ffc0d4","#f075a8"], "黑白":["#e6efff","#a9c3f0"],
   "黑":["#d6dcff","#93a1d8"], "白":["#ffffff","#d8e6ff"], "其他":["#cdf0ff","#86cde8"] };
-function starColors(c){ for(const k in COAT_COLORS)
-  if(c.coatGroup===k||(c.coat||"").includes(k)) return COAT_COLORS[k]; return COAT_COLORS["其他"]; }
+function starColors(c){ const g=coatOf(c);          // 星色与筛选归组同一口径（v2.9.2）
+  return COAT_COLORS[g]||COAT_COLORS["其他"]; }
 
 /* ---------- 状态 ---------- */
+const REDUCE=matchMedia("(prefers-reduced-motion: reduce)").matches;   // 尊重系统减弱动态（v2.9.2）
 let filter="all", query="", editMode=false, hovered=null, selected=null;
 let dragInfo=null, starDrag=null, T=0;
 
+/* 毛色归组（唯一口径 v2.9.2）：登记 coatGroup 优先；「其他」按毛色描述兜底归组。
+   互斥分区，五组并集 = 76，任何一只猫都至少属于一组（修复 CAT-051/074 筛选不可达）。 */
+function coatOf(c){
+  const g=c.coatGroup;
+  if(g==="橘"||g==="狸花"||g==="三花"||g==="黑白") return g;
+  const coat=c.coat||"";
+  if(/黑白|奶牛|纯黑|纯白/.test(coat)) return "黑白";
+  if(/三花|玳瑁/.test(coat)) return "三花";
+  if(coat.includes("橘")) return "橘";
+  if(coat.includes("狸花")) return "狸花";
+  return "其他";
+}
 function catVisible(c){
-  if(filter!=="all"){
-    if(filter==="黑白"){ if(!/黑白|奶牛|纯黑|纯白/.test(c.coat)&&c.coatGroup!=="黑白") return false; }
-    else if(filter==="三花"){ if(!/三花|玳瑁/.test(c.coat)) return false; }
-    else if(c.coatGroup!==filter&&!(c.coat||"").includes(filter)) return false;
-  }
+  if(filter!=="all"&&coatOf(c)!==filter) return false;
   if(query){ const q=query.toLowerCase();
     if(!(c.name+c.rank+(c.title||"")+c.coat+c.features).toLowerCase().includes(q)) return false; }
   return true;
@@ -1830,12 +1987,12 @@ function catVisible(c){
 function drawStar(c,s,bk){
   const [c1,c2]=starColors(c);
   const hot=hovered===c||selected===c;
-  const breathe=1+.1*Math.sin(animT*1.5+hashStr(c.id)%9);
+  const breathe=REDUCE?1:1+.1*Math.sin(animT*1.5+c._hash%9);
   let R=(3.4+3*(c.brightness||.7)+.3*Math.min(4,(c.photoCount||1)>>1))*Math.sqrt(cam.z)*breathe*(hot?1.42:1);
   if(bk<1){ if(bk<=0) return; R*=Math.max(.001,easeOutBack(bk)); }
   ctx.globalCompositeOperation="lighter";
   drawGlow(s.x,s.y,R*6.2,c2);                                   // 外晕
-  const ray=R*(2.4+.5*Math.sin(animT*2+hashStr(c.id)))*(hot?1.35:1);
+  const ray=R*(2.4+(REDUCE?0:.5*Math.sin(animT*2+c._hash)))*(hot?1.35:1);
   ctx.globalAlpha=.9;
   ctx.drawImage(raySprite(c1),s.x-ray,s.y-1.7,ray*2,3.4);       // 横星芒
   ctx.drawImage(raySprite(c1),s.x-1.7,s.y-ray,3.4,ray*2);       // 纵星芒
@@ -1844,7 +2001,7 @@ function drawStar(c,s,bk){
   const ns=Math.min(3,1+((c.photoCount||1)>>1));
   if(cam.z>.62&&bk>.6){
     for(let i=0;i<ns;i++){
-      const oa=animT*(.5+.22*i)*(i%2?1:-1)+hashStr(c.id)%7+i*2.1;
+      const oa=animT*(.5+.22*i)*(i%2?1:-1)+c._hash%7+i*2.1;
       const orR=R*2.35+i*R*.9;
       ctx.globalAlpha=.62;
       drawGlow(s.x+Math.cos(oa)*orR,s.y+Math.sin(oa)*orR*.58,2.7,c1,"#fff");
@@ -1878,13 +2035,14 @@ function drawStar(c,s,bk){
 
 /* ---------- 主循环（intro → fly 入场飞行 → live 常驻） ---------- */
 let phase="intro", animT=0, lastTs=0, entry=null, starBirth=null;
+let vgCache=null, vgCacheH=0, tgCache=null, tgCacheH=0, tgCacheKey="";   // 渐变缓存（v2.9.2）
 const comet={ x:innerWidth/2, y:innerHeight/2, tx:innerWidth/2, ty:innerHeight/2,
   on:matchMedia("(pointer:fine)").matches };           // 鼠标彗星（桌面端）
 addEventListener("mousemove",e=>{ comet.tx=e.clientX; comet.ty=e.clientY; },{passive:true});
 function birthK(c,now){                                  // 入场时星星依次点亮
   if(!starBirth) return 1;
   const p=catPos(c);
-  const delay=Math.hypot(p.x-starBirth.fx,p.y-starBirth.fy)*1150+(hashStr(c.id)%97)*4.6;
+  const delay=Math.hypot(p.x-starBirth.fx,p.y-starBirth.fy)*1150+(c._hash%97)*4.6;
   return clamp((now-starBirth.t0-delay)/620,0,1);
 }
 function startEntry(){
@@ -1893,10 +2051,10 @@ function startEntry(){
   document.getElementById("intro").classList.add("fade");
   const f=catPos(catById("CAT-060")||CATS[0]);          // 从最密的猫群深处起飞
   const sz=8.2, tz=Math.max(W/MW,H/MH);
-  entry={ t0:performance.now(), sx:W/2-f.x*MW*sz, sy:H/2-f.y*MH*sz, sz,
-    tx:(W-MW*tz)/2, ty:(H-MH*tz)/2, tz };
-  starBirth={ t0:performance.now()+1500, fx:f.x, fy:f.y };
-  setTimeout(()=>{ document.body.classList.add("live"); },1600);
+  entry={ t0:performance.now()-(REDUCE?2600:0), sx:W/2-f.x*MW*sz, sy:H/2-f.y*MH*sz, sz,
+    tx:(W-MW*tz)/2, ty:(H-MH*tz)/2, tz };                 // 减弱动态：跳过 2.6s 拉镜直接落位
+  starBirth={ t0:performance.now()+(REDUCE?0:1500), fx:f.x, fy:f.y };
+  setTimeout(()=>{ document.body.classList.add("live"); },REDUCE?200:1600);
   setTimeout(()=>{ document.getElementById("hint").classList.add("gone"); },7200);
 }
 /* --- 性能自适应引擎：FPS 中位数驱动三档特效（手机/低配机自动省电，切档明示不悄悄降级） --- */
@@ -1926,24 +2084,34 @@ function applyFx(mode,silent){
     :"特效档位：省电 · 星系与星尘抽稀，保帧率优先");
 }
 function perfTick(ts){
-  if(!PERF._t){ PERF._t=ts; return; }             // 首帧校零：避免把启动耗时算进帧率
+  if(!PERF._t){ PERF._t=ts; PERF._start=ts; return; }  // 首帧校零：避免把启动耗时算进帧率
   PERF._n++;
   if(ts-PERF._t<1000) return;
   PERF.fps=Math.round(PERF._n*1000/(ts-PERF._t)); PERF._n=0; PERF._t=ts;
   if(PERF.mode!=="auto") return;                  // 手动锁定：不自动切
-  PERF._win.push(PERF.fps); if(PERF._win.length>4) PERF._win.shift();   // 4 秒滑动窗口取中位数，防瞬时抖动
+  PERF._win.push(PERF.fps); if(PERF._win.length>6) PERF._win.shift();
   const med=[...PERF._win].sort((a,b)=>a-b)[Math.floor(PERF._win.length/2)];
-  if(med<32){ if(++PERF._slow>=2&&PERF._win.length>=4&&PERF.tier!=="lite"){ PERF._slow=0; PERF._fast=0; PERF._win=[];
-    setTier("lite"); toast("帧率偏低 · 已自动切省电特效（可去「⋯」菜单换档）"); } }
-  else if(med<46){ if(++PERF._slow>=2&&PERF._win.length>=4&&PERF.tier==="full"){ PERF._slow=0; PERF._win=[];
-    setTier("balanced"); toast("帧率一般 · 已自动切均衡特效（可去「⋯」菜单换档）"); } }
+  // 开场粒子汇聚 + 首屏加载本来就会掉帧，8 秒内只测量不判定，避免一进门就弹「帧率偏低」
+  const warming = (ts-PERF._start) < 8000;
+  if(med<32){ if(++PERF._slow>=2&&PERF._win.length>=6&&PERF.tier!=="lite"){ PERF._slow=0; PERF._fast=0; PERF._win=[];
+    setTier("lite"); if(!warming) toast("帧率偏低 · 已自动切省电特效（可去「⋯」菜单换档）"); } }
+  else if(med<46){ if(++PERF._slow>=2&&PERF._win.length>=6&&PERF.tier==="full"){ PERF._slow=0; PERF._win=[];
+    setTier("balanced"); if(!warming) toast("帧率一般 · 已自动切均衡特效（可去「⋯」菜单换档）"); } }
   else { PERF._slow=0;
     if(med>=54){ if(++PERF._fast>=5){ PERF._fast=0; PERF._win=[];
-      if(PERF.tier!=="full"){ setTier("full"); toast("性能充足 · 完整特效已恢复"); } } }
+      if(PERF.tier!=="full"){ setTier("full"); if(!warming) toast("性能充足 · 完整特效已恢复"); } } }
     else PERF._fast=0; }                          // 46-53 滞回区：稳定但不富余，不升不降防来回切档
 }
+let rafId=0;
 function draw(ts){
-  requestAnimationFrame(draw);
+  rafId=rafId=requestAnimationFrame(draw);
+/* 后台标签页暂停渲染与音频（省电省热 · 回前台重置时基防粒子跳变）v2.9.2 */
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){ cancelAnimationFrame(rafId); rafId=0;
+    if(AU.ctx&&AU.ctx.state==="running") AU.ctx.suspend().catch(()=>{}); }
+  else if(!rafId){ lastTs=0; rafId=requestAnimationFrame(draw);
+    if(AU.on&&AU.ctx&&AU.ctx.state==="suspended") AU.ctx.resume().catch(()=>{}); }
+});
   perfTick(ts);
   if(!lastTs) lastTs=ts;
   const dt=Math.min(.05,(ts-lastTs)/1000); lastTs=ts;   // 120Hz 屏不加速
@@ -1981,13 +2149,14 @@ function draw(ts){
     const ma=(phase==="fly"?clamp((now-entry.t0-450)/1700,0,1)*.82:.82)*(1-.62*trailK);  // 星轨模式：地景退为鬼影
     ctx.save(); ctx.globalAlpha=ma;
     ctx.drawImage(mapImg,cam.x,cam.y,MW*cam.z,MH*cam.z); ctx.restore();
-    const vg=ctx.createLinearGradient(0,0,0,H);
-    vg.addColorStop(0,"rgba(6,10,26,.25)"); vg.addColorStop(1,"rgba(3,6,15,.5)");
-    ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+    if(!vgCache||vgCacheH!==H){ vgCache=ctx.createLinearGradient(0,0,0,H);   // 暗角渐变按键控缓存（v2.9.2）
+      vgCache.addColorStop(0,"rgba(6,10,26,.25)"); vgCache.addColorStop(1,"rgba(3,6,15,.5)"); vgCacheH=H; }
+    ctx.fillStyle=vgCache; ctx.fillRect(0,0,W,H);
     const st=skyTint();                                        // 实况天色（按真实时刻）
-    if(st){ const tg=ctx.createLinearGradient(0,0,0,H);
-      tg.addColorStop(0,st[0]); tg.addColorStop(1,st[1]);
-      ctx.fillStyle=tg; ctx.fillRect(0,0,W,H); }
+    if(st){ const tk=st[0]+"|"+st[1];
+      if(!tgCache||tgCacheH!==H||tgCacheKey!==tk){ tgCache=ctx.createLinearGradient(0,0,0,H);
+        tgCache.addColorStop(0,st[0]); tgCache.addColorStop(1,st[1]); tgCacheH=H; tgCacheKey=tk; }
+      ctx.fillStyle=tgCache; ctx.fillRect(0,0,W,H); }
     drawClNeb();                                               // 毛色星云（聚簇着色）
   }
   // 屏幕空间星尘（视差慢层；星轨模式下缓慢漂移拉出细线）
@@ -2031,18 +2200,21 @@ function draw(ts){
   if(showConst&&phase==="live") drawConstellations();
   // 区域名册标注
   if(phase==="live"&&cam.z>1.55) drawAreas();
-  // 选中星的"星轨"连线（连向最近的 3 颗）
+  // 选中星的"星轨"连线（连向地图空间最近的 3 颗 · 开卡时算一次，免每帧全量排序）（v2.9.2）
   if(selected&&phase==="live"){
     const sp=toScreen(catPos(selected).x,catPos(selected).y);
-    const others=CATS.filter(c=>c!==selected&&catVisible(c))
-      .map(c=>({c,s:toScreen(catPos(c).x,catPos(c).y)}))
-      .sort((a,b)=>Math.hypot(a.s.x-sp.x,a.s.y-sp.y)-Math.hypot(b.s.x-sp.x,b.s.y-sp.y)).slice(0,3);
-    for(const o of others){
-      const lg=ctx.createLinearGradient(sp.x,sp.y,o.s.x,o.s.y);
+    if(!selected._partners){ const p0=catPos(selected);
+      selected._partners=CATS.filter(c=>c!==selected)
+        .map(c=>({c,p:catPos(c)}))
+        .sort((a,b)=>Math.hypot(a.p.x-p0.x,a.p.y-p0.y)-Math.hypot(b.p.x-p0.x,b.p.y-p0.y))
+        .slice(0,3).map(o=>o.c); }
+    for(const pc of selected._partners){
+      const os=toScreen(catPos(pc).x,catPos(pc).y);
+      const lg=ctx.createLinearGradient(sp.x,sp.y,os.x,os.y);
       lg.addColorStop(0,"rgba(255,233,168,.5)"); lg.addColorStop(1,"rgba(255,233,168,.04)");
       ctx.strokeStyle=lg; ctx.lineWidth=1;
       ctx.setLineDash([3,6]); ctx.lineDashOffset=-animT*20;
-      ctx.beginPath(); ctx.moveTo(sp.x,sp.y); ctx.lineTo(o.s.x,o.s.y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(sp.x,sp.y); ctx.lineTo(os.x,os.y); ctx.stroke(); ctx.setLineDash([]);
     }
   }
   // 猫咪星（入场时按离焦点距离依次点亮）
@@ -2067,7 +2239,14 @@ function draw(ts){
   auTick(dt);                                                 // 星语环境音（开启时）
   if(phase!=="live") drawIntro(dt,animT);
 }
-requestAnimationFrame(draw);
+rafId=requestAnimationFrame(draw);
+/* 后台标签页暂停渲染与音频（省电省热 · 回前台重置时基防粒子跳变）v2.9.2 */
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){ cancelAnimationFrame(rafId); rafId=0;
+    if(AU.ctx&&AU.ctx.state==="running") AU.ctx.suspend().catch(()=>{}); }
+  else if(!rafId){ lastTs=0; rafId=requestAnimationFrame(draw);
+    if(AU.on&&AU.ctx&&AU.ctx.state==="suspended") AU.ctx.resume().catch(()=>{}); }
+});
 
 /* ---------- 星语 · WebAudio 生成式环境音（零音频文件 · 默认关闭） ---------- */
 const AU={on:false,ctx:null,master:null,delaySend:null,pluckT:3};
@@ -2113,6 +2292,7 @@ function auTick(dt){
 }
 
 /* ---------- 交互 ---------- */
+let lastTouchTs=0;                       // 触摸后 500ms 内忽略合成鼠标事件，防双开卡（v2.9.2）
 function starAt(sx,sy){
   let best=null,bd=1e9;
   for(const c of CATS){ if(!catVisible(c)) continue;
@@ -2123,6 +2303,7 @@ function starAt(sx,sy){
   return best;
 }
 canvas.addEventListener("mousedown",e=>{
+  if(performance.now()-lastTouchTs<500) return;
   const c=starAt(e.clientX,e.clientY);
   if(editMode&&c) starDrag=c; else dragInfo={ sx:e.clientX, sy:e.clientY, cx:cam.x, cy:cam.y };
   canvas.classList.add("dragging");
@@ -2139,6 +2320,7 @@ addEventListener("mousemove",e=>{
 });
 addEventListener("mouseup",e=>{
   canvas.classList.remove("dragging");
+  if(performance.now()-lastTouchTs<500){ dragInfo=null; starDrag=null; return; }
   if(starDrag){ starDrag=null; return; }
   if(dragInfo){ const moved=Math.hypot(e.clientX-dragInfo.sx,e.clientY-dragInfo.sy); dragInfo=null;
     if(moved<6&&!editMode){ const ai=constHit(e.clientX,e.clientY);          // 星宿宿名点击 → 星宿档案
@@ -2159,6 +2341,7 @@ canvas.addEventListener("touchmove",e=>{ const t=e.touches[0];
   if(dragInfo){ cam.x=dragInfo.cx+(t.clientX-dragInfo.sx); cam.y=dragInfo.cy+(t.clientY-dragInfo.sy); clampCam(); }
 },{passive:true});
 canvas.addEventListener("touchend",e=>{
+  lastTouchTs=performance.now();
   if(starDrag){ starDrag=null; return; }
   if(dragInfo){ const t=e.changedTouches[0];
     const moved=Math.hypot(t.clientX-dragInfo.sx,t.clientY-dragInfo.sy); dragInfo=null;
@@ -2256,7 +2439,8 @@ function drawMedal(g,x,y,s,rank){                    // Canvas 版（分享卡/�
 /* ---------- 档案卡 ---------- */
 const card=document.getElementById("card");
 function openCard(c){
-  selected=c;
+  if(selected===c&&card.classList.contains("open")) return;   // 幂等：触摸+合成鼠标双通道不重复开卡（v2.9.2）
+  selected=c; c._partners=null;                               // 换卡重算最近搭档
   if(TOUR.active) endTour();
   if(findPanel.classList.contains("open")) closeFind();
   auPluck(659.25,.05); setTimeout(()=>auPluck(987.77,.028),110);   // 开卡双音
@@ -2266,6 +2450,19 @@ function openCard(c){
   const img=document.getElementById("cardImg"), imgWrap=img.closest(".cardImgWrap");
   const imgDone=()=>{ img.classList.remove("loading");                 // 摘占位：照片带淡入接管
     if(imgWrap) imgWrap.classList.remove("loading"); };
+  // 竖构图照片：横向 264px 卡位用 cover 会裁掉一半主体（本次修复的 28 张竖拍图尤其明显），
+  // 改为 contain 完整显示，并用同一背景色补足两侧，避免出现突兀的白边或拉伸。
+  const bg=document.getElementById("cardBg");
+  const fitPhoto=()=>{
+    if(!img.naturalWidth||!img.naturalHeight) return;
+    const portrait = img.naturalHeight > img.naturalWidth*1.05;
+    img.style.objectFit = portrait ? "contain" : "cover";
+    if(bg){
+      if(portrait && img.src){ bg.src = img.src; bg.style.display = "block"; }  // 竖图：模糊同图铺满，主体以 contain 完整呈现
+      else { bg.style.display = "none"; bg.removeAttribute("src"); }
+    }
+  };
+  if(!img._fitBound){ img._fitBound=1; img.addEventListener("load", fitPhoto); }  // 只绑一次，避免每次开卡累积监听
   img.classList.remove("loading"); if(imgWrap) imgWrap.classList.remove("loading");
   img.onerror=()=>{ img.onerror=null;                 // 照片缺失兜底：换成星夜占位图
     imgDone(); toast("照片没加载出来 · 先用星星代替了");
@@ -2299,14 +2496,28 @@ function openCard(c){
   spawnBurst(sp.x,sp.y,starColors(c)[0]); spawnRipple(sp.x,sp.y,starColors(c)[1]);
   startMorph(c,sp.x,sp.y);                                    // 星尘变身：星星炸开、重组成这只猫的照片
   refreshSeenBtn();
+  card._lastFocus=document.activeElement;                     // 记录触发元素，关闭时归还焦点
   card.classList.add("open");
+  document.getElementById("cardClose").focus({preventScroll:true});
   flyTo(c);
 }
-document.getElementById("cardClose").onclick=()=>{ card.classList.remove("open"); selected=null; };
+document.getElementById("cardClose").onclick=()=>{ card.classList.remove("open"); selected=null;
+  if(card._lastFocus&&card._lastFocus.focus){ try{ card._lastFocus.focus(); }catch(e){} } };
+/* 档案卡焦点管理：开卡聚焦关闭钮 · Tab 卡内循环 · Esc 归还焦点（v2.9.2） */
+card.addEventListener("keydown",e=>{
+  if(e.key!=="Tab"||!card.classList.contains("open")) return;
+  const f=[...card.querySelectorAll('[tabindex="0"],button,a[href],input')].filter(el=>el.offsetParent!==null);
+  if(!f.length) return;
+  const first=f[0], last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
+  else if(!card.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+});
 
 function flyTo(c){
   const p=catPos(c), tz=Math.max(1.7,cam.z);
   const tx=W*.42-p.x*MW*tz, ty=H*.5-p.y*MH*tz;
+  if(REDUCE){ cam.x=tx; cam.y=ty; cam.z=tz; clampCam(); return; }   // 减弱动态：直接落位不飞行
   const sx=cam.x, sy=cam.y, sz=cam.z, t0=performance.now();
   (function step(t){ const k=Math.min(1,(t-t0)/750), e=1-Math.pow(1-k,3);
     cam.x=sx+(tx-sx)*e; cam.y=sy+(ty-sy)*e; cam.z=sz+(tz-sz)*e; clampCam();
@@ -2322,7 +2533,7 @@ function openStats(){
   document.getElementById("stN").textContent=CATS.length;
   document.getElementById("stP").textContent=CATS.reduce((s,c)=>s+(c.photoCount||1),0);
   document.getElementById("stA").textContent=AREAS.length;
-  const groups={}; for(const c of CATS) groups[c.coatGroup]=(groups[c.coatGroup]||0)+1;
+  const groups={}; for(const c of CATS){ const k=coatOf(c); groups[k]=(groups[k]||0)+1; }
   document.getElementById("stCoat").innerHTML=Object.entries(groups).sort((a,b)=>b[1]-a[1]).map(([k,n])=>
     `<div class="stRow"><span class="nm">${k}</span><span class="bar"><i data-w="${Math.round(n/CATS.length*100)}" style="background:linear-gradient(90deg,${COAT_BAR[k]||COAT_BAR["其他"]},${(COAT_BAR[k]||COAT_BAR["其他"])+"aa"})"></i></span><span class="ct">${n} 只</span></div>`).join("");
   const ranks={}; for(const c of CATS) ranks[c.rank]=(ranks[c.rank]||0)+1;
@@ -2469,15 +2680,15 @@ function setFilter(f){
 }
 document.querySelectorAll(".chip.filter").forEach(ch=>ch.onclick=()=>setFilter(ch.dataset.f));
 document.querySelectorAll("#legend .row[data-f]").forEach(r=>r.onclick=()=>setFilter(r.dataset.f===filter?"all":r.dataset.f));
-/* 筛选数量徽标（复用 catVisible 语义 · 静态档案数） */
-(function(){
-  const counts={all:CATS.length};
-  for(const f of ["橘","狸花","三花","黑白"]){
-    const keep=filter; filter=f; counts[f]=CATS.filter(catVisible).length; filter=keep; }
+/* 筛选数量徽标（唯一口径 coatOf · 互斥分区 · 五组并集=76） */
+const COAT_COUNTS=(function(){
+  const counts={all:CATS.length,"橘":0,"狸花":0,"三花":0,"黑白":0,"其他":0};
+  for(const c of CATS) counts[coatOf(c)]++;
   document.querySelectorAll(".chip.filter").forEach(ch=>{
     const n=ch.querySelector(".n"); if(n) n.textContent=counts[ch.dataset.f]; });
   document.querySelectorAll("#legend .row[data-f]").forEach(r=>{
     r.insertAdjacentHTML("beforeend",'<b class="n">'+counts[r.dataset.f]+'</b>'); });
+  return counts;
 })();
 /* 「更多」下拉（收纳低频功能） */
 const moreMenu=document.getElementById("moreMenu"), btnMore=document.getElementById("btnMore");
@@ -2502,7 +2713,7 @@ document.getElementById("lgFocus").onclick=()=>{
 addEventListener("keydown",e=>{
   if(e.key==="Escape"){                               // Esc 逐层关闭：建议→档案→星图志→指南→喵签→寻猫→更多
     if(sHint.style.display==="flex"){ sHint.style.display="none"; return; }
-    if(card.classList.contains("open")){ card.classList.remove("open"); selected=null; return; }
+    if(card.classList.contains("open")){ document.getElementById("cardClose").onclick(); return; }
     if(statsPanel&&statsPanel.classList.contains("open")){ statsPanel.classList.remove("open"); return; }
     const gdP=document.getElementById("guide");                        // 指南同享 Esc 关闭
     if(gdP.classList.contains("open")){ gdP.classList.remove("open");
@@ -2530,7 +2741,7 @@ function showSearchHint(){                           // 无结果：持久建议
   t.textContent="未找到「"+query+"」"; sHint.appendChild(t);
   if(filter!=="all"){                                // 毛色筛选在挡路：先给出口
     const t2=document.createElement("span"); t2.className="sTitle";
-    t2.textContent="（当前只看「"+({橘:"橘系",狸:"狸花",三:"三花",黑:"黑白"}[filter]||filter)+"）";
+    t2.textContent="（当前只看「"+({橘:"橘系",狸:"狸花",三:"三花",黑:"黑白",其他:"其他"}[filter]||filter)+"）";
     sHint.appendChild(t2);
     const cb=document.createElement("span"); cb.className="sChip sReset";
     cb.textContent="清筛选 · 看全部76只"; cb.tabIndex=0; cb.setAttribute("role","button");
@@ -2615,12 +2826,14 @@ btnEdit.onclick=()=>{ editMode=true; btnEdit.classList.add("on"); editbar.classL
   hint.style.display="none"; toast("校准模式：按住星星拖到它常出没的位置"); };
 document.getElementById("btnEditDone").onclick=()=>{ editMode=false; btnEdit.classList.remove("on");
   editbar.classList.remove("show"); hint.style.display=""; toast("校准结果已保存到本地"); };
-document.getElementById("btnReset").onclick=()=>{ localStorage.removeItem(LS_KEY); OV={}; POS.clear(); toast("已清除手动校准 · 恢复固化星位"); };
+document.getElementById("btnReset").onclick=()=>{ try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  OV={}; POS.clear(); for(const k of CATS) k._partners=null; toast("已清除手动校准 · 恢复固化星位"); };
 document.getElementById("btnExport").onclick=()=>{
   const data={ map:"中北大学校园图2023秋季版", exported:new Date().toISOString(), positions:loadOv() };
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
   a.download="猫咪星图-位置校准.json"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   toast("已导出校准 JSON，发回给我即可固化名册");
 };
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.opacity=1;
@@ -2940,38 +3153,42 @@ btnConst.onclick=()=>{
 document.getElementById("cpClose").onclick=closeConst;
 
 /* ---------- 星尘变身：开卡瞬间星星炸开、重组成这只猫的照片 ---------- */
-const MORPH={pts:[],t:0,dur:1.05,hold:.62,gone:.55,x:0,y:0,wide:300};
+const MORPH={pts:[],t:0,dur:1.05,hold:.62,gone:.55,x:0,y:0,wide:300,ar:1.5,gw:96,gh:64};
 function startMorph(c,sx,sy){
   MORPH.pts=[]; MORPH.t=0; MORPH.x=sx; MORPH.y=sy;
+  if(REDUCE) return;                                       // 减弱动态：跳过星尘变身
   if(!c.photo) return;
   MORPH.cat=c.id;                                  // 身份防护：连开猫时旧图作废
   const small=Math.min(W,H)<700;
-  const gw=small?60:96, gh=Math.round(gw*2/3);
-  MORPH.wide=small?Math.min(230,W*.72):Math.min(400,W*.34);
+  const gw=small?72:96, gh=Math.round(gw*2/3);   // 手机 72x48 / 桌面 96x64：按原生网格采样，不做事后抽稀
+  MORPH.wide=small?Math.min(230,W*.72):Math.min(360,W*.30);   // 略收窄，竖版照片才不会顶到屏幕边
+  MORPH.ar=1.5;                                    // 面板长宽比 w/h，等图片加载后按真实比例覆盖
   const img=new Image();
   img.onload=()=>{ if(MORPH.cat!==c.id) return;
     try{
-      const cv=document.createElement("canvas"); cv.width=gw; cv.height=gh;
+      // 面板长宽比跟随照片本身：竖版照片（本次修正的 28 张）若按 3:2 横裁，只会剩中间一条
+      const nar=img.width/img.height;
+      MORPH.ar=Math.min(1.45,Math.max(.62,nar));
+      const gw0=gw, gh0=Math.max(24,Math.round(gw0/MORPH.ar));
+      const cv=document.createElement("canvas"); cv.width=gw0; cv.height=gh0;
       const g=cv.getContext("2d",{willReadFrequently:true});
-      const ir=img.width/img.height, tr=gw/gh; let sw,sh,sx0,sy0;
+      const ir=img.width/img.height, tr=gw0/gh0; let sw,sh,sx0,sy0;
       if(ir>tr){ sh=img.height; sw=sh*tr; sx0=(img.width-sw)/2; sy0=0; }
       else{ sw=img.width; sh=sw/tr; sx0=0; sy0=(img.height-sh)/2; }
-      g.drawImage(img,sx0,sy0,sw,sh,0,0,gw,gh);
-      const data=g.getImageData(0,0,gw,gh).data;                // file:// 离线直开会被浏览器判为污染画布 → 静默降级
+      g.drawImage(img,sx0,sy0,sw,sh,0,0,gw0,gh0);
+      const data=g.getImageData(0,0,gw0,gh0).data;                // file:// 离线直开会被浏览器判为污染画布 → 静默降级
       const pts=[];
-      for(let y=0;y<gh;y++) for(let x=0;x<gw;x++){
-        const k=(y*gw+x)*4;
+      for(let y=0;y<gh0;y++) for(let x=0;x<gw0;x++){
+        const k=(y*gw0+x)*4;
         if(data[k+3]<60) continue;
         const lum=(data[k]*.299+data[k+1]*.587+data[k+2]*.114)/255;
         if(lum<.14) continue;
-        pts.push({fx:x/(gw-1)-.5,fy:y/(gh-1)-.5,r:.6+lum*1.5,
+        pts.push({fx:x/(gw0-1)-.5,fy:y/(gh0-1)-.5,r:.6+lum*1.5,
           col:"rgb("+data[k]+","+data[k+1]+","+data[k+2]+")",
           sa:Math.random()*TAU,sr:60+Math.random()*180,ph:Math.random()*TAU});
       }
-      const cap=small?1100:2400;
-      if(pts.length>cap){ const st=Math.ceil(pts.length/cap),p2=[];
-        for(let i=0;i<pts.length;i+=st) p2.push(pts[i]); MORPH.pts=p2; }
-      else MORPH.pts=pts;
+      MORPH.gw=gw0; MORPH.gh=gh0;                      // 供 drawMorph 计算格距
+      MORPH.pts=pts;   // 采样网格已按预算定好，无需事后抽稀（旧写法 i+=st 会把每行挖成竖条）
     }catch(e){ MORPH.pts=[]; }
   };
   img.onerror=()=>{};
@@ -2982,22 +3199,40 @@ function drawMorph(dt){
   M.t+=dt;
   const D=M.dur,HO=M.hold,GO=M.gone;
   if(M.t>=D+HO+GO){ M.pts=[]; return; }
-  const wpx=M.wide,hpx=wpx*2/3, small=Math.min(W,H)<700;
+  const wpx=M.wide,hpx=Math.round(wpx/(M.ar||1.5)), small=Math.min(W,H)<700;
   let cx,cy;
   if(small){ cx=clamp(M.x,wpx/2+10,W-wpx/2-10); cy=clamp(M.y-hpx*.5,hpx*.5+70,H*.62); }
   else{ cx=clamp(M.x,wpx/2+14,Math.max(wpx/2+14,W-460-wpx/2)); cy=clamp(M.y-hpx*.42,hpx*.65,H-hpx*.65-90); }
   let alpha=1,fade=0;
   if(M.t<D) alpha=Math.min(1,M.t/.22);
   else if(M.t>D+HO) fade=clamp((M.t-D-HO)/GO,0,1);
-  ctx.save(); ctx.globalCompositeOperation="lighter";
+  ctx.save();
+  /* 关键：不能整段用 lighter（相加混色）。照片的暗部（眼窝、鼻头、胡须）在相加后等于零，
+     叠在明亮的星图上会彻底消失，点阵就只剩一堆均匀亮点 —— 用户看到的"噪点"就是这么来的。
+     改为：先垫一层暗底压住背景，再用 source-over 正常绘制，暗部才能显出来。*/
+  const dirfade = fade>0 ? fade : 0;
+  if(M.pts.length){
+    const padX=cx-wpx/2-14, padY=cy-hpx/2-14, padW=wpx+28, padH=hpx+28;
+    ctx.globalAlpha=alpha*(1-dirfade);
+    ctx.fillStyle="rgba(3,7,18,.80)";
+    ctx.beginPath(); ctx.roundRect(padX,padY,padW,padH,14); ctx.fill();
+    // 边缘柔化：一圈渐隐，避免出现生硬的方块边界
+    const vg=ctx.createRadialGradient(cx,cy,Math.min(padW,padH)*.28,cx,cy,Math.max(padW,padH)*.62);
+    vg.addColorStop(0,"rgba(3,7,18,0)"); vg.addColorStop(1,"rgba(3,7,18,.55)");
+    ctx.fillStyle=vg; ctx.beginPath(); ctx.roundRect(padX,padY,padW,padH,14); ctx.fill();
+    ctx.globalAlpha=1;
+  }
+  ctx.globalCompositeOperation="source-over";
   if(M.t>D*.72){                                                 // 显影框：照片在星野中成像
     const fk=clamp((M.t-D*.72)/(D*.5),0,1)*(1-fade);
-    if(fk>.02){ ctx.globalAlpha=fk*.55; ctx.strokeStyle="rgba(125,232,214,.9)"; ctx.lineWidth=1.2;
+    if(fk>.02){ ctx.globalAlpha=fk*.75; ctx.strokeStyle="rgba(125,232,214,.95)"; ctx.lineWidth=1.2;
       ctx.setLineDash([5,7]); ctx.lineDashOffset=-animT*14;
       ctx.beginPath(); ctx.roundRect(cx-wpx/2-9,cy-hpx/2-9,wpx+18,hpx+18,10); ctx.stroke();
       ctx.setLineDash([]); }
   }
-  const sz=small?1.6:2.0;
+  // 点径跟着格距走（留 30% 空隙）。写死数值会在竖版窄面板里把相邻列黏成一条条竖线。
+  const cellPx=Math.min(wpx/Math.max(1,(M.gw||96)-1), hpx/Math.max(1,(M.gh||64)-1));
+  const sz=Math.max(.9, cellPx*.70);
   for(const p of M.pts){
     const st=Math.min(.3,(Math.abs(p.fx)+Math.abs(p.fy))*.42);  // 径向波：中心先到、边缘后到
     const k=clamp((M.t-st*.35)/(D-st*.35),0,1); if(k<=0) continue;
@@ -3111,7 +3346,7 @@ function sqResult(){
   for(const a of sqAns) for(const k in a) w[k]+=a[k];
   let best=null,bs=-1e9;
   for(const c of CATS){
-    let s=(w[c.coatGroup]||0)*1.15;
+    let s=(w[coatOf(c)]||0)*1.15;
     const night=/夜|晚上|深夜|凌晨/.test(c.bio+c.features)?1:0;
     s+=w.night*night*1.15-w.night*(1-night)*.25;
     const extro=Math.min(1,((c.photoCount||1)/6)*.65+(c.brightness||.7)*.35);
@@ -3418,7 +3653,7 @@ function radioPlay(c){
   if(!ac){ toast("当前浏览器不支持音频"); return; }
   if(ac.state==="suspended") ac.resume();
   const scales={"橘":[0,2,4,5,7,9,11],"狸花":[0,2,4,7,9],"三花":[0,2,3,5,7,8,10],"黑白":[0,3,5,6,7,10]};
-  const sc=scales[c.coatGroup]||[0,2,4,7,11];
+  const sc=scales[coatOf(c)]||[0,2,4,7,11];
   const seed=hashStr(c.id+c.name);
   const base=220*Math.pow(2,(seed%7)/12);                        // 起始音：名字哈希决定
   const n=10+((seed>>3)%6), step=.16+(c.brightness||.7)*.12;    // 步长：亮度决定节奏
@@ -3634,6 +3869,6 @@ addEventListener("keydown",e=>{
 })();
 
 /* 开发者控制台署名：F12 也能看到原作者与仓库 */
-console.log("%c🐱 中北喵星图 · NUC CAT GALAXY v2.9.1","font:700 18px sans-serif;color:#ffd76a;text-shadow:0 0 8px #ffd76a66");
+console.log("%c🐱 中北喵星图 · NUC CAT GALAXY v2.9.2","font:700 18px sans-serif;color:#ffd76a;text-shadow:0 0 8px #ffd76a66");
 console.log("%c原创作品 © 2026 TianWenzzzh · 76 只猫的实地普查档案\n开源仓库：https://github.com/TianWenzzzh/nuc-cat-starmap\n转载请署名并附仓库链接 · 一起给更多学校点亮喵星系 ✦","color:#7f92c0;line-height:1.7");
 </script></body></html>

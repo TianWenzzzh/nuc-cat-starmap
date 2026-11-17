@@ -26,7 +26,9 @@ const jsFiles = [];
   }
 })(root);
 
-// 内联块 = 不带 src 的 <script>；type="module" 也一并查（语法层两者都吃 --check）
+// 内联块 = 不带 src 的 <script>；type="module" 也一并查（语法层两者都吃 --check）。
+// 非 JS 的数据块（如 v2.9.2 的 JSON-LD type="application/ld+json"）跳过，别拿 --check 去解析 JSON。
+const JS_TYPES = new Set(['', 'module', 'text/javascript', 'application/javascript', 'text/ecmascript', 'application/ecmascript']);
 function inlineScripts(htmlPath) {
   const html = readFileSync(htmlPath, 'utf8');
   const out = [];
@@ -34,6 +36,9 @@ function inlineScripts(htmlPath) {
   let m;
   while ((m = re.exec(html))) {
     if (/\bsrc\s*=/i.test(m[1] || '')) continue;
+    const typeMatch = /\btype\s*=\s*["']([^"']+)["']/i.exec(m[1] || '');
+    const type = (typeMatch ? typeMatch[1] : '').trim().toLowerCase();
+    if (!JS_TYPES.has(type)) continue;
     if (m[2].trim()) out.push(m[2]);
   }
   return out;
