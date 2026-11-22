@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   ═══════════════════════════════════════════════════════════════════
-  中北喵星图 · NUC CAT GALAXY · v2.9.2
+  中北喵星图 · NUC CAT GALAXY · v2.9.3
   原创作品 © 2026 TianWenzzzh ｜ 194 张原始照片实地采集，逐张归并为 76 只在册档案
   开源仓库：https://github.com/TianWenzzzh/nuc-cat-starmap
   转载 / 二创请保留本署名并附仓库链接；删除本声明继续传播即构成侵权故意。
@@ -900,6 +900,9 @@
   <span class="chip mItem" id="btnFortune" tabindex="0" role="button"><span class="aIco">🎋</span>喵签</span>
   <span class="chip mItem" id="btnAudio" tabindex="0" role="button"><span class="aIco">♪</span>星语</span>
   <span class="chip mItem" id="btnFx" tabindex="0" role="button" aria-label="切换特效档位"><span class="aIco">⚡</span><span class="fxTxt">特效 · 自动</span></span>
+  <span class="chip mItem" id="btnAutumn" tabindex="0" role="button" aria-pressed="false"><span class="aIco">🍂</span><span>秋季金叶</span></span>
+  <span class="chip mItem" id="btnWinter" tabindex="0" role="button" aria-pressed="false"><span class="aIco">❄</span><span>冬季初雪</span></span>
+  <span class="chip mItem" id="btnSeason" tabindex="0" role="button" aria-pressed="false"><span class="aIco">🍂</span><span>季节主题 · 关闭</span></span>
   <span class="chip mItem" id="btnGuide" tabindex="0" role="button"><span class="aIco">?</span>喵星指南</span>
   <span class="chip mItem" id="btnEdit" tabindex="0" role="button"><span class="aIco">✎</span>校准位置</span>
 </div>
@@ -3693,7 +3696,7 @@ document.getElementById("fSpeak").onclick=()=>{
 };
 
 /* ---------- 秋季限定：开学季星尘里飘金叶 · 冬季限定：星尘里落初雪 ---------- */
-const AUTUMN={on:false,lv:[]}, WINTER={on:false,lv:[]};
+const AUTUMN={on:false,lv:[],manual:false}, WINTER={on:false,lv:[],manual:false};
 (function(){ const m=new Date().getMonth();                     // 季节限定：9-10月金叶 · 11-2月初雪
   if(m===8||m===9){ AUTUMN.on=true;
     for(let i=0;i<24;i++) AUTUMN.lv.push({x:Math.random(),y:Math.random(),
@@ -3703,9 +3706,24 @@ const AUTUMN={on:false,lv:[]}, WINTER={on:false,lv:[]};
     for(let i=0;i<26;i++) WINTER.lv.push({x:Math.random(),y:Math.random(),
       vy:.004+Math.random()*.008,ph:Math.random()*TAU,sp:.3+Math.random()*.6,
       r:1+Math.random()*1.9});
-  }})();
+  }
+  // 手动开启预览时按需创建粒子；一个开关依次切换 关闭 → 金叶 → 初雪。
+  const sync=()=>{
+    if(AUTUMN.on&&AUTUMN.lv.length===0) for(let i=0;i<24;i++) AUTUMN.lv.push({x:Math.random(),y:Math.random(),vy:.006+Math.random()*.01,ph:Math.random()*TAU,sp:.4+Math.random()*.8,r:2+Math.random()*2.6,rot:Math.random()*TAU,vr:(Math.random()-.5)*1.4});
+    if(WINTER.on&&WINTER.lv.length===0) for(let i=0;i<26;i++) WINTER.lv.push({x:Math.random(),y:Math.random(),vy:.004+Math.random()*.008,ph:Math.random()*TAU,sp:.3+Math.random()*.6,r:1+Math.random()*1.9});
+  };
+  const b=document.getElementById("btnSeason"); let mode=(AUTUMN.on?"autumn":WINTER.on?"winter":"off");
+  const render=()=>{
+    AUTUMN.on=mode==="autumn"; WINTER.on=mode==="winter"; sync();
+    b.classList.toggle("on",mode!=="off"); b.setAttribute("aria-pressed",mode!=="off");
+    b.innerHTML='<span class="aIco">'+(mode==="autumn"?"🍂":mode==="winter"?"❄":"✧")+'</span><span>季节 · '+(mode==="autumn"?"金叶":mode==="winter"?"初雪":"关闭")+'</span>';
+  };
+  b.onclick=()=>{ mode=mode==="off"?"autumn":mode==="autumn"?"winter":"off"; render();
+    toast(mode==="autumn"?"🍂 秋季金叶已开启 · 9-10月开学季":mode==="winter"?"❄ 冬季初雪已开启 · 11月至次年2月":"季节主题已关闭 · 再点切换金叶"); };
+  render();
+})();
 function drawLeaves(dt){
-  if(!AUTUMN.on||phase==="intro") return;
+  if(!AUTUMN.on||phase==="intro"||REDUCE||document.hidden) return;
   ctx.save();
   for(const L of AUTUMN.lv){
     L.y+=L.vy*dt*10; L.ph+=dt*L.sp; L.rot+=L.vr*dt;
@@ -3724,7 +3742,7 @@ function drawLeaves(dt){
   ctx.restore();
 }
 function drawSnow(dt){
-  if(!WINTER.on||phase==="intro") return;
+  if(!WINTER.on||phase==="intro"||REDUCE||document.hidden) return;
   ctx.save();
   for(const F of WINTER.lv){
     F.y+=F.vy*dt*10; F.ph+=dt*F.sp;
